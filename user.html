@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felhasználói fiók</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h4>Profil</h4>
+                <p><strong>Név:</strong> <span id="user-name"></span></p>
+                <p><strong>Email:</strong> <span id="user-email"></span></p>
+                <p><strong>Mobilszám:</strong> <span id="user-phone"></span></p>
+                <button class="btn btn-secondary w-100" id="edit-profile-button">Profil szerkesztése</button>
+                <button class="btn btn-danger w-100 mt-2" id="logout-button">Kijelentkezés</button>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h4>Foglalások</h4>
+                <ul id="bookings-list" class="list-group">
+                    <!-- Foglalások betöltése -->
+                </ul>
+            </div>
+        </div>
+        <div id="edit-profile-form" style="display: none;">
+            <h4>Profil Szerkesztése</h4>
+            <form id="profile-edit-form">
+                <div class="mb-3">
+                    <label for="edit-name" class="form-label">Név:</label>
+                    <input type="text" class="form-control" id="edit-name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="edit-email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-phone" class="form-label">Mobilszám:</label>
+                    <input type="text" class="form-control" id="edit-phone" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Mentés</button>
+                <button type="button" class="btn btn-secondary" id="cancel-edit">Mégse</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="module" src="./public/login.js"></script>
+</body>
+</html>

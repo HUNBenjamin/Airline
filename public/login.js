@@ -18,24 +18,61 @@ export function setCurrentUser(user) {
 export function clearCurrentUser() {
     localStorage.removeItem('currentUser');
 }
-// DOM Elements
-const loginSection = document.getElementById('login-section');
-const accountSection = document.getElementById('account-section');
-const userNameSpan = document.getElementById('user-name');
-const bookingsList = document.getElementById('bookings-list');
-// 
-// Forms
-const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
-const updateProfileForm = document.getElementById('update-profile-form');
-const logoutButton = document.getElementById('logout-button');
-// JSON Server URL
-const API_URL = 'http://localhost:3000/users';
-// Fetch all users from the server with error handling
+// Utility function to redirect to a specific page
+function redirectToPage(page) {
+    window.location.href = page;
+}
+// Handle login form submission
+function handleLogin(event) {
+    return __awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const users = yield fetchUsers();
+        const user = users.find((u) => u.email === email && u.password === password);
+        if (user) {
+            setCurrentUser(user);
+            redirectToPage('./user.html');
+        }
+        else {
+            alert('Hibás email vagy jelszó.');
+        }
+    });
+}
+// Handle register form submission
+function handleRegister(event) {
+    return __awaiter(this, void 0, void 0, function* () {
+        event.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const phone = document.getElementById('register-phone').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const users = yield fetchUsers();
+        if (users.some((u) => u.email === email)) {
+            alert('Az email már használatban van.');
+            return;
+        }
+        const newUser = { name, phone, email, password, bookings: [] };
+        try {
+            const response = yield fetch("http://localhost:3000/users", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newUser),
+            });
+            if (!response.ok)
+                throw new Error('Failed to register user');
+            alert('Regisztráció sikeres! Kérlek jelentkezz be.');
+        }
+        catch (error) {
+            console.error('Hiba a regisztráció során:', error);
+        }
+    });
+}
+// Fetch all users
 function fetchUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield fetch(API_URL);
+            const response = yield fetch("http://localhost:3000/users");
             if (!response.ok)
                 throw new Error('Failed to fetch users');
             return yield response.json();
@@ -46,116 +83,73 @@ function fetchUsers() {
         }
     });
 }
-// Login function to check user credentials
-function loginUser(email, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const users = yield fetchUsers();
-        const user = users.find((u) => u.email === email && u.password === password);
-        if (user) {
-            setCurrentUser(user);
-            showAccount(user);
-        }
-        else {
-            alert('Hibás email vagy jelszó.');
-        }
+// Handle user page interactions
+function setupUserPage() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        redirectToPage('./login.html');
+        return;
+    }
+    const userNameSpan = document.getElementById('user-name');
+    const userEmailSpan = document.getElementById('user-email');
+    const userPhoneSpan = document.getElementById('user-phone');
+    const bookingsList = document.getElementById('bookings-list');
+    const logoutButton = document.getElementById('logout-button');
+    const editProfileButton = document.getElementById('edit-profile-button');
+    const editProfileForm = document.getElementById('edit-profile-form');
+    const profileEditForm = document.getElementById('profile-edit-form');
+    const cancelEditButton = document.getElementById('cancel-edit');
+    // Populate user details
+    userNameSpan.textContent = currentUser.name;
+    userEmailSpan.textContent = currentUser.email;
+    userPhoneSpan.textContent = currentUser.phone;
+    bookingsList.innerHTML = (currentUser.bookings || [])
+        .map((booking) => `<li class="list-group-item">${booking}</li>`)
+        .join('');
+    // Edit profile functionality
+    editProfileButton.addEventListener('click', () => {
+        document.getElementById('edit-name').value = currentUser.name;
+        document.getElementById('edit-email').value = currentUser.email;
+        document.getElementById('edit-phone').value = currentUser.phone;
+        editProfileForm.style.display = 'block';
+    });
+    cancelEditButton.addEventListener('click', () => {
+        editProfileForm.style.display = 'none';
+    });
+    profileEditForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const updatedName = document.getElementById('edit-name').value;
+        const updatedEmail = document.getElementById('edit-email').value;
+        const updatedPhone = document.getElementById('edit-phone').value;
+        // Update user data
+        currentUser.name = updatedName;
+        currentUser.email = updatedEmail;
+        currentUser.phone = updatedPhone;
+        setCurrentUser(currentUser);
+        // Update UI
+        userNameSpan.textContent = updatedName;
+        userEmailSpan.textContent = updatedEmail;
+        userPhoneSpan.textContent = updatedPhone;
+        editProfileForm.style.display = 'none';
+        alert('Profil sikeresen frissítve!');
+    });
+    // Logout functionality
+    logoutButton.addEventListener('click', () => {
+        clearCurrentUser();
+        redirectToPage('./login.html');
     });
 }
-// Register a new user
-function registerUser(name, phone, email, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const users = yield fetchUsers();
-        if (users.some((u) => u.email === email)) {
-            alert('Az email már használatban van.');
-            return;
-        }
-        const newUser = { name, phone, email, password, bookings: [] };
-        try {
-            const response = yield fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newUser),
-            });
-            if (!response.ok)
-                throw new Error('Failed to register user');
-            alert('Regisztráció sikeres! Kérlek jelentkezz be.');
-        }
-        catch (error) {
-            console.error('Error registering user:', error);
-        }
-    });
+// Initialize the page based on context
+function init() {
+    if (document.getElementById('login-form')) {
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        loginForm.addEventListener('submit', handleLogin);
+        registerForm.addEventListener('submit', handleRegister);
+    }
+    else if (document.getElementById('user-name')) {
+        setupUserPage();
+    }
 }
-// Update the user's profile
-function updateProfile(name, phone, email, password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const currentUser = getCurrentUser();
-        if (!currentUser)
-            return alert('Nincs bejelentkezett felhasználó.');
-        try {
-            const response = yield fetch(`${API_URL}/${currentUser.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.assign(Object.assign({}, currentUser), { name, phone, email, password })),
-            });
-            if (!response.ok)
-                throw new Error('Failed to update user profile');
-            const updatedUser = yield response.json();
-            setCurrentUser(updatedUser);
-            showAccount(updatedUser);
-            alert('Profil sikeresen frissítve.');
-        }
-        catch (error) {
-            console.error('Error updating profile:', error);
-        }
-    });
-}
-// Show login page
-function showLogin() {
-    loginSection.style.display = 'block';
-    accountSection.style.display = 'none';
-}
-// Show account details
-function showAccount(user) {
-    loginSection.style.display = 'none';
-    accountSection.style.display = 'block';
-    userNameSpan.textContent = user.name;
-    document.getElementById('update-name').value = user.name;
-    document.getElementById('update-phone').value = user.phone;
-    document.getElementById('update-email').value = user.email;
-    document.getElementById('update-password').value = user.password;
-    bookingsList.innerHTML = (user.bookings || []).map((booking) => `<li>${booking}</li>`).join('');
-}
-// Event Listeners
-loginForm.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
-    e.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    yield loginUser(email, password);
-}));
-registerForm.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
-    e.preventDefault();
-    const name = document.getElementById('register-name').value;
-    const phone = document.getElementById('register-phone').value;
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-    yield registerUser(name, phone, email, password);
-}));
-updateProfileForm.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
-    e.preventDefault();
-    const name = document.getElementById('update-name').value;
-    const phone = document.getElementById('update-phone').value;
-    const email = document.getElementById('update-email').value;
-    const password = document.getElementById('update-password').value;
-    yield updateProfile(name, phone, email, password);
-}));
-logoutButton.addEventListener('click', () => {
-    clearCurrentUser();
-    showLogin();
-});
-// Initial Load
-const currentUser = getCurrentUser();
-if (currentUser) {
-    showAccount(currentUser);
-}
-else {
-    showLogin();
-}
+// Run initialization
+init();
