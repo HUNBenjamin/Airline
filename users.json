@@ -1,4 +1,73 @@
 {
+  "userFlights": [
+        {
+            "id": 1,
+            "Departure_Date": "2025-02-15",
+            "Departure_Time": "09:30",
+            "Destination_Date": "2025-02-15",
+            "Destination_Time": "12:45",
+            "Airport_From": "Budapest",
+            "Airport_To": "London",
+            "Price": 189,
+            "Plane_Type": "Airbus A320",
+            "Free Seats": 27,
+            "Flight Number": "SKY123"
+        },
+        {
+            "id": 2,
+            "Departure_Date": "2025-03-02",
+            "Departure_Time": "14:00",
+            "Destination_Date": "2025-03-02",
+            "Destination_Time": "17:15",
+            "Airport_From": "New York",
+            "Airport_To": "San Francisco",
+            "Price": 349,
+            "Plane_Type": "Boeing 737 MAX",
+            "Free Seats": 13,
+            "Flight Number": "SKY456"
+        },
+        {
+            "id": 3,
+            "Departure_Date": "2025-04-10",
+            "Departure_Time": "21:50",
+            "Destination_Date": "2025-04-11",
+            "Destination_Time": "01:15",
+            "Airport_From": "Dubai",
+            "Airport_To": "Delhi",
+            "Price": 119,
+            "Plane_Type": "Boeing 777-300ER",
+            "Free Seats": 42,
+            "Flight Number": "SKY789"
+        },
+        {
+            "id": 4,
+            "Departure_Date": "2025-05-18",
+            "Departure_Time": "07:15",
+            "Destination_Date": "2025-05-18",
+            "Destination_Time": "10:30",
+            "Airport_From": "Sydney",
+            "Airport_To": "Melbourne",
+            "Price": 89,
+            "Plane_Type": "Embraer E190",
+            "Free Seats": 18,
+            "Flight Number": "SKY101"
+        },
+        {
+            "id": 5,
+            "Departure_Date": "2025-06-22",
+            "Departure_Time": "16:00",
+            "Destination_Date": "2025-06-22",
+            "Destination_Time": "20:20",
+            "Airport_From": "Frankfurt",
+            "Airport_To": "Chicago",
+            "Price": 499,
+            "Plane_Type": "Airbus A350",
+            "Free Seats": 9,
+            "Flight Number": "SKY202"
+        }
+    ],
+
+
   "users": [
     {
       "name": "Béla",
