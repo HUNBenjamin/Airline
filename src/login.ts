@@ -1,3 +1,18 @@
+(window as any).cancelBooking = cancelBooking;
+(window as any).resetBookings = resetBookings;
+
+function cancelBooking(flightId: number) {
+    activeBookingIds = activeBookingIds.filter(id => id !== flightId);
+    
+    const flightElement = document.getElementById(`booking-${flightId}`);
+    if (flightElement) {
+        flightElement.remove();
+    }
+    
+    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    
+    alert(`Foglalás ${flightId} sikeresen törölve!`);
+}
 // Utility functions for localStorage management
 export function getCurrentUser() {
     const user = localStorage.getItem('currentUser');
@@ -12,8 +27,28 @@ export function clearCurrentUser() {
     localStorage.removeItem('currentUser');
 }
 
-let activeBookingIds: number[] = [1, 2, 3, 4, 5];
+let activeBookingIds: number[] = [1, 2, 3];
+let allFlights: number[] = [];
 
+//activebookingids by all the records in json
+async function fetchFlights(): Promise<any[]> {
+    try {
+        const response = await fetch("http://localhost:3000/userFlights");
+        if (!response.ok) throw new Error('Failed to fetch user flights');
+        return await response.json();
+        
+    } catch (error) {
+        console.error('Error fetching flights:', error);
+        return [];
+    }
+}
+
+const fetchallFlightsData = async () => {
+    const flights = await fetchFlights();
+    allFlights = flights.map(flight => Number(flight.id));
+    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    return flights;
+};
 
 // Utility function to redirect to a specific page
 function redirectToPage(page: string) {
@@ -86,96 +121,139 @@ function setupUserPage() {
         return;
     }
 
-    const userNameSpan = document.getElementById('user-name') as HTMLElement;
-    const userEmailSpan = document.getElementById('user-email') as HTMLElement;
-    const userPhoneSpan = document.getElementById('user-phone') as HTMLElement;
-    const bookingsList = document.getElementById('bookings-list') as HTMLElement;
-    const logoutButton = document.getElementById('logout-button') as HTMLButtonElement;
-    const editProfileButton = document.getElementById('edit-profile-button') as HTMLButtonElement;
-    const editProfileForm = document.getElementById('edit-profile-form') as HTMLElement;
-    const profileEditForm = document.getElementById('profile-edit-form') as HTMLFormElement;
-    const cancelEditButton = document.getElementById('cancel-edit') as HTMLButtonElement;
+    // Get DOM elements
+    const userNameSpan = document.getElementById('user-name');
+    const userEmailSpan = document.getElementById('user-email');
+    const userPhoneSpan = document.getElementById('user-phone');
+    const bookingsList = document.getElementById('bookings-list');
+    const logoutButton = document.getElementById('logout-button');
+    const editProfileButton = document.getElementById('edit-profile-button');
+    const editProfileForm = document.getElementById('edit-profile-form');
+    const profileEditForm = document.getElementById('profile-edit-form');
+    const cancelEditButton = document.getElementById('cancel-edit');
 
-    // Populate user details
-    userNameSpan.textContent = currentUser.name;
-    userEmailSpan.textContent = currentUser.email;
-    userPhoneSpan.textContent = currentUser.phone;
+    // Display user info
+    if (userNameSpan) userNameSpan.textContent = currentUser.name;
+    if (userEmailSpan) userEmailSpan.textContent = currentUser.email;
+    if (userPhoneSpan) userPhoneSpan.textContent = currentUser.phone;
 
-    // Fetch and display all flights from the userFlights.json
-    fetchFlights().then(flights => {
-        const activeFlights = flights.filter((flight: any) => 
-            activeBookingIds.includes(flight.id)
-        );
-        
-        bookingsList.innerHTML = activeFlights
-            .map((flight: any) => {
-                return `
-                    <li class="list-group-item" id="booking-${flight.id}">
-                        <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
-                        ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
-                        Price: ${flight.Price} USD<br>
-                        <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
-                    </li>
-                `;
-            })
-            .join('');
-            bookingsList.insertAdjacentHTML('afterend', `
-                <button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>
-            `);
-    }).catch(error => {
-        console.error('Error fetching flights:', error);
-    });
+    // Display bookings
+    const displayBookings = async () => {
+        if (!bookingsList) return;
+    
+        try {
+            const flights = await fetchFlights();
+            console.log("All flights:", flights);
+    
+            const activeFlights = flights.filter(flight => 
+                activeBookingIds.includes(Number(flight.id))
+            );
+            console.log("Active flights:", activeFlights);
+    
+            if (activeFlights.length === 0) {
+                bookingsList.innerHTML = '<li class="list-group-item">Nincsenek aktív foglalások</li>';
+                bookingsList.insertAdjacentHTML('afterend', 
+                    '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>'
+                );
+                return;
+            }
+    
+            const bookingsHTML = activeFlights.map(flight => `
+                <li class="list-group-item" id="booking-${flight.id}">
+                    <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
+                    ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
+                    Plane: ${flight.Plane_Type}<br>
+                    Price: ${flight.Price} USD<br>
+                    <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                </li>
+            `).join('');
+    
+            bookingsList.innerHTML = bookingsHTML;
+            bookingsList.insertAdjacentHTML('afterend', 
+                '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>'
+            );
+        } catch (error) {
+            console.error('Error displaying bookings:', error);
+            bookingsList.innerHTML = '<li class="list-group-item">Hiba történt a foglalások betöltésekor</li>';
+        }
+    };
+    // Call displayBookings
+    displayBookings();
 
-    // Edit profile functionality
-    editProfileButton.addEventListener('click', () => {
-        (document.getElementById('edit-name') as HTMLInputElement).value = currentUser.name;
-        (document.getElementById('edit-email') as HTMLInputElement).value = currentUser.email;
-        (document.getElementById('edit-phone') as HTMLInputElement).value = currentUser.phone;
-        editProfileForm.style.display = 'block';
-    });
+    // Setup profile editing
+    if (editProfileButton) {
+        editProfileButton.addEventListener('click', () => {
+            if (editProfileForm) {
+                (document.getElementById('edit-name') as HTMLInputElement).value = currentUser.name;
+                (document.getElementById('edit-email') as HTMLInputElement).value = currentUser.email;
+                (document.getElementById('edit-phone') as HTMLInputElement).value = currentUser.phone;
+                editProfileForm.style.display = 'block';
+            }
+        });
+    }
 
-    cancelEditButton.addEventListener('click', () => {
-        editProfileForm.style.display = 'none';
-    });
+    if (cancelEditButton) {
+        cancelEditButton.addEventListener('click', () => {
+            if (editProfileForm) {
+                editProfileForm.style.display = 'none';
+            }
+        });
+    }
 
-    profileEditForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+    if (profileEditForm) {
+        profileEditForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const updatedName = (document.getElementById('edit-name') as HTMLInputElement).value;
+            const updatedEmail = (document.getElementById('edit-email') as HTMLInputElement).value;
+            const updatedPhone = (document.getElementById('edit-phone') as HTMLInputElement).value;
 
-        const updatedName = (document.getElementById('edit-name') as HTMLInputElement).value;
-        const updatedEmail = (document.getElementById('edit-email') as HTMLInputElement).value;
-        const updatedPhone = (document.getElementById('edit-phone') as HTMLInputElement).value;
+            currentUser.name = updatedName;
+            currentUser.email = updatedEmail;
+            currentUser.phone = updatedPhone;
 
-        // Update user data
-        currentUser.name = updatedName;
-        currentUser.email = updatedEmail;
-        currentUser.phone = updatedPhone;
+            setCurrentUser(currentUser);
 
-        setCurrentUser(currentUser);
+            if (userNameSpan) userNameSpan.textContent = updatedName;
+            if (userEmailSpan) userEmailSpan.textContent = updatedEmail;
+            if (userPhoneSpan) userPhoneSpan.textContent = updatedPhone;
 
-        // Update UI
-        userNameSpan.textContent = updatedName;
-        userEmailSpan.textContent = updatedEmail;
-        userPhoneSpan.textContent = updatedPhone;
+            if (editProfileForm) {
+                editProfileForm.style.display = 'none';
+            }
+            alert('Profil sikeresen frissítve!');
+        });
+    }
 
-        editProfileForm.style.display = 'none';
-        alert('Profil sikeresen frissítve!');
-    });
-
-    // Logout functionality
-    logoutButton.addEventListener('click', () => {
-        clearCurrentUser();
-        redirectToPage('./login.html');
-    });
+    // Setup logout
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            clearCurrentUser();
+            redirectToPage('./login.html');
+        });
+    }
 }
 
-function resetBookings() {
-    activeBookingIds = [1, 2, 3, 4, 5]; // Reset to original values
+async function resetBookings() {
+    activeBookingIds = [1, 2, 3];
     localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
-    setupUserPage(); // Refresh the page content
+    setupUserPage();
 }
 
-// Initialize the page based on context
+function initializeActiveBookings() {
+    const savedBookings = localStorage.getItem('activeBookings');
+    activeBookingIds = savedBookings ? JSON.parse(savedBookings) : [];
+    // For testing, you can initialize with some flights
+    if (activeBookingIds.length === 0) {
+        activeBookingIds = [1, 2, 3]; // Add some initial bookings
+        localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    }
+}
+
+
+// Initialize the page based on contextfunction init() {
 function init() {
+    fetchallFlightsData();
+    initializeActiveBookings();
     if (document.getElementById('login-form')) {
         const loginForm = document.getElementById('login-form') as HTMLFormElement;
         const registerForm = document.getElementById('register-form') as HTMLFormElement;
@@ -189,6 +267,9 @@ function init() {
     if (savedBookings) {
         activeBookingIds = JSON.parse(savedBookings);
     }
+
+    console.log(localStorage.getItem('activeBookings'));
+    
 }
 
 
@@ -198,30 +279,3 @@ init();
 
 
 // Utility function to fetch flights (simulating a database fetch)
-async function fetchFlights(): Promise<any[]> {
-    try {
-        const response = await fetch("http://localhost:3000/userFlights");
-        if (!response.ok) throw new Error('Failed to fetch user flights');
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching flights:', error);
-        return [];
-    }
-}
-
-function cancelBooking(flightId: number) {
-    activeBookingIds = activeBookingIds.filter(id => id !== flightId);
-    
-    const flightElement = document.getElementById(`booking-${flightId}`);
-    if (flightElement) {
-        flightElement.remove();
-    }
-    
-    // Optional: Save to localStorage to persist the active bookings
-    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
-    
-    alert(`Foglalás ${flightId} sikeresen törölve!`);
-}
-
-(window as any).cancelBooking = cancelBooking;
-(window as any).resetBookings = resetBookings;
