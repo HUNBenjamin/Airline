@@ -1,19 +1,3 @@
-// Utility functions for localStorage management
-export function getCurrentUser() {
-    const user = localStorage.getItem('currentUser');
-    return user ? JSON.parse(user) : null;
-}
-
-export function setCurrentUser(user: any) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-}
-
-export function clearCurrentUser() {
-    localStorage.removeItem('currentUser');
-}
-
-let activeBookingIds: number[] = [1, 2, 3, 4, 5];
-
 (window as any).cancelBooking = cancelBooking;
 (window as any).resetBookings = resetBookings;
 
@@ -29,6 +13,42 @@ function cancelBooking(flightId: number) {
     
     alert(`Foglalás ${flightId} sikeresen törölve!`);
 }
+// Utility functions for localStorage management
+export function getCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+}
+
+export function setCurrentUser(user: any) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+}
+
+export function clearCurrentUser() {
+    localStorage.removeItem('currentUser');
+}
+
+let activeBookingIds: number[] = [1, 2, 3];
+let allFlights: number[] = [];
+
+//activebookingids by all the records in json
+async function fetchFlights(): Promise<any[]> {
+    try {
+        const response = await fetch("http://localhost:3000/userFlights");
+        if (!response.ok) throw new Error('Failed to fetch user flights');
+        return await response.json();
+        
+    } catch (error) {
+        console.error('Error fetching flights:', error);
+        return [];
+    }
+}
+
+const fetchallFlightsData = async () => {
+    const flights = await fetchFlights();
+    allFlights = flights.map(flight => Number(flight.id));
+    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    return flights;
+};
 
 // Utility function to redirect to a specific page
 function redirectToPage(page: string) {
@@ -120,21 +140,24 @@ function setupUserPage() {
     // Display bookings
     const displayBookings = async () => {
         if (!bookingsList) return;
-
+    
         try {
             const flights = await fetchFlights();
             console.log("All flights:", flights);
-
+    
             const activeFlights = flights.filter(flight => 
                 activeBookingIds.includes(Number(flight.id))
             );
             console.log("Active flights:", activeFlights);
-
+    
             if (activeFlights.length === 0) {
                 bookingsList.innerHTML = '<li class="list-group-item">Nincsenek aktív foglalások</li>';
+                bookingsList.insertAdjacentHTML('afterend', 
+                    '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>'
+                );
                 return;
             }
-
+    
             const bookingsHTML = activeFlights.map(flight => `
                 <li class="list-group-item" id="booking-${flight.id}">
                     <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
@@ -143,7 +166,7 @@ function setupUserPage() {
                     <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
                 </li>
             `).join('');
-
+    
             bookingsList.innerHTML = bookingsHTML;
             bookingsList.insertAdjacentHTML('afterend', 
                 '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>'
@@ -153,7 +176,6 @@ function setupUserPage() {
             bookingsList.innerHTML = '<li class="list-group-item">Hiba történt a foglalások betöltésekor</li>';
         }
     };
-
     // Call displayBookings
     displayBookings();
 
@@ -210,14 +232,27 @@ function setupUserPage() {
     }
 }
 
-function resetBookings() {
-    activeBookingIds = [1, 2, 3, 4, 5]; // Reset to original values
+async function resetBookings() {
+    activeBookingIds = [1, 2, 3];
     localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
-    setupUserPage(); // Refresh the page content
+    setupUserPage();
 }
 
-// Initialize the page based on context
+function initializeActiveBookings() {
+    const savedBookings = localStorage.getItem('activeBookings');
+    activeBookingIds = savedBookings ? JSON.parse(savedBookings) : [];
+    // For testing, you can initialize with some flights
+    if (activeBookingIds.length === 0) {
+        activeBookingIds = [1, 2, 3]; // Add some initial bookings
+        localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    }
+}
+
+
+// Initialize the page based on contextfunction init() {
 function init() {
+    fetchallFlightsData();
+    initializeActiveBookings();
     if (document.getElementById('login-form')) {
         const loginForm = document.getElementById('login-form') as HTMLFormElement;
         const registerForm = document.getElementById('register-form') as HTMLFormElement;
@@ -243,14 +278,3 @@ init();
 
 
 // Utility function to fetch flights (simulating a database fetch)
-async function fetchFlights(): Promise<any[]> {
-    try {
-        const response = await fetch("http://localhost:3000/userFlights");
-        if (!response.ok) throw new Error('Failed to fetch user flights');
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching flights:', error);
-        return [];
-    }
-}
-

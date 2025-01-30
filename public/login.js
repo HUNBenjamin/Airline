@@ -7,18 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// Utility functions for localStorage management
-export function getCurrentUser() {
-    const user = localStorage.getItem('currentUser');
-    return user ? JSON.parse(user) : null;
-}
-export function setCurrentUser(user) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-}
-export function clearCurrentUser() {
-    localStorage.removeItem('currentUser');
-}
-let activeBookingIds = [1, 2, 3, 4, 5];
 window.cancelBooking = cancelBooking;
 window.resetBookings = resetBookings;
 function cancelBooking(flightId) {
@@ -30,6 +18,40 @@ function cancelBooking(flightId) {
     localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
     alert(`Foglalás ${flightId} sikeresen törölve!`);
 }
+// Utility functions for localStorage management
+export function getCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+}
+export function setCurrentUser(user) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+}
+export function clearCurrentUser() {
+    localStorage.removeItem('currentUser');
+}
+let activeBookingIds = [1, 2, 3];
+let allFlights = [];
+//activebookingids by all the records in json
+function fetchFlights() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch("http://localhost:3000/userFlights");
+            if (!response.ok)
+                throw new Error('Failed to fetch user flights');
+            return yield response.json();
+        }
+        catch (error) {
+            console.error('Error fetching flights:', error);
+            return [];
+        }
+    });
+}
+const fetchallFlightsData = () => __awaiter(void 0, void 0, void 0, function* () {
+    const flights = yield fetchFlights();
+    allFlights = flights.map(flight => Number(flight.id));
+    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    return flights;
+});
 // Utility function to redirect to a specific page
 function redirectToPage(page) {
     window.location.href = page;
@@ -130,6 +152,7 @@ function setupUserPage() {
             console.log("Active flights:", activeFlights);
             if (activeFlights.length === 0) {
                 bookingsList.innerHTML = '<li class="list-group-item">Nincsenek aktív foglalások</li>';
+                bookingsList.insertAdjacentHTML('afterend', '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>');
                 return;
             }
             const bookingsHTML = activeFlights.map(flight => `
@@ -199,12 +222,25 @@ function setupUserPage() {
     }
 }
 function resetBookings() {
-    activeBookingIds = [1, 2, 3, 4, 5]; // Reset to original values
-    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
-    setupUserPage(); // Refresh the page content
+    return __awaiter(this, void 0, void 0, function* () {
+        activeBookingIds = [1, 2, 3];
+        localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+        setupUserPage();
+    });
 }
-// Initialize the page based on context
+function initializeActiveBookings() {
+    const savedBookings = localStorage.getItem('activeBookings');
+    activeBookingIds = savedBookings ? JSON.parse(savedBookings) : [];
+    // For testing, you can initialize with some flights
+    if (activeBookingIds.length === 0) {
+        activeBookingIds = [1, 2, 3]; // Add some initial bookings
+        localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    }
+}
+// Initialize the page based on contextfunction init() {
 function init() {
+    fetchallFlightsData();
+    initializeActiveBookings();
     if (document.getElementById('login-form')) {
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
@@ -223,17 +259,3 @@ function init() {
 // Run initialization
 init();
 // Utility function to fetch flights (simulating a database fetch)
-function fetchFlights() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const response = yield fetch("http://localhost:3000/userFlights");
-            if (!response.ok)
-                throw new Error('Failed to fetch user flights');
-            return yield response.json();
-        }
-        catch (error) {
-            console.error('Error fetching flights:', error);
-            return [];
-        }
-    });
-}
