@@ -162,6 +162,7 @@ function setupUserPage() {
                 <li class="list-group-item" id="booking-${flight.id}">
                     <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
                     ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
+                    Plane: ${flight.Plane_Type}<br>
                     Price: ${flight.Price} USD<br>
                     <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
                 </li>
