@@ -96,3 +96,11 @@ header nav a:hover {
 .info-card p {
     color: #666;
 }
+
+#departureDropDownMenuInput {
+    min-width: 200px;
+}
+
+#destinationDropDownMenuInput {
+    min-width: 200px;
+}
