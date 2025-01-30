@@ -19,6 +19,17 @@ export function clearCurrentUser() {
     localStorage.removeItem('currentUser');
 }
 let activeBookingIds = [1, 2, 3, 4, 5];
+window.cancelBooking = cancelBooking;
+window.resetBookings = resetBookings;
+function cancelBooking(flightId) {
+    activeBookingIds = activeBookingIds.filter(id => id !== flightId);
+    const flightElement = document.getElementById(`booking-${flightId}`);
+    if (flightElement) {
+        flightElement.remove();
+    }
+    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+    alert(`Foglalás ${flightId} sikeresen törölve!`);
+}
 // Utility function to redirect to a specific page
 function redirectToPage(page) {
     window.location.href = page;
@@ -91,6 +102,7 @@ function setupUserPage() {
         redirectToPage('./login.html');
         return;
     }
+    // Get DOM elements
     const userNameSpan = document.getElementById('user-name');
     const userEmailSpan = document.getElementById('user-email');
     const userPhoneSpan = document.getElementById('user-phone');
@@ -100,63 +112,91 @@ function setupUserPage() {
     const editProfileForm = document.getElementById('edit-profile-form');
     const profileEditForm = document.getElementById('profile-edit-form');
     const cancelEditButton = document.getElementById('cancel-edit');
-    // Populate user details
-    userNameSpan.textContent = currentUser.name;
-    userEmailSpan.textContent = currentUser.email;
-    userPhoneSpan.textContent = currentUser.phone;
-    // Fetch and display all flights from the userFlights.json
-    fetchFlights().then(flights => {
-        const activeFlights = flights.filter((flight) => activeBookingIds.includes(flight.id));
-        bookingsList.innerHTML = activeFlights
-            .map((flight) => {
-            return `
-                    <li class="list-group-item" id="booking-${flight.id}">
-                        <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
-                        ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
-                        Price: ${flight.Price} USD<br>
-                        <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
-                    </li>
-                `;
-        })
-            .join('');
-        bookingsList.insertAdjacentHTML('afterend', `
-                <button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>
-            `);
-    }).catch(error => {
-        console.error('Error fetching flights:', error);
+    // Display user info
+    if (userNameSpan)
+        userNameSpan.textContent = currentUser.name;
+    if (userEmailSpan)
+        userEmailSpan.textContent = currentUser.email;
+    if (userPhoneSpan)
+        userPhoneSpan.textContent = currentUser.phone;
+    // Display bookings
+    const displayBookings = () => __awaiter(this, void 0, void 0, function* () {
+        if (!bookingsList)
+            return;
+        try {
+            const flights = yield fetchFlights();
+            console.log("All flights:", flights);
+            const activeFlights = flights.filter(flight => activeBookingIds.includes(Number(flight.id)));
+            console.log("Active flights:", activeFlights);
+            if (activeFlights.length === 0) {
+                bookingsList.innerHTML = '<li class="list-group-item">Nincsenek aktív foglalások</li>';
+                return;
+            }
+            const bookingsHTML = activeFlights.map(flight => `
+                <li class="list-group-item" id="booking-${flight.id}">
+                    <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
+                    ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
+                    Price: ${flight.Price} USD<br>
+                    <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                </li>
+            `).join('');
+            bookingsList.innerHTML = bookingsHTML;
+            bookingsList.insertAdjacentHTML('afterend', '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>');
+        }
+        catch (error) {
+            console.error('Error displaying bookings:', error);
+            bookingsList.innerHTML = '<li class="list-group-item">Hiba történt a foglalások betöltésekor</li>';
+        }
     });
-    // Edit profile functionality
-    editProfileButton.addEventListener('click', () => {
-        document.getElementById('edit-name').value = currentUser.name;
-        document.getElementById('edit-email').value = currentUser.email;
-        document.getElementById('edit-phone').value = currentUser.phone;
-        editProfileForm.style.display = 'block';
-    });
-    cancelEditButton.addEventListener('click', () => {
-        editProfileForm.style.display = 'none';
-    });
-    profileEditForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const updatedName = document.getElementById('edit-name').value;
-        const updatedEmail = document.getElementById('edit-email').value;
-        const updatedPhone = document.getElementById('edit-phone').value;
-        // Update user data
-        currentUser.name = updatedName;
-        currentUser.email = updatedEmail;
-        currentUser.phone = updatedPhone;
-        setCurrentUser(currentUser);
-        // Update UI
-        userNameSpan.textContent = updatedName;
-        userEmailSpan.textContent = updatedEmail;
-        userPhoneSpan.textContent = updatedPhone;
-        editProfileForm.style.display = 'none';
-        alert('Profil sikeresen frissítve!');
-    });
-    // Logout functionality
-    logoutButton.addEventListener('click', () => {
-        clearCurrentUser();
-        redirectToPage('./login.html');
-    });
+    // Call displayBookings
+    displayBookings();
+    // Setup profile editing
+    if (editProfileButton) {
+        editProfileButton.addEventListener('click', () => {
+            if (editProfileForm) {
+                document.getElementById('edit-name').value = currentUser.name;
+                document.getElementById('edit-email').value = currentUser.email;
+                document.getElementById('edit-phone').value = currentUser.phone;
+                editProfileForm.style.display = 'block';
+            }
+        });
+    }
+    if (cancelEditButton) {
+        cancelEditButton.addEventListener('click', () => {
+            if (editProfileForm) {
+                editProfileForm.style.display = 'none';
+            }
+        });
+    }
+    if (profileEditForm) {
+        profileEditForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const updatedName = document.getElementById('edit-name').value;
+            const updatedEmail = document.getElementById('edit-email').value;
+            const updatedPhone = document.getElementById('edit-phone').value;
+            currentUser.name = updatedName;
+            currentUser.email = updatedEmail;
+            currentUser.phone = updatedPhone;
+            setCurrentUser(currentUser);
+            if (userNameSpan)
+                userNameSpan.textContent = updatedName;
+            if (userEmailSpan)
+                userEmailSpan.textContent = updatedEmail;
+            if (userPhoneSpan)
+                userPhoneSpan.textContent = updatedPhone;
+            if (editProfileForm) {
+                editProfileForm.style.display = 'none';
+            }
+            alert('Profil sikeresen frissítve!');
+        });
+    }
+    // Setup logout
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            clearCurrentUser();
+            redirectToPage('./login.html');
+        });
+    }
 }
 function resetBookings() {
     activeBookingIds = [1, 2, 3, 4, 5]; // Reset to original values
@@ -178,6 +218,7 @@ function init() {
     if (savedBookings) {
         activeBookingIds = JSON.parse(savedBookings);
     }
+    console.log(localStorage.getItem('activeBookings'));
 }
 // Run initialization
 init();
@@ -196,15 +237,3 @@ function fetchFlights() {
         }
     });
 }
-function cancelBooking(flightId) {
-    activeBookingIds = activeBookingIds.filter(id => id !== flightId);
-    const flightElement = document.getElementById(`booking-${flightId}`);
-    if (flightElement) {
-        flightElement.remove();
-    }
-    // Optional: Save to localStorage to persist the active bookings
-    localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
-    alert(`Foglalás ${flightId} sikeresen törölve!`);
-}
-window.cancelBooking = cancelBooking;
-window.resetBookings = resetBookings;
