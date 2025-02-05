@@ -156,13 +156,17 @@ function setupUserPage() {
                 return;
             }
             const bookingsHTML = activeFlights.map(flight => `
-                <li class="list-group-item" id="booking-${flight.id}">
-                    <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
-                    ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
-                    Plane: ${flight.Plane_Type}<br>
-                    Price: ${flight.Price} USD<br>
-                    <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                <li class="list-group-item" id="booking-${flight.id}" style="display: flex; align-items: center;">
+                    <div style="flex-grow: 1;">
+                        <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
+                        ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
+                        Plane: ${flight.Plane_Type}<br>
+                        Price: ${flight.Price} USD<br>
+                        <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                    </div>
+                    <img src="${flight.Image}" alt="${flight.Plane_Type}" style="max-width: 200px; margin: 10px;">
                 </li>
+
             `).join('');
             bookingsList.innerHTML = bookingsHTML;
             bookingsList.insertAdjacentHTML('afterend', '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>');
