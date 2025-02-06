@@ -66,12 +66,25 @@ function handleLogin(event) {
         const user = users.find((u) => u.email === email && u.password === password);
         if (user) {
             setCurrentUser(user);
+            updateNavbarUsername();
             redirectToPage('./user.html');
         }
         else {
             alert('Hibás email vagy jelszó.');
         }
     });
+}
+function updateNavbarUsername() {
+    const currentUser = getCurrentUser();
+    const navbarUsername = document.getElementById('navbar-username');
+    if (currentUser && navbarUsername) {
+        navbarUsername.textContent = currentUser.name;
+    }
+    else {
+        if (navbarUsername) {
+            navbarUsername.textContent = "User";
+        }
+    }
 }
 // Handle register form submission
 function handleRegister(event) {
@@ -120,6 +133,7 @@ function fetchUsers() {
 // Handle user page interactions
 function setupUserPage() {
     const currentUser = getCurrentUser();
+    updateNavbarUsername(); // Add this at the start
     if (!currentUser) {
         redirectToPage('./login.html');
         return;
@@ -156,13 +170,17 @@ function setupUserPage() {
                 return;
             }
             const bookingsHTML = activeFlights.map(flight => `
-                <li class="list-group-item" id="booking-${flight.id}">
-                    <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
-                    ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
-                    Plane: ${flight.Plane_Type}<br>
-                    Price: ${flight.Price} USD<br>
-                    <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                <li class="list-group-item" id="booking-${flight.id}" style="display: flex; align-items: center;">
+                    <div style="flex-grow: 1;">
+                        <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
+                        ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
+                        Plane: ${flight.Plane_Type}<br>
+                        Price: ${flight.Price} USD<br>
+                        <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                    </div>
+                    <img src="${flight.Image}" alt="${flight.Plane_Type}" style="max-width: 200px; margin: 10px;">
                 </li>
+
             `).join('');
             bookingsList.innerHTML = bookingsHTML;
             bookingsList.insertAdjacentHTML('afterend', '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>');
@@ -218,6 +236,7 @@ function setupUserPage() {
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
             clearCurrentUser();
+            updateNavbarUsername();
             redirectToPage('./login.html');
         });
     }
@@ -242,11 +261,12 @@ function initializeActiveBookings() {
 function init() {
     fetchallFlightsData();
     initializeActiveBookings();
+    updateNavbarUsername(); // Add this line
     if (document.getElementById('login-form')) {
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
-        loginForm.addEventListener('submit', handleLogin);
-        registerForm.addEventListener('submit', handleRegister);
+        loginForm.addEventListener('submit', (event) => handleLogin(event));
+        registerForm.addEventListener('submit', (event) => handleRegister(event));
     }
     else if (document.getElementById('user-name')) {
         setupUserPage();
@@ -255,8 +275,6 @@ function init() {
     if (savedBookings) {
         activeBookingIds = JSON.parse(savedBookings);
     }
-    console.log(localStorage.getItem('activeBookings'));
 }
 // Run initialization
 init();
-// Utility function to fetch flights (simulating a database fetch)

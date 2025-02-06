@@ -1,3 +1,5 @@
+import { log } from "console";
+
 (window as any).cancelBooking = cancelBooking;
 (window as any).resetBookings = resetBookings;
 
@@ -66,11 +68,28 @@ async function handleLogin(event: SubmitEvent) {
 
     if (user) {
         setCurrentUser(user);
+        updateNavbarUsername();
         redirectToPage('./user.html');
+        
     } else {
         alert('Hibás email vagy jelszó.');
     }
 }
+
+function updateNavbarUsername() {
+    const currentUser = getCurrentUser();
+    const navbarUsername = document.getElementById('navbar-username');
+    
+    if (currentUser && navbarUsername) {
+        navbarUsername.textContent = currentUser.name;
+    } else {
+        if (navbarUsername) {
+            navbarUsername.textContent = "User";
+        }
+    }
+}
+
+
 
 // Handle register form submission
 async function handleRegister(event: SubmitEvent) {
@@ -116,6 +135,8 @@ async function fetchUsers(): Promise<any[]> {
 // Handle user page interactions
 function setupUserPage() {
     const currentUser = getCurrentUser();
+    updateNavbarUsername(); // Add this at the start
+    
     if (!currentUser) {
         redirectToPage('./login.html');
         return;
@@ -159,13 +180,17 @@ function setupUserPage() {
             }
     
             const bookingsHTML = activeFlights.map(flight => `
-                <li class="list-group-item" id="booking-${flight.id}">
-                    <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
-                    ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
-                    Plane: ${flight.Plane_Type}<br>
-                    Price: ${flight.Price} USD<br>
-                    <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                <li class="list-group-item" id="booking-${flight.id}" style="display: flex; align-items: center;">
+                    <div style="flex-grow: 1;">
+                        <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
+                        ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
+                        Plane: ${flight.Plane_Type}<br>
+                        Price: ${flight.Price} USD<br>
+                        <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                    </div>
+                    <img src="${flight.Image}" alt="${flight.Plane_Type}" style="max-width: 200px; margin: 10px;">
                 </li>
+
             `).join('');
     
             bookingsList.innerHTML = bookingsHTML;
@@ -228,6 +253,7 @@ function setupUserPage() {
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
             clearCurrentUser();
+            updateNavbarUsername();
             redirectToPage('./login.html');
         });
     }
@@ -251,31 +277,24 @@ function initializeActiveBookings() {
 
 
 // Initialize the page based on contextfunction init() {
-function init() {
-    fetchallFlightsData();
-    initializeActiveBookings();
-    if (document.getElementById('login-form')) {
-        const loginForm = document.getElementById('login-form') as HTMLFormElement;
-        const registerForm = document.getElementById('register-form') as HTMLFormElement;
-
-        loginForm.addEventListener('submit', handleLogin);
-        registerForm.addEventListener('submit', handleRegister);
-    } else if (document.getElementById('user-name')) {
-        setupUserPage();
-    }
-    const savedBookings = localStorage.getItem('activeBookings');
-    if (savedBookings) {
-        activeBookingIds = JSON.parse(savedBookings);
-    }
-
-    console.log(localStorage.getItem('activeBookings'));
+    function init() {
+        fetchallFlightsData();
+        initializeActiveBookings();
+        updateNavbarUsername(); // Add this line
+        if (document.getElementById('login-form')) {
+            const loginForm = document.getElementById('login-form') as HTMLFormElement;
+            const registerForm = document.getElementById('register-form') as HTMLFormElement;
     
-}
-
-
+            loginForm.addEventListener('submit', (event: SubmitEvent) => handleLogin(event));
+            registerForm.addEventListener('submit', (event: SubmitEvent) => handleRegister(event));
+        } else if (document.getElementById('user-name')) {
+            setupUserPage();
+        }
+        const savedBookings = localStorage.getItem('activeBookings');
+        if (savedBookings) {
+            activeBookingIds = JSON.parse(savedBookings);
+        }
+    }
+    
 // Run initialization
 init();
-
-
-
-// Utility function to fetch flights (simulating a database fetch)

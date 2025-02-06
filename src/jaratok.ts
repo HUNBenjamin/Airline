@@ -29,6 +29,9 @@ interface Plane{
 //     Flight_Number: string,
 // };
 
+let BigPlanes: Plane[];
+let From_Airport = "";
+let To_Airport = "";
 
 async function fetchPlanes() : Promise<Plane[]> {
     const response =  await fetch("http://localhost:3000/userFlights");
@@ -41,6 +44,7 @@ async function fetchPlanes() : Promise<Plane[]> {
 
 async function displayPlanes(type: string = 'all') {
     const plane = await fetchPlanes();
+    BigPlanes = plane;
     
     let citiesFrom = plane.map(x => x.Airport_From)
     let departureInputes = document.getElementById('departureDropDownMenuInput')
@@ -49,11 +53,8 @@ async function displayPlanes(type: string = 'all') {
         const option = document.createElement('option');
         option.value = `${element}`
         option.innerText = `${element}`
-        console.log('1');
         
         departureInputes?.appendChild(option);
-
-        //Honnan mennek kiszedése illetve hova mehetsz beleírása
     });
 
     
@@ -62,7 +63,37 @@ async function displayPlanes(type: string = 'all') {
 
 displayPlanes()
 
-// let filteredPlanes : Plane[] = [];
+document.getElementById('departureDropDownMenuInput')?.addEventListener("change",(event) => {
+    let destinationInputes = document.getElementById('destinationDropDownMenuInput')
+
+    const target = event.target as HTMLSelectElement;
+    let departure = target.value;
+    From_Airport = departure;
+    let lastAirports = BigPlanes.filter(x => x.Airport_From == departure)
+    lastAirports.forEach(element => {
+        const option = document.createElement('option');
+        option.value = `${element.Airport_To}`
+        option.innerText = `${element.Airport_To}`
+        
+        destinationInputes?.appendChild(option);
+    });
+    
+
+})
+document.getElementById('destinationDropDownMenuInput')?.addEventListener("change",(event) => {
+    const target = event.target as HTMLSelectElement;
+    let To_Airport = target.value;
+});
+
+
+(document.getElementById('flyingDateData') as HTMLInputElement).addEventListener("change", (event) => {
+    const target = event.target as HTMLSelectElement;
+    let flyingDateTime = target.value;
+    console.log(flyingDateTime);
+    
+    
+})
+
 
 
 
