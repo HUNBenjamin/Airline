@@ -76,17 +76,13 @@ function handleLogin(event) {
 }
 function updateNavbarUsername() {
     const currentUser = getCurrentUser();
-    console.log("Current user:", currentUser);
     const navbarUsername = document.getElementById('navbar-username');
-    console.log("Navbar element:", navbarUsername);
     if (currentUser && navbarUsername) {
         navbarUsername.textContent = currentUser.name;
-        console.log("Updated navbar with name:", currentUser.name);
     }
     else {
         if (navbarUsername) {
             navbarUsername.textContent = "User";
-            console.log("Reset to default User text");
         }
     }
 }
@@ -282,4 +278,3 @@ function init() {
 }
 // Run initialization
 init();
-// Utility function to fetch flights (simulating a database fetch)
