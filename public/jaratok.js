@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a, _b;
+var _c, _d;
 ;
 // interface Plane{
 //     id: number,
@@ -52,7 +52,7 @@ function displayPlanes() {
     });
 }
 displayPlanes();
-(_a = document.getElementById('departureDropDownMenuInput')) === null || _a === void 0 ? void 0 : _a.addEventListener("change", (event) => {
+(_c = document.getElementById('departureDropDownMenuInput')) === null || _c === void 0 ? void 0 : _c.addEventListener("change", (event) => {
     let destinationInputes = document.getElementById('destinationDropDownMenuInput');
     const target = event.target;
     let departure = target.value;
@@ -65,7 +65,7 @@ displayPlanes();
         destinationInputes === null || destinationInputes === void 0 ? void 0 : destinationInputes.appendChild(option);
     });
 });
-(_b = document.getElementById('destinationDropDownMenuInput')) === null || _b === void 0 ? void 0 : _b.addEventListener("change", (event) => {
+(_d = document.getElementById('destinationDropDownMenuInput')) === null || _d === void 0 ? void 0 : _d.addEventListener("change", (event) => {
     const target = event.target;
     let To_Airport = target.value;
 });
