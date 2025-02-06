@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var _a, _b;
 ;
 // interface Plane{
 //     id: number,
@@ -23,6 +24,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 //     Free_seats: number,
 //     Flight_Number: string,
 // };
+let BigPlanes;
+let From_Airport = "";
+let To_Airport = "";
 function fetchPlanes() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch("http://localhost:3000/userFlights");
@@ -36,18 +40,34 @@ function fetchPlanes() {
 function displayPlanes() {
     return __awaiter(this, arguments, void 0, function* (type = 'all') {
         const plane = yield fetchPlanes();
+        BigPlanes = plane;
         let citiesFrom = plane.map(x => x.Airport_From);
         let departureInputes = document.getElementById('departureDropDownMenuInput');
         citiesFrom.forEach(element => {
             const option = document.createElement('option');
             option.value = `${element}`;
             option.innerText = `${element}`;
-            console.log('1');
             departureInputes === null || departureInputes === void 0 ? void 0 : departureInputes.appendChild(option);
-            //Honnan mennek kiszedése illetve hova mehetsz beleírása
         });
     });
 }
 displayPlanes();
+(_a = document.getElementById('departureDropDownMenuInput')) === null || _a === void 0 ? void 0 : _a.addEventListener("change", (event) => {
+    let destinationInputes = document.getElementById('destinationDropDownMenuInput');
+    const target = event.target;
+    let departure = target.value;
+    From_Airport = departure;
+    let lastAirports = BigPlanes.filter(x => x.Airport_From == departure);
+    lastAirports.forEach(element => {
+        const option = document.createElement('option');
+        option.value = `${element.Airport_To}`;
+        option.innerText = `${element.Airport_To}`;
+        destinationInputes === null || destinationInputes === void 0 ? void 0 : destinationInputes.appendChild(option);
+    });
+});
+(_b = document.getElementById('destinationDropDownMenuInput')) === null || _b === void 0 ? void 0 : _b.addEventListener("change", (event) => {
+    const target = event.target;
+    let To_Airport = target.value;
+});
 export {};
 // let filteredPlanes : Plane[] = [];
