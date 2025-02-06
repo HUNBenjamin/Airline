@@ -69,5 +69,9 @@ displayPlanes();
     const target = event.target;
     let To_Airport = target.value;
 });
+document.getElementById('flyingDateData').addEventListener("change", (event) => {
+    const target = event.target;
+    let flyingDateTime = target.value;
+    console.log(flyingDateTime);
+});
 export {};
-// let filteredPlanes : Plane[] = [];

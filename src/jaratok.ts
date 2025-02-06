@@ -83,10 +83,17 @@ document.getElementById('departureDropDownMenuInput')?.addEventListener("change"
 document.getElementById('destinationDropDownMenuInput')?.addEventListener("change",(event) => {
     const target = event.target as HTMLSelectElement;
     let To_Airport = target.value;
+});
+
+
+(document.getElementById('flyingDateData') as HTMLInputElement).addEventListener("change", (event) => {
+    const target = event.target as HTMLSelectElement;
+    let flyingDateTime = target.value;
+    console.log(flyingDateTime);
+    
+    
 })
 
-
-// let filteredPlanes : Plane[] = [];
 
 
 
