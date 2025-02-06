@@ -66,12 +66,29 @@ function handleLogin(event) {
         const user = users.find((u) => u.email === email && u.password === password);
         if (user) {
             setCurrentUser(user);
+            updateNavbarUsername();
             redirectToPage('./user.html');
         }
         else {
             alert('Hibás email vagy jelszó.');
         }
     });
+}
+function updateNavbarUsername() {
+    const currentUser = getCurrentUser();
+    console.log("Current user:", currentUser);
+    const navbarUsername = document.getElementById('navbar-username');
+    console.log("Navbar element:", navbarUsername);
+    if (currentUser && navbarUsername) {
+        navbarUsername.textContent = currentUser.name;
+        console.log("Updated navbar with name:", currentUser.name);
+    }
+    else {
+        if (navbarUsername) {
+            navbarUsername.textContent = "User";
+            console.log("Reset to default User text");
+        }
+    }
 }
 // Handle register form submission
 function handleRegister(event) {
@@ -120,6 +137,7 @@ function fetchUsers() {
 // Handle user page interactions
 function setupUserPage() {
     const currentUser = getCurrentUser();
+    updateNavbarUsername(); // Add this at the start
     if (!currentUser) {
         redirectToPage('./login.html');
         return;
@@ -222,6 +240,7 @@ function setupUserPage() {
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
             clearCurrentUser();
+            updateNavbarUsername();
             redirectToPage('./login.html');
         });
     }
@@ -246,11 +265,12 @@ function initializeActiveBookings() {
 function init() {
     fetchallFlightsData();
     initializeActiveBookings();
+    updateNavbarUsername(); // Add this line
     if (document.getElementById('login-form')) {
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
-        loginForm.addEventListener('submit', handleLogin);
-        registerForm.addEventListener('submit', handleRegister);
+        loginForm.addEventListener('submit', (event) => handleLogin(event));
+        registerForm.addEventListener('submit', (event) => handleRegister(event));
     }
     else if (document.getElementById('user-name')) {
         setupUserPage();
@@ -259,7 +279,6 @@ function init() {
     if (savedBookings) {
         activeBookingIds = JSON.parse(savedBookings);
     }
-    console.log(localStorage.getItem('activeBookings'));
 }
 // Run initialization
 init();
