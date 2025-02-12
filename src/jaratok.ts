@@ -1,5 +1,3 @@
-import { log } from "console";
-
 interface Plane{
     id: number,
     Departure_Date: string,
@@ -29,9 +27,10 @@ interface Plane{
 //     Flight_Number: string,
 // };
 
-let BigPlanes: Plane[];
+let AllPlanes: Plane[];
 let From_Airport = "";
 let To_Airport = "";
+let FlyingDateTime = "";
 
 async function fetchPlanes() : Promise<Plane[]> {
     const response =  await fetch("http://localhost:3000/userFlights");
@@ -44,7 +43,7 @@ async function fetchPlanes() : Promise<Plane[]> {
 
 async function displayPlanes(type: string = 'all') {
     const plane = await fetchPlanes();
-    BigPlanes = plane;
+    AllPlanes = plane;
     
     let citiesFrom = plane.map(x => x.Airport_From)
     let departureInputes = document.getElementById('departureDropDownMenuInput')
@@ -69,7 +68,7 @@ document.getElementById('departureDropDownMenuInput')?.addEventListener("change"
     const target = event.target as HTMLSelectElement;
     let departure = target.value;
     From_Airport = departure;
-    let lastAirports = BigPlanes.filter(x => x.Airport_From == departure)
+    let lastAirports = AllPlanes.filter(x => x.Airport_From == departure)
     lastAirports.forEach(element => {
         const option = document.createElement('option');
         option.value = `${element.Airport_To}`
@@ -82,22 +81,51 @@ document.getElementById('departureDropDownMenuInput')?.addEventListener("change"
 })
 document.getElementById('destinationDropDownMenuInput')?.addEventListener("change",(event) => {
     const target = event.target as HTMLSelectElement;
-    let To_Airport = target.value;
+    To_Airport = target.value;
+    const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport)
+    console.log(AvailablePlanes);
+    
 });
 
 
 (document.getElementById('flyingDateData') as HTMLInputElement).addEventListener("change", (event) => {
     const target = event.target as HTMLSelectElement;
-    let flyingDateTime = target.value;
-    console.log(flyingDateTime);
+    FlyingDateTime = target.value;
+    
     
     
 })
 
+document.getElementById('DoneButton')?.addEventListener("click", () => {
 
-
-
-
-
-
-
+    const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport)//.filter(x => x.Departure_Date < FlyingDateTime)
+    let flightDiv = document.getElementById('fromDiv');
+    AvailablePlanes.forEach(element => {
+        const myDiv = document.createElement('div');
+        myDiv.innerHTML += `<div class="flight-card">
+                <div class="flight-info">
+                    <img src="img/Logo_1000-1000.png" alt="Airline Logo" width="100">
+                    <div id="flightFromDataFill" class="flight-time">
+                        <strong>${element.Departure_Time}</strong>
+                        <span>${element.Airport_From}</span>
+                    </div>
+                    <div id="flightCodeAndNumberFill" class="flight-time">
+                        ✈ ${element.Flight_Number}
+                        <span>${element.Destination_Time - element.Departure_Time}</span>
+                    </div>
+                    <div id="flightToDataFill" class="flight-time">
+                        <strong>${element.Destination_Time}</strong>
+                        <span>${element.Airport_To}</span>
+                    </div>
+                </div>
+                <div id="filghtPriceFill" class="flight-price">
+                    <del>${element.Price} Eur</del>
+                    <!-- <div style="color: red; font-size: 18px;"><strong>Ft25,529</strong></div> -->
+                    <button class="select-btn">Select</button>
+                </div>
+            </div>`;
+        
+            flightDiv?.appendChild(myDiv);
+        
+    });
+})

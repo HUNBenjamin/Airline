@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a, _b;
+var _c, _d, _e;
 ;
 // interface Plane{
 //     id: number,
@@ -24,9 +25,10 @@ var _a, _b;
 //     Free_seats: number,
 //     Flight_Number: string,
 // };
-let BigPlanes;
+let AllPlanes;
 let From_Airport = "";
 let To_Airport = "";
+let FlyingDateTime = "";
 function fetchPlanes() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch("http://localhost:3000/userFlights");
@@ -40,7 +42,7 @@ function fetchPlanes() {
 function displayPlanes() {
     return __awaiter(this, arguments, void 0, function* (type = 'all') {
         const plane = yield fetchPlanes();
-        BigPlanes = plane;
+        AllPlanes = plane;
         let citiesFrom = plane.map(x => x.Airport_From);
         let departureInputes = document.getElementById('departureDropDownMenuInput');
         citiesFrom.forEach(element => {
@@ -52,12 +54,12 @@ function displayPlanes() {
     });
 }
 displayPlanes();
-(_a = document.getElementById('departureDropDownMenuInput')) === null || _a === void 0 ? void 0 : _a.addEventListener("change", (event) => {
+(_c = document.getElementById('departureDropDownMenuInput')) === null || _c === void 0 ? void 0 : _c.addEventListener("change", (event) => {
     let destinationInputes = document.getElementById('destinationDropDownMenuInput');
     const target = event.target;
     let departure = target.value;
     From_Airport = departure;
-    let lastAirports = BigPlanes.filter(x => x.Airport_From == departure);
+    let lastAirports = AllPlanes.filter(x => x.Airport_From == departure);
     lastAirports.forEach(element => {
         const option = document.createElement('option');
         option.value = `${element.Airport_To}`;
@@ -65,13 +67,43 @@ displayPlanes();
         destinationInputes === null || destinationInputes === void 0 ? void 0 : destinationInputes.appendChild(option);
     });
 });
-(_b = document.getElementById('destinationDropDownMenuInput')) === null || _b === void 0 ? void 0 : _b.addEventListener("change", (event) => {
+(_d = document.getElementById('destinationDropDownMenuInput')) === null || _d === void 0 ? void 0 : _d.addEventListener("change", (event) => {
     const target = event.target;
-    let To_Airport = target.value;
+    To_Airport = target.value;
+    const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport);
+    console.log(AvailablePlanes);
 });
 document.getElementById('flyingDateData').addEventListener("change", (event) => {
     const target = event.target;
-    let flyingDateTime = target.value;
-    console.log(flyingDateTime);
+    FlyingDateTime = target.value;
 });
-export {};
+(_e = document.getElementById('DoneButton')) === null || _e === void 0 ? void 0 : _e.addEventListener("click", () => {
+    const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport); //.filter(x => x.Departure_Date < FlyingDateTime)
+    let flightDiv = document.getElementById('fromDiv');
+    AvailablePlanes.forEach(element => {
+        const myDiv = document.createElement('div');
+        myDiv.innerHTML += `<div class="flight-card">
+                <div class="flight-info">
+                    <img src="img/Logo_1000-1000.png" alt="Airline Logo" width="100">
+                    <div id="flightFromDataFill" class="flight-time">
+                        <strong>${element.Departure_Time}</strong>
+                        <span>${element.Airport_From}</span>
+                    </div>
+                    <div id="flightCodeAndNumberFill" class="flight-time">
+                        ✈ ${element.Flight_Number}
+                        <span>${element.Destination_Time - element.Departure_Time}</span>
+                    </div>
+                    <div id="flightToDataFill" class="flight-time">
+                        <strong>${element.Destination_Time}</strong>
+                        <span>${element.Airport_To}</span>
+                    </div>
+                </div>
+                <div id="filghtPriceFill" class="flight-price">
+                    <del>${element.Price} Eur</del>
+                    <!-- <div style="color: red; font-size: 18px;"><strong>Ft25,529</strong></div> -->
+                    <button class="select-btn">Select</button>
+                </div>
+            </div>`;
+        flightDiv === null || flightDiv === void 0 ? void 0 : flightDiv.appendChild(myDiv);
+    });
+});
