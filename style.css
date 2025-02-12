@@ -104,3 +104,42 @@ header nav a:hover {
 #destinationDropDownMenuInput {
     min-width: 200px;
 }
+
+.flight-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    width: 600px;
+    background: #fff;
+}
+.flight-info {
+    display: flex;
+    align-items: center;
+}
+.flight-time {
+    margin: 0 10px;
+    text-align: center;
+}
+.flight-time span {
+    display: block;
+    font-size: 14px;
+    color: gray;
+}
+.flight-price {
+    text-align: right;
+}
+.flight-price del {
+    color: gray;
+    font-size: 14px;
+}
+.select-btn {
+    background: #0047ab;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
