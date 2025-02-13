@@ -2011,5 +2011,2247 @@
       "password": "12345",
       "bookings": []
     }
+  ],
+  "hotels": [
+    {
+      "id": 1,
+      "name": "Frankfurt Grand Hotel",
+      "city": "Frankfurt",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-23"
+    },
+    {
+      "id": 2,
+      "name": "Frankfurt Skyline Inn",
+      "city": "Frankfurt",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-03-28"
+    },
+    {
+      "id": 3,
+      "name": "Frankfurt Luxury Suites",
+      "city": "Frankfurt",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-05"
+    },
+    {
+      "id": 4,
+      "name": "Frankfurt City Center Plaza",
+      "city": "Frankfurt",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-04"
+    },
+    {
+      "id": 5,
+      "name": "Frankfurt Riverside Retreat",
+      "city": "Frankfurt",
+      "pricePerNight": 180,
+      "maxGuests": 11,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-11"
+    },
+    {
+      "id": 6,
+      "name": "New York Grand Hotel",
+      "city": "New York",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-20"
+    },
+    {
+      "id": 7,
+      "name": "New York Skyline Inn",
+      "city": "New York",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-19"
+    },
+    {
+      "id": 8,
+      "name": "New York Luxury Suites",
+      "city": "New York",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-28"
+    },
+    {
+      "id": 9,
+      "name": "New York City Center Plaza",
+      "city": "New York",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-06"
+    },
+    {
+      "id": 10,
+      "name": "New York Riverside Retreat",
+      "city": "New York",
+      "pricePerNight": 180,
+      "maxGuests": 9,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-12"
+    },
+    {
+      "id": 11,
+      "name": "San Francisco Grand Hotel",
+      "city": "San Francisco",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-03-30"
+    },
+    {
+      "id": 12,
+      "name": "San Francisco Skyline Inn",
+      "city": "San Francisco",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-13"
+    },
+    {
+      "id": 13,
+      "name": "San Francisco Luxury Suites",
+      "city": "San Francisco",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-03-18"
+    },
+    {
+      "id": 14,
+      "name": "San Francisco City Center Plaza",
+      "city": "San Francisco",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-13"
+    },
+    {
+      "id": 15,
+      "name": "San Francisco Riverside Retreat",
+      "city": "San Francisco",
+      "pricePerNight": 180,
+      "maxGuests": 7,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-15"
+    },
+    {
+      "id": 16,
+      "name": "Dublin Grand Hotel",
+      "city": "Dublin",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-07"
+    },
+    {
+      "id": 17,
+      "name": "Dublin Skyline Inn",
+      "city": "Dublin",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-21"
+    },
+    {
+      "id": 18,
+      "name": "Dublin Luxury Suites",
+      "city": "Dublin",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-02-05"
+    },
+    {
+      "id": 19,
+      "name": "Dublin City Center Plaza",
+      "city": "Dublin",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-22"
+    },
+    {
+      "id": 20,
+      "name": "Dublin Riverside Retreat",
+      "city": "Dublin",
+      "pricePerNight": 180,
+      "maxGuests": 12,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-16"
+    },
+    {
+      "id": 21,
+      "name": "Zurich Grand Hotel",
+      "city": "Zurich",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-02"
+    },
+    {
+      "id": 22,
+      "name": "Zurich Skyline Inn",
+      "city": "Zurich",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-07"
+    },
+    {
+      "id": 23,
+      "name": "Zurich Luxury Suites",
+      "city": "Zurich",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-05"
+    },
+    {
+      "id": 24,
+      "name": "Zurich City Center Plaza",
+      "city": "Zurich",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-05"
+    },
+    {
+      "id": 25,
+      "name": "Zurich Riverside Retreat",
+      "city": "Zurich",
+      "pricePerNight": 180,
+      "maxGuests": 10,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-13"
+    },
+    {
+      "id": 26,
+      "name": "Singapore Grand Hotel",
+      "city": "Singapore",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-18"
+    },
+    {
+      "id": 27,
+      "name": "Singapore Skyline Inn",
+      "city": "Singapore",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-24"
+    },
+    {
+      "id": 28,
+      "name": "Singapore Luxury Suites",
+      "city": "Singapore",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-21"
+    },
+    {
+      "id": 29,
+      "name": "Singapore City Center Plaza",
+      "city": "Singapore",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-12"
+    },
+    {
+      "id": 30,
+      "name": "Singapore Riverside Retreat",
+      "city": "Singapore",
+      "pricePerNight": 180,
+      "maxGuests": 8,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-13"
+    },
+    {
+      "id": 31,
+      "name": "Berlin Grand Hotel",
+      "city": "Berlin",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-27"
+    },
+    {
+      "id": 32,
+      "name": "Berlin Skyline Inn",
+      "city": "Berlin",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-19"
+    },
+    {
+      "id": 33,
+      "name": "Berlin Luxury Suites",
+      "city": "Berlin",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-25"
+    },
+    {
+      "id": 34,
+      "name": "Berlin City Center Plaza",
+      "city": "Berlin",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-23"
+    },
+    {
+      "id": 35,
+      "name": "Berlin Riverside Retreat",
+      "city": "Berlin",
+      "pricePerNight": 180,
+      "maxGuests": 6,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-11"
+    },
+    {
+      "id": 36,
+      "name": "Delhi Grand Hotel",
+      "city": "Delhi",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-18"
+    },
+    {
+      "id": 37,
+      "name": "Delhi Skyline Inn",
+      "city": "Delhi",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-30"
+    },
+    {
+      "id": 38,
+      "name": "Delhi Luxury Suites",
+      "city": "Delhi",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-06"
+    },
+    {
+      "id": 39,
+      "name": "Delhi City Center Plaza",
+      "city": "Delhi",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-20"
+    },
+    {
+      "id": 40,
+      "name": "Delhi Riverside Retreat",
+      "city": "Delhi",
+      "pricePerNight": 180,
+      "maxGuests": 11,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-10"
+    },
+    {
+      "id": 41,
+      "name": "Oslo Grand Hotel",
+      "city": "Oslo",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-08"
+    },
+    {
+      "id": 42,
+      "name": "Oslo Skyline Inn",
+      "city": "Oslo",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-22"
+    },
+    {
+      "id": 43,
+      "name": "Oslo Luxury Suites",
+      "city": "Oslo",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-28"
+    },
+    {
+      "id": 44,
+      "name": "Oslo City Center Plaza",
+      "city": "Oslo",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-15"
+    },
+    {
+      "id": 45,
+      "name": "Oslo Riverside Retreat",
+      "city": "Oslo",
+      "pricePerNight": 180,
+      "maxGuests": 9,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-22"
+    },
+    {
+      "id": 46,
+      "name": "Stockholm Grand Hotel",
+      "city": "Stockholm",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-02"
+    },
+    {
+      "id": 47,
+      "name": "Stockholm Skyline Inn",
+      "city": "Stockholm",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-24"
+    },
+    {
+      "id": 48,
+      "name": "Stockholm Luxury Suites",
+      "city": "Stockholm",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-04"
+    },
+    {
+      "id": 49,
+      "name": "Stockholm City Center Plaza",
+      "city": "Stockholm",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-08"
+    },
+    {
+      "id": 50,
+      "name": "Stockholm Riverside Retreat",
+      "city": "Stockholm",
+      "pricePerNight": 180,
+      "maxGuests": 7,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-24"
+    },
+    {
+      "id": 51,
+      "name": "Sydney Grand Hotel",
+      "city": "Sydney",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-04"
+    },
+    {
+      "id": 52,
+      "name": "Sydney Skyline Inn",
+      "city": "Sydney",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-12"
+    },
+    {
+      "id": 53,
+      "name": "Sydney Luxury Suites",
+      "city": "Sydney",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-25"
+    },
+    {
+      "id": 54,
+      "name": "Sydney City Center Plaza",
+      "city": "Sydney",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-14"
+    },
+    {
+      "id": 55,
+      "name": "Sydney Riverside Retreat",
+      "city": "Sydney",
+      "pricePerNight": 180,
+      "maxGuests": 12,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-06"
+    },
+    {
+      "id": 56,
+      "name": "Munich Grand Hotel",
+      "city": "Munich",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-29"
+    },
+    {
+      "id": 57,
+      "name": "Munich Skyline Inn",
+      "city": "Munich",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-08"
+    },
+    {
+      "id": 58,
+      "name": "Munich Luxury Suites",
+      "city": "Munich",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-19"
+    },
+    {
+      "id": 59,
+      "name": "Munich City Center Plaza",
+      "city": "Munich",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-05"
+    },
+    {
+      "id": 60,
+      "name": "Munich Riverside Retreat",
+      "city": "Munich",
+      "pricePerNight": 180,
+      "maxGuests": 10,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-26"
+    },
+    {
+      "id": 61,
+      "name": "Vienna Grand Hotel",
+      "city": "Vienna",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-29"
+    },
+    {
+      "id": 62,
+      "name": "Vienna Skyline Inn",
+      "city": "Vienna",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-12"
+    },
+    {
+      "id": 63,
+      "name": "Vienna Luxury Suites",
+      "city": "Vienna",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-16"
+    },
+    {
+      "id": 64,
+      "name": "Vienna City Center Plaza",
+      "city": "Vienna",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-08"
+    },
+    {
+      "id": 65,
+      "name": "Vienna Riverside Retreat",
+      "city": "Vienna",
+      "pricePerNight": 180,
+      "maxGuests": 8,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-04"
+    },
+    {
+      "id": 66,
+      "name": "Prague Grand Hotel",
+      "city": "Prague",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-07"
+    },
+    {
+      "id": 67,
+      "name": "Prague Skyline Inn",
+      "city": "Prague",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-02"
+    },
+    {
+      "id": 68,
+      "name": "Prague Luxury Suites",
+      "city": "Prague",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-09"
+    },
+    {
+      "id": 69,
+      "name": "Prague City Center Plaza",
+      "city": "Prague",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-17"
+    },
+    {
+      "id": 70,
+      "name": "Prague Riverside Retreat",
+      "city": "Prague",
+      "pricePerNight": 180,
+      "maxGuests": 6,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-24"
+    },
+    {
+      "id": 71,
+      "name": "Budapest Grand Hotel",
+      "city": "Budapest",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-11"
+    },
+    {
+      "id": 72,
+      "name": "Budapest Skyline Inn",
+      "city": "Budapest",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-02-05"
+    },
+    {
+      "id": 73,
+      "name": "Budapest Luxury Suites",
+      "city": "Budapest",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-15"
+    },
+    {
+      "id": 74,
+      "name": "Budapest City Center Plaza",
+      "city": "Budapest",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-21"
+    },
+    {
+      "id": 75,
+      "name": "Budapest Riverside Retreat",
+      "city": "Budapest",
+      "pricePerNight": 180,
+      "maxGuests": 11,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-14"
+    },
+    {
+      "id": 76,
+      "name": "Dubai Grand Hotel",
+      "city": "Dubai",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-31"
+    },
+    {
+      "id": 77,
+      "name": "Dubai Skyline Inn",
+      "city": "Dubai",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-18"
+    },
+    {
+      "id": 78,
+      "name": "Dubai Luxury Suites",
+      "city": "Dubai",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-25"
+    },
+    {
+      "id": 79,
+      "name": "Dubai City Center Plaza",
+      "city": "Dubai",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-23"
+    },
+    {
+      "id": 80,
+      "name": "Dubai Riverside Retreat",
+      "city": "Dubai",
+      "pricePerNight": 180,
+      "maxGuests": 9,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-29"
+    },
+    {
+      "id": 81,
+      "name": "Tokyo Grand Hotel",
+      "city": "Tokyo",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-06"
+    },
+    {
+      "id": 82,
+      "name": "Tokyo Skyline Inn",
+      "city": "Tokyo",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-25"
+    },
+    {
+      "id": 83,
+      "name": "Tokyo Luxury Suites",
+      "city": "Tokyo",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-25"
+    },
+    {
+      "id": 84,
+      "name": "Tokyo City Center Plaza",
+      "city": "Tokyo",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-18"
+    },
+    {
+      "id": 85,
+      "name": "Tokyo Riverside Retreat",
+      "city": "Tokyo",
+      "pricePerNight": 180,
+      "maxGuests": 7,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-02"
+    },
+    {
+      "id": 86,
+      "name": "Paris Grand Hotel",
+      "city": "Paris",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-27"
+    },
+    {
+      "id": 87,
+      "name": "Paris Skyline Inn",
+      "city": "Paris",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-17"
+    },
+    {
+      "id": 88,
+      "name": "Paris Luxury Suites",
+      "city": "Paris",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-04"
+    },
+    {
+      "id": 89,
+      "name": "Paris City Center Plaza",
+      "city": "Paris",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-17"
+    },
+    {
+      "id": 90,
+      "name": "Paris Riverside Retreat",
+      "city": "Paris",
+      "pricePerNight": 180,
+      "maxGuests": 12,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-30"
+    },
+    {
+      "id": 91,
+      "name": "Amsterdam Grand Hotel",
+      "city": "Amsterdam",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-11"
+    },
+    {
+      "id": 92,
+      "name": "Amsterdam Skyline Inn",
+      "city": "Amsterdam",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-03-22"
+    },
+    {
+      "id": 93,
+      "name": "Amsterdam Luxury Suites",
+      "city": "Amsterdam",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-16"
+    },
+    {
+      "id": 94,
+      "name": "Amsterdam City Center Plaza",
+      "city": "Amsterdam",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 95,
+      "name": "Amsterdam Riverside Retreat",
+      "city": "Amsterdam",
+      "pricePerNight": 180,
+      "maxGuests": 10,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-02-12"
+    },
+    {
+      "id": 96,
+      "name": "Lisbon Grand Hotel",
+      "city": "Lisbon",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-04"
+    },
+    {
+      "id": 97,
+      "name": "Lisbon Skyline Inn",
+      "city": "Lisbon",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-15"
+    },
+    {
+      "id": 98,
+      "name": "Lisbon Luxury Suites",
+      "city": "Lisbon",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-25"
+    },
+    {
+      "id": 99,
+      "name": "Lisbon City Center Plaza",
+      "city": "Lisbon",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-07"
+    },
+    {
+      "id": 100,
+      "name": "Lisbon Riverside Retreat",
+      "city": "Lisbon",
+      "pricePerNight": 180,
+      "maxGuests": 8,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-16"
+    },
+    {
+      "id": 101,
+      "name": "Rome Grand Hotel",
+      "city": "Rome",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-26"
+    },
+    {
+      "id": 102,
+      "name": "Rome Skyline Inn",
+      "city": "Rome",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-17"
+    },
+    {
+      "id": 103,
+      "name": "Rome Luxury Suites",
+      "city": "Rome",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-30"
+    },
+    {
+      "id": 104,
+      "name": "Rome City Center Plaza",
+      "city": "Rome",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-12"
+    },
+    {
+      "id": 105,
+      "name": "Rome Riverside Retreat",
+      "city": "Rome",
+      "pricePerNight": 180,
+      "maxGuests": 6,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-06"
+    },
+    {
+      "id": 106,
+      "name": "Chicago Grand Hotel",
+      "city": "Chicago",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-03-22"
+    },
+    {
+      "id": 107,
+      "name": "Chicago Skyline Inn",
+      "city": "Chicago",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-03-18"
+    },
+    {
+      "id": 108,
+      "name": "Chicago Luxury Suites",
+      "city": "Chicago",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-02-03"
+    },
+    {
+      "id": 109,
+      "name": "Chicago City Center Plaza",
+      "city": "Chicago",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-18"
+    },
+    {
+      "id": 110,
+      "name": "Chicago Riverside Retreat",
+      "city": "Chicago",
+      "pricePerNight": 180,
+      "maxGuests": 11,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-23"
+    },
+    {
+      "id": 111,
+      "name": "Barcelona Grand Hotel",
+      "city": "Barcelona",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-24"
+    },
+    {
+      "id": 112,
+      "name": "Barcelona Skyline Inn",
+      "city": "Barcelona",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-25"
+    },
+    {
+      "id": 113,
+      "name": "Barcelona Luxury Suites",
+      "city": "Barcelona",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-01"
+    },
+    {
+      "id": 114,
+      "name": "Barcelona City Center Plaza",
+      "city": "Barcelona",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-23"
+    },
+    {
+      "id": 115,
+      "name": "Barcelona Riverside Retreat",
+      "city": "Barcelona",
+      "pricePerNight": 180,
+      "maxGuests": 9,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-01"
+    },
+    {
+      "id": 116,
+      "name": "Madrid Grand Hotel",
+      "city": "Madrid",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-13"
+    },
+    {
+      "id": 117,
+      "name": "Madrid Skyline Inn",
+      "city": "Madrid",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-29"
+    },
+    {
+      "id": 118,
+      "name": "Madrid Luxury Suites",
+      "city": "Madrid",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-11"
+    },
+    {
+      "id": 119,
+      "name": "Madrid City Center Plaza",
+      "city": "Madrid",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-03-26"
+    },
+    {
+      "id": 120,
+      "name": "Madrid Riverside Retreat",
+      "city": "Madrid",
+      "pricePerNight": 180,
+      "maxGuests": 7,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-09"
+    },
+    {
+      "id": 121,
+      "name": "Bangkok Grand Hotel",
+      "city": "Bangkok",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-02"
+    },
+    {
+      "id": 122,
+      "name": "Bangkok Skyline Inn",
+      "city": "Bangkok",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-08"
+    },
+    {
+      "id": 123,
+      "name": "Bangkok Luxury Suites",
+      "city": "Bangkok",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-08"
+    },
+    {
+      "id": 124,
+      "name": "Bangkok City Center Plaza",
+      "city": "Bangkok",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-03"
+    },
+    {
+      "id": 125,
+      "name": "Bangkok Riverside Retreat",
+      "city": "Bangkok",
+      "pricePerNight": 180,
+      "maxGuests": 12,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 126,
+      "name": "Melbourne Grand Hotel",
+      "city": "Melbourne",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-22"
+    },
+    {
+      "id": 127,
+      "name": "Melbourne Skyline Inn",
+      "city": "Melbourne",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-20"
+    },
+    {
+      "id": 128,
+      "name": "Melbourne Luxury Suites",
+      "city": "Melbourne",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-18"
+    },
+    {
+      "id": 129,
+      "name": "Melbourne City Center Plaza",
+      "city": "Melbourne",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-11-26"
+    },
+    {
+      "id": 130,
+      "name": "Melbourne Riverside Retreat",
+      "city": "Melbourne",
+      "pricePerNight": 180,
+      "maxGuests": 10,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-02"
+    },
+    {
+      "id": 131,
+      "name": "Helsinki Grand Hotel",
+      "city": "Helsinki",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-05-14"
+    },
+    {
+      "id": 132,
+      "name": "Helsinki Skyline Inn",
+      "city": "Helsinki",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-20"
+    },
+    {
+      "id": 133,
+      "name": "Helsinki Luxury Suites",
+      "city": "Helsinki",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-06-06"
+    },
+    {
+      "id": 134,
+      "name": "Helsinki City Center Plaza",
+      "city": "Helsinki",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-04"
+    },
+    {
+      "id": 135,
+      "name": "Helsinki Riverside Retreat",
+      "city": "Helsinki",
+      "pricePerNight": 180,
+      "maxGuests": 8,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-27"
+    },
+    {
+      "id": 136,
+      "name": "Copenhagen Grand Hotel",
+      "city": "Copenhagen",
+      "pricePerNight": 100,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Gym",
+        "Airport Shuttle"
+      ],
+      "rating": 4.3,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-21"
+    },
+    {
+      "id": 137,
+      "name": "Copenhagen Skyline Inn",
+      "city": "Copenhagen",
+      "pricePerNight": 120,
+      "maxGuests": 3,
+      "amenities": [
+        "Pool",
+        "Spa",
+        "Sauna",
+        "City View"
+      ],
+      "rating": 4.4,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-13"
+    },
+    {
+      "id": 138,
+      "name": "Copenhagen Luxury Suites",
+      "city": "Copenhagen",
+      "pricePerNight": 140,
+      "maxGuests": 4,
+      "amenities": [
+        "Parking",
+        "Restaurant",
+        "Bar",
+        "Conference Room"
+      ],
+      "rating": 4.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2026-01-12"
+    },
+    {
+      "id": 139,
+      "name": "Copenhagen City Center Plaza",
+      "city": "Copenhagen",
+      "pricePerNight": 160,
+      "maxGuests": 2,
+      "amenities": [
+        "Fine Dining",
+        "Rooftop Bar",
+        "Lake View",
+        "Beach Access"
+      ],
+      "rating": 4.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-04-22"
+    },
+    {
+      "id": 140,
+      "name": "Copenhagen Riverside Retreat",
+      "city": "Copenhagen",
+      "pricePerNight": 180,
+      "maxGuests": 6,
+      "amenities": [
+        "Sauna",
+        "Mountain View",
+        "Free Parking",
+        "Business Center"
+      ],
+      "rating": 4.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-03"
+    }
   ]
 }
