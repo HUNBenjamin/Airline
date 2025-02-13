@@ -1,5 +1,3 @@
-import { log } from "console";
-
 (window as any).cancelBooking = cancelBooking;
 (window as any).resetBookings = resetBookings;
 
