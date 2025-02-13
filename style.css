@@ -112,7 +112,7 @@ header nav a:hover {
     border: 1px solid #ddd;
     padding: 15px;
     border-radius: 8px;
-    width: 600px;
+    width: 800px;
     background: #fff;
 }
 .flight-info {
@@ -130,6 +130,7 @@ header nav a:hover {
 }
 .flight-price {
     text-align: right;
+    display: flex;
 }
 .flight-price del {
     color: gray;

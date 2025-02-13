@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _c, _d, _e;
-;
 // interface Plane{
 //     id: number,
 //     Departure_Date: string,
@@ -29,7 +28,8 @@ let AllPlanes;
 let From_Airport = "";
 let To_Airport = "";
 let FlyingDateTime = "";
-function fetchPlanes() {
+let AvailablePlanes;
+function fetchPlane() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch("http://localhost:3000/userFlights");
         if (!response.ok) {
@@ -39,9 +39,9 @@ function fetchPlanes() {
         return data;
     });
 }
-function displayPlanes() {
+function displayPlane() {
     return __awaiter(this, arguments, void 0, function* (type = 'all') {
-        const plane = yield fetchPlanes();
+        const plane = yield fetchPlane();
         AllPlanes = plane;
         let citiesFrom = plane.map(x => x.Airport_From);
         let departureInputes = document.getElementById('departureDropDownMenuInput');
@@ -53,7 +53,7 @@ function displayPlanes() {
         });
     });
 }
-displayPlanes();
+displayPlane();
 (_c = document.getElementById('departureDropDownMenuInput')) === null || _c === void 0 ? void 0 : _c.addEventListener("change", (event) => {
     let destinationInputes = document.getElementById('destinationDropDownMenuInput');
     const target = event.target;
@@ -70,15 +70,25 @@ displayPlanes();
 (_d = document.getElementById('destinationDropDownMenuInput')) === null || _d === void 0 ? void 0 : _d.addEventListener("change", (event) => {
     const target = event.target;
     To_Airport = target.value;
-    const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport);
+    AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport);
+    localStorage.setItem("planesList", JSON.stringify(AvailablePlanes));
     console.log(AvailablePlanes);
 });
-document.getElementById('flyingDateData').addEventListener("change", (event) => {
-    const target = event.target;
-    FlyingDateTime = target.value;
-});
-(_e = document.getElementById('DoneButton')) === null || _e === void 0 ? void 0 : _e.addEventListener("click", () => {
-    const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport); //.filter(x => x.Departure_Date < FlyingDateTime)
+// (document.getElementById('flyingDateData') as HTMLInputElement).addEventListener("change", (event) => {
+//     const target = event.target as HTMLSelectElement;
+//     FlyingDateTime = target.value;  
+// })
+(_e = document.getElementById('DoneButton')) === null || _e === void 0 ? void 0 : _e.addEventListener("click", (event) => {
+    event === null || event === void 0 ? void 0 : event.preventDefault();
+    console.log("Megy");
+    const storedPlanes = localStorage.getItem("planesList");
+    if (storedPlanes) {
+        const restoredPlanes = JSON.parse(storedPlanes);
+        console.log("Restored Planes List:", restoredPlanes);
+        console.log(restoredPlanes);
+        AvailablePlanes = restoredPlanes;
+    }
+    // const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport)//.filter(x => x.Departure_Date < FlyingDateTime)
     let flightDiv = document.getElementById('fromDiv');
     AvailablePlanes.forEach(element => {
         const myDiv = document.createElement('div');
@@ -99,11 +109,12 @@ document.getElementById('flyingDateData').addEventListener("change", (event) => 
                     </div>
                 </div>
                 <div id="filghtPriceFill" class="flight-price">
-                    <del>${element.Price} Eur</del>
+                    <p class="my-auto">${element.Price} Eur</p>
                     <!-- <div style="color: red; font-size: 18px;"><strong>Ft25,529</strong></div> -->
-                    <button class="select-btn">Select</button>
+                    <button class="select-btn ms-3">Select</button>
                 </div>
             </div>`;
+        console.log(myDiv);
         flightDiv === null || flightDiv === void 0 ? void 0 : flightDiv.appendChild(myDiv);
     });
 });
