@@ -21,6 +21,20 @@
     background-color: white;
 }
 
+.flight-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .flight-card button:hover {
+        background-color: #2980b9;
+    }
+
+
+    #cheapest-flights, #popular-flights {
+        margin: 20px auto;
+        max-width: 1200px;
+    }
 .flight-card h3 {
     margin-top: 0;
     color: #333;
@@ -71,9 +85,8 @@ h2 {
 html, body {
     width: 100%;
     height: 100%;   
-    background-image: url('img/firstSlide.jpg');
+    background-image: url('img/felhohatter.jpg');
     background-position: center;
-    background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
     height: 100%;
@@ -83,6 +96,24 @@ html, body {
     width: 20%;
 }
 
+.card {
+        margin: 15px;
+        min-width: 280px;
+    }
+    
+    .card-body {
+        padding: 25px;
+    }
+
+    .btn-lg {
+        padding: 12px 24px;
+        font-size: 18px;
+    }
+
+    .info-cards{
+        background-color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
 
     </style>
 </head>
@@ -107,6 +138,25 @@ html, body {
         <div id="cheapest-flights"></div>
         <h2>Legnépszerűbb repjegyek</h2>
         <div id="popular-flights"></div>
+    </div>
+
+    <div class="banner">
+        <p><strong>Surprise Sale:</strong> Get 20% off on all bookings! Offer valid until March 31st.</p>
+    </div>
+    
+    <div class="info-cards">
+        <div class="info-card">
+            <h3>Flight Delays</h3>
+            <p>Check real-time updates on flight schedules.</p>
+        </div>
+        <div class="info-card">
+            <h3>Booking Tips</h3>
+            <p>Find out how to make secure bookings through verified platforms.</p>
+        </div>
+        <div class="info-card">
+            <h3>Special Offers</h3>
+            <p>Explore our latest discounts and deals for your next trip.</p>
+        </div>
     </div>
     
     <script type="module" src="./public/ajanlatok.js"></script>
