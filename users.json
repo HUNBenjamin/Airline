@@ -11,7 +11,7 @@
       "Price": 381,
       "Plane_Type": "Boeing 737 MAX",
       "Free Seats": 43,
-      "Flight Number": "SKY575",
+      "Flight Number": "Amit nem kéne elrontani: id kövesse egymást, plane type 6 fajta lehet: Airbus A320, Airbus A321, Airbus A350, Boeing 737 MAX, Boeing 777, Boeing 787, az image meg ahogy lentebb van, ../img/planeSideProfile/ kezdőérték per után A320, A321, A350, B737, B777, B787, generáláskor ügyelni hogy a 320, 321, 737 rövidebb, a 350, 777, 787 hosszabb útvonalakon jár, ne vegyél fel új reptereket",
       "Image": "../img/planeSideProfile/B737.png"
     },
     {
