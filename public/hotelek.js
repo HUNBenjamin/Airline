@@ -28,6 +28,33 @@ function fetchPlanes() {
         return data;
     });
 }
+function saveFormData() {
+    const destinationSelect = document.getElementById('hotelDestinationSelect');
+    const guestsInput = document.getElementById('guestsInput');
+    const dateFromInput = document.getElementById('dateFromInput');
+    const dateToInput = document.getElementById('dateToInput');
+    const formData = {
+        destination: destinationSelect.value,
+        guests: guestsInput.value,
+        dateFrom: dateFromInput.value,
+        dateTo: dateToInput.value
+    };
+    localStorage.setItem('hotelFormData', JSON.stringify(formData));
+}
+function loadFormData() {
+    const formData = localStorage.getItem('hotelFormData');
+    if (formData) {
+        const parsedData = JSON.parse(formData);
+        const destinationSelect = document.getElementById('hotelDestinationSelect');
+        const guestsInput = document.getElementById('guestsInput');
+        const dateFromInput = document.getElementById('dateFromInput');
+        const dateToInput = document.getElementById('dateToInput');
+        destinationSelect.value = parsedData.destination;
+        guestsInput.value = parsedData.guests;
+        dateFromInput.value = parsedData.dateFrom;
+        dateToInput.value = parsedData.dateTo;
+    }
+}
 function initializeHotelSearch() {
     const searchForm = document.getElementById('hotelSearchForm');
     const destinationSelect = document.getElementById('hotelDestinationSelect');
@@ -43,7 +70,9 @@ function initializeHotelSearch() {
             new Date(hotel.availableFrom) <= new Date(dateFrom) &&
             new Date(hotel.availableTo) >= new Date(dateTo));
         displayFilteredHotels(filteredHotels, hotelContainer);
+        saveFormData();
     }));
+    loadFormData();
 }
 export function displayHotels() {
     return __awaiter(this, void 0, void 0, function* () {

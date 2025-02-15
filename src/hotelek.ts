@@ -44,6 +44,38 @@ async function fetchPlanes(): Promise<Flight[]> {
     return data;
 }
 
+function saveFormData() {
+    const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
+    const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
+    const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
+    const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
+
+    const formData = {
+        destination: destinationSelect.value,
+        guests: guestsInput.value,
+        dateFrom: dateFromInput.value,
+        dateTo: dateToInput.value
+    };
+
+    localStorage.setItem('hotelFormData', JSON.stringify(formData));
+}
+
+function loadFormData() {
+    const formData = localStorage.getItem('hotelFormData');
+    if (formData) {
+        const parsedData = JSON.parse(formData);
+        const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
+        const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
+        const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
+        const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
+
+        destinationSelect.value = parsedData.destination;
+        guestsInput.value = parsedData.guests;
+        dateFromInput.value = parsedData.dateFrom;
+        dateToInput.value = parsedData.dateTo;
+    }
+}
+
 function initializeHotelSearch() {
     const searchForm = document.getElementById('hotelSearchForm') as HTMLFormElement;
     const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
@@ -65,7 +97,10 @@ function initializeHotelSearch() {
         );
 
         displayFilteredHotels(filteredHotels, hotelContainer);
+        saveFormData();
     });
+
+    loadFormData();
 }
 
 export async function displayHotels(): Promise<void> {
