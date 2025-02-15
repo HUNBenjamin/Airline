@@ -24,25 +24,40 @@ export async function fetchPlanes(): Promise<Flight[]> {
 export async function displayPlanes(): Promise<void> {
     const planes = await fetchPlanes();
     const departureInputes = document.getElementById('departureDropDownMenuInput');
-    const citiesFrom = planes.map(x => x.Airport_From);
+    const destinationInputes = document.getElementById('destinationDropDownMenuInput');
+    const citiesFrom = [...new Set(planes.map(x => x.Airport_From))]; // Egyedi indulási városok
     
+    // Indulási városok feltöltése
     citiesFrom.forEach(element => {
         const option = document.createElement('option');
         option.value = element;
         option.innerText = element;
         departureInputes?.appendChild(option);
     });
+
+    // Célállomások feltöltése (kivéve "Bárhova")
+    const citiesTo = [...new Set(planes.map(x => x.Airport_To))]; // Egyedi célállomások
+    citiesTo.forEach(element => {
+        const option = document.createElement('option');
+        option.value = element;
+        option.innerText = element;
+        destinationInputes?.appendChild(option);
+    });
 }
-
-
 
 let cheapestFlightIds: number[] = [];
 
-async function displayCheapestFlights(selectedCity: string) {
+async function displayCheapestFlights(selectedCity: string, guests: number, dateFrom?: string) {
     try {
         const flights = await fetchPlanes();
-        const cheapestFlights = flights
-            .filter(flight => flight.Airport_From === selectedCity)
+        let filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
+
+        // Dátum szűrés, ha meg van adva
+        if (dateFrom) {
+            filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
+        }
+
+        const cheapestFlights = filteredFlights
             .sort((a, b) => a.Price - b.Price)
             .slice(0, 4);
 
@@ -51,24 +66,29 @@ async function displayCheapestFlights(selectedCity: string) {
         const container = document.getElementById('cheapest-flights');
         if (container) {
             container.innerHTML = '';
-            container.className = 'row g-4';
+            container.className = 'flight-list';
 
             cheapestFlights.forEach(flight => {
+                const totalPrice = flight.Price * guests;
                 const card = document.createElement('div');
-                card.className = 'col-xl-3 col-lg-3 col-md-6 col-sm-12';
+                card.className = 'flight-card';
                 card.innerHTML = `
-                    <div class="card h-100 shadow">
-                        <div class="card-body d-flex flex-column">
-                            <h4 class="card-title text-center mb-4">${flight.Airport_From} → ${flight.Airport_To}</h4>
-                            <div class="card-text text-center">
-                                <h5 class="mb-3">Date: ${flight.Departure_Date}</h5>
-                                <h5 class="mb-3">Time: ${flight.Departure_Time}:00</h5>
-                                <h3 class="price text-primary mb-4">${flight.Price} EUR</h3>
-                            </div>
-                            <button class="btn btn-primary btn-lg mt-auto" onclick="bookFlight(${flight.id})">
-                                Book Now
-                            </button>
+                    <div class="flight-card-left">
+                        <img src="img/cities/${flight.Airport_To}.jpg" alt="${flight.Airport_To}" class="flight-image">
+                    </div>
+                    <div class="flight-card-middle">
+                        <div class="flight-header">
+                            <h3>${flight.Airport_From} → ${flight.Airport_To}</h3>
                         </div>
+                        <div class="seats">
+                            <p>Date: ${flight.Departure_Date}</p>
+                            <p>Time: ${flight.Departure_Time}:00</p>
+                            <p>Price per person: ${flight.Price} EUR</p>
+                            <p>Total price: ${totalPrice} EUR</p>
+                        </div>
+                    </div>
+                    <div class="flight-card-right">
+                        <button class="book-flight-btn" onclick="bookFlight(${flight.id})">Book Now</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -79,39 +99,47 @@ async function displayCheapestFlights(selectedCity: string) {
     }
 }
 
-async function displayPopularFlights(selectedCity: string) {
+async function displayPopularFlights(selectedCity: string, guests: number, dateFrom?: string) {
     try {
         const flights = await fetchPlanes();
-        const popularFlights = flights
-            .filter(flight => 
-                flight.Airport_From === selectedCity && 
-                !cheapestFlightIds.includes(flight.id)
-            )
+        let filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
+
+        // Dátum szűrés, ha meg van adva
+        if (dateFrom) {
+            filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
+        }
+
+        const popularFlights = filteredFlights
+            .filter(flight => !cheapestFlightIds.includes(flight.id))
             .sort((a, b) => a.Free_seats - b.Free_seats)
             .slice(0, 4);
 
         const container = document.getElementById('popular-flights');
         if (container) {
             container.innerHTML = '';
-            container.className = 'row g-4';
+            container.className = 'flight-list';
 
             popularFlights.forEach(flight => {
+                const totalPrice = flight.Price * guests;
                 const card = document.createElement('div');
-                card.className = 'col-xl-3 col-lg-3 col-md-6 col-sm-12';
+                card.className = 'flight-card';
                 card.innerHTML = `
-                    <div class="card h-100 shadow">
-                        <div class="card-body d-flex flex-column">
-                            <h4 class="card-title text-center mb-4">${flight.Airport_From} → ${flight.Airport_To}</h4>
-                            <div class="card-text text-center">
-                                <h5 class="mb-3">Date: ${flight.Departure_Date}</h5>
-                                <h5 class="mb-3">Time: ${flight.Departure_Time}:00</h5>
-                                <h3 class="price text-primary mb-3">${flight.Price} EUR</h3>
-                                <h5 class="mb-4">Free seats: ${flight.Free_seats}</h5>
-                            </div>
-                            <button class="btn btn-primary btn-lg mt-auto" onclick="bookFlight(${flight.id})">
-                                Book Now
-                            </button>
+                    <div class="flight-card-left">
+                        <img src="img/cities/${flight.Airport_To}.jpg" alt="${flight.Airport_To}" class="flight-image">
+                    </div>
+                    <div class="flight-card-middle">
+                        <div class="flight-header">
+                            <h3>${flight.Airport_From} → ${flight.Airport_To}</h3>
                         </div>
+                        <div class="seats">
+                            <p>Date: ${flight.Departure_Date}</p>
+                            <p>Time: ${flight.Departure_Time}:00</p>
+                            <p>Price per person: ${flight.Price} EUR</p>
+                            <p>Total price: ${totalPrice} EUR</p>
+                        </div>
+                    </div>
+                    <div class="flight-card-right">
+                        <button class="book-flight-btn" onclick="bookFlight(${flight.id})">Book Now</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -119,7 +147,7 @@ async function displayPopularFlights(selectedCity: string) {
         }
         if (popularFlights.length === 0) {
             const noFlightsMessage = document.createElement('div');
-            noFlightsMessage.className = 'col-12 text-center';
+            noFlightsMessage.className = 'no-flights';
             noFlightsMessage.innerHTML = `<h3>No popular flights available from ${selectedCity}</h3>`;
             container?.appendChild(noFlightsMessage);
         }
@@ -128,75 +156,29 @@ async function displayPopularFlights(selectedCity: string) {
     }
 }
 
+document.getElementById('flightSearchForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
+    const departureSelect = document.getElementById('departureDropDownMenuInput') as HTMLSelectElement;
+    const destinationSelect = document.getElementById('destinationDropDownMenuInput') as HTMLSelectElement;
+    const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
+    const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
 
-document.getElementById('departureDropDownMenuInput')?.addEventListener("change", async (event) => {
-    const target = event.target as HTMLSelectElement;
-    const selectedCity = target.value;
-    
-    displayCheapestFlights(selectedCity);
-    displayPopularFlights(selectedCity);
-    
+    const selectedCity = departureSelect.value;
+    const guests = parseInt(guestsInput.value);
+    const dateFrom = dateFromInput.value || undefined; // Dátum opcionális
 
-    let destinationInputes = document.getElementById('destinationDropDownMenuInput');
-    if (destinationInputes) {
-        destinationInputes.innerHTML = ''; 
-        const planes = await fetchPlanes();
-        let availableDestinations = planes
-            .filter(x => x.Airport_From === selectedCity)
-            .forEach(element => {
-                const option = document.createElement('option');
-                option.value = element.Airport_To;
-                option.innerText = element.Airport_To;
-                destinationInputes?.appendChild(option);
-            });
+    if (destinationSelect.value === "anywhere") {
+        // Ha "Bárhova" van kiválasztva, akkor minden célállomásra mutatjuk a repjegyeket
+        displayCheapestFlights(selectedCity, guests, dateFrom);
+        displayPopularFlights(selectedCity, guests, dateFrom);
+    } else {
+        // Ha konkrét célállomás van kiválasztva, akkor csak azokat mutatjuk
+        displayCheapestFlights(selectedCity, guests, dateFrom);
+        displayPopularFlights(selectedCity, guests, dateFrom);
     }
 });
 
-
-
-interface Plane {
-    id: number,
-    Departure_Date: string,
-    Departure_Time: number,
-    Destination_Date: string,
-    Destination_Time: number,
-    Airport_From: string,
-    Airport_To: string,
-    Price: number,
-    Type_of_plane: string,
-    Free_seats: number,
-    Flight_Number: string,
-}
-
-displayPlanes();
-document.getElementById('departureDropDownMenuInput')?.addEventListener("change", async (event) => {
-    let destinationInputes = document.getElementById('destinationDropDownMenuInput');
-    const target = event.target as HTMLSelectElement;
-    let departure = target.value;
-    let From_Airport = departure;
-    const planes = await fetchPlanes();
-    let lastAirports = planes.filter(x => x.Airport_From == departure);
-    lastAirports.forEach(element => {
-        const option = document.createElement('option');
-        option.value = `${element.Airport_To}`;
-        option.innerText = `${element.Airport_To}`;
-        destinationInputes?.appendChild(option);
-    });
-});
-
-
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
-    displayCheapestFlights('');
-    displayPopularFlights('');
+    displayPlanes();
 });
-
-
-
-
-
-

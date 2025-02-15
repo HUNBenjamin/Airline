@@ -125,6 +125,14 @@ export async function displayHotels(): Promise<void> {
     }
 }
 
+function calculateTotalPrice(pricePerNight: number, dateFrom: string, dateTo: string): number {
+    const fromDate = new Date(dateFrom);
+    const toDate = new Date(dateTo);
+    const timeDiff = toDate.getTime() - fromDate.getTime();
+    const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return pricePerNight * nights;
+}
+
 function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void {
     container.innerHTML = hotels.length === 0 
         ? '<div class="no-hotels">Erre az időszakra/főre nincs elérhető szállás.</div>'
@@ -134,16 +142,26 @@ function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void
         const hotelCard = document.createElement('div');
         hotelCard.className = 'hotel-card';
         hotelCard.innerHTML = `
-            <h3>${hotel.name}</h3>
-            <p>Ár/éjszaka: ${hotel.pricePerNight} EUR</p>
-            <p>Max vendégek: ${hotel.maxGuests} fő</p>
-            <p>Értékelés: ${hotel.rating}/5</p>
-            <p>Elérhető: ${hotel.availableFrom} - ${hotel.availableTo}</p>
-            <div class="amenities">
-                <p>Szolgáltatások:</p>
-                <ul>${hotel.amenities.map(amenity => `<li>${amenity}</li>`).join('')}</ul>
+            <div class="hotel-card-left">
+                <img src="img/firstSlide.jpg" alt="Hotel Image" class="hotel-image">
             </div>
-            <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
+            <div class="hotel-card-middle">
+                <div class="hotel-header">
+                    <h3>${hotel.name}</h3>
+                    </div>
+                    <div class="amenities">
+                    <p>Szolgáltatások:</p>
+                    <ul>${hotel.amenities.map(amenity => `<li>${amenity}</li>`).join('')}</ul>
+                    </div>
+                    <div class="price-section">     
+                    <p>Ár/éjszaka: ${hotel.pricePerNight} EUR</p>
+                    </div>
+                    </div>
+                    <div class="hotel-card-right">
+                    <p class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⯨' : ''} ${hotel.rating}/5</p>
+                <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
+                <p><strong>Összérték: ${calculateTotalPrice(hotel.pricePerNight, (document.getElementById('dateFromInput') as HTMLInputElement).value, (document.getElementById('dateToInput') as HTMLInputElement).value)} EUR</strong></p>
+            </div>
         `;
         container.appendChild(hotelCard);
     });
