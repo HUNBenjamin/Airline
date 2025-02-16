@@ -69,6 +69,7 @@ function initializeHotelSearch() {
             hotel.maxGuests >= guestCount &&
             new Date(hotel.availableFrom) <= new Date(dateFrom) &&
             new Date(hotel.availableTo) >= new Date(dateTo));
+        selectedHotels = filteredHotels; // Mentjük a kiválasztott hoteleket
         displayFilteredHotels(filteredHotels, hotelContainer);
         saveFormData();
     }));
@@ -96,12 +97,12 @@ export function displayHotels() {
         }
     });
 }
-function calculateTotalPrice(pricePerNight, dateFrom, dateTo) {
+function calculateTotalPrice(pricePerNight, dateFrom, dateTo, guests) {
     const fromDate = new Date(dateFrom);
     const toDate = new Date(dateTo);
     const timeDiff = toDate.getTime() - fromDate.getTime();
     const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    return pricePerNight * nights;
+    return pricePerNight * nights * guests;
 }
 function displayFilteredHotels(hotels, container) {
     container.innerHTML = hotels.length === 0
@@ -133,88 +134,92 @@ function displayFilteredHotels(hotels, container) {
                 </div>
                 <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
                 <div class="total-price-line">
-                    <span>Összérték: ${calculateTotalPrice(hotel.pricePerNight, document.getElementById('dateFromInput').value, document.getElementById('dateToInput').value)} <span class="currency">EUR</span></span>
+                    <span>Összérték: <strong>${calculateTotalPrice(hotel.pricePerNight, document.getElementById('dateFromInput').value, document.getElementById('dateToInput').value, parseInt(document.getElementById('guestsInput').value))} EUR</strong></span>
                 </div>
             </div>
         `;
         container.appendChild(hotelCard);
     });
 }
-// Szűrőpanel hozzáadása
-function addFilterPanel() {
-    const filterPanel = document.createElement('div');
-    filterPanel.className = 'filter-panel';
-    filterPanel.innerHTML = `
-        <h3>Szűrők</h3>
-        <div class="filter-group">
-            <label for="amenityFilter">Extrák:</label>
-            <select id="amenityFilter" multiple>
-                <option value="Free WiFi">Free WiFi</option>
-                <option value="Breakfast Included">Breakfast Included</option>
-                <option value="Gym">Gym</option>
-                <option value="Airport Shuttle">Airport Shuttle</option>
-                <option value="Pool">Pool</option>
-                <option value="Spa">Spa</option>
-                <option value="Sauna">Sauna</option>
-                <option value="City View">City View</option>
-                <option value="Parking">Parking</option>
-                <option value="Restaurant">Restaurant</option>
-                <option value="Bar">Bar</option>
-                <option value="Conference Room">Conference Room</option>
-                <option value="Fine Dining">Fine Dining</option>
-                <option value="Rooftop Bar">Rooftop Bar</option>
-                <option value="Lake View">Lake View</option>
-                <option value="Beach Access">Beach Access</option>
-                <option value="Mountain View">Mountain View</option>
-                <option value="Business Center">Business Center</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label for="ratingFilter">Csillagok száma:</label>
-            <select id="ratingFilter">
-                <option value="0">Mindegy</option>
-                <option value="1">1 csillag</option>
-                <option value="2">2 csillag</option>
-                <option value="3">3 csillag</option>
-                <option value="4">4 csillag</option>
-                <option value="5">5 csillag</option>
-            </select>
-        </div>
-        <div class="filter-group">
-            <label for="priceRange">Árintervallum:</label>
-            <input type="range" id="priceRange" min="0" max="500" step="50">
-            <span id="priceRangeValue">0 - 500 EUR</span>
-        </div>
-        <button id="applyFilters">Szűrők alkalmazása</button>
-    `;
-    const container = document.querySelector('.content-overlay');
-    container === null || container === void 0 ? void 0 : container.insertBefore(filterPanel, container.firstChild);
-    const priceRange = document.getElementById('priceRange');
-    const priceRangeValue = document.getElementById('priceRangeValue');
-    priceRange.addEventListener('input', () => {
-        priceRangeValue.textContent = `0 - ${priceRange.value} EUR`;
+function applyFilters() {
+    var _a;
+    const selectedAmenities = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+        .map(checkbox => checkbox.value);
+    const ratingElement = document.querySelector('.rating-filter .star.selected:last-child');
+    const selectedRating = ratingElement ? parseInt(ratingElement.dataset.value || "0") : 0;
+    const priceInput = document.getElementById('priceRange');
+    const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
+    const sortBy = ((_a = document.getElementById('sortSelect')) === null || _a === void 0 ? void 0 : _a.value) || "price-asc";
+    let filteredHotels = selectedHotels.filter(hotel => {
+        const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
+        const matchesRating = hotel.rating >= selectedRating;
+        const matchesPrice = hotel.pricePerNight <= selectedPrice;
+        return matchesAmenities && matchesRating && matchesPrice;
     });
-    const applyFiltersButton = document.getElementById('applyFilters');
-    applyFiltersButton.addEventListener('click', () => {
-        const selectedAmenities = Array.from(document.getElementById('amenityFilter').selectedOptions).map(option => option.value);
-        const selectedRating = parseInt(document.getElementById('ratingFilter').value);
-        const selectedPrice = parseInt(priceRange.value);
-        const hotelContainer = document.getElementById('hotelList');
-        const hotels = Array.from(hotelContainer.querySelectorAll('.hotel-card')).map(card => {
-            var _a;
-            const hotelId = parseInt(((_a = card.querySelector('.book-hotel-btn')) === null || _a === void 0 ? void 0 : _a.getAttribute('data-hotel-id')) || '0');
-            return selectedHotels.find(hotel => hotel.id === hotelId);
-        }).filter(hotel => hotel !== undefined);
-        const filteredHotels = hotels.filter(hotel => {
-            const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
-            const matchesRating = selectedRating === 0 || Math.floor(hotel.rating) === selectedRating;
-            const matchesPrice = hotel.pricePerNight <= selectedPrice;
-            return matchesAmenities && matchesRating && matchesPrice;
-        });
+    filteredHotels.sort((a, b) => {
+        switch (sortBy) {
+            case "price-asc": return a.pricePerNight - b.pricePerNight;
+            case "price-desc": return b.pricePerNight - a.pricePerNight;
+            case "rating-asc": return a.rating - b.rating;
+            case "rating-desc": return b.rating - a.rating;
+            default: return 0;
+        }
+    });
+    const hotelContainer = document.getElementById('hotelList');
+    if (hotelContainer) {
         displayFilteredHotels(filteredHotels, hotelContainer);
-    });
+    }
+}
+function initializeRatingFilter() {
+    const ratingFilter = document.getElementById('ratingFilter');
+    if (!ratingFilter)
+        return;
+    ratingFilter.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.textContent = '☆';
+        star.dataset.value = i.toString();
+        star.addEventListener('click', () => {
+            const stars = ratingFilter.querySelectorAll('.star');
+            stars.forEach((s, index) => {
+                if (index < i) {
+                    s.classList.add('selected');
+                    s.textContent = '⭐️';
+                }
+                else {
+                    s.classList.remove('selected');
+                    s.textContent = '☆';
+                }
+            });
+            applyFilters();
+        });
+        ratingFilter.appendChild(star);
+    }
 }
 document.addEventListener('DOMContentLoaded', () => {
+    var _a;
     displayHotels();
-    addFilterPanel();
+    initializeRatingFilter();
+    const applyFiltersButton = document.getElementById('applyFilters');
+    if (applyFiltersButton) {
+        applyFiltersButton.classList.add('search-button');
+        applyFiltersButton.addEventListener('click', applyFilters);
+    }
+    const sortSelect = document.createElement('select');
+    sortSelect.id = 'sortSelect';
+    sortSelect.style.marginLeft = '10px';
+    sortSelect.style.padding = '5px';
+    sortSelect.style.width = 'max-content';
+    sortSelect.innerHTML = `
+        <option value="price-asc">Ár (növekvő)</option>
+        <option value="price-desc">Ár (csökkenő)</option>
+        <option value="rating-asc">Értékelés (növekvő)</option>
+        <option value="rating-desc">Értékelés (csökkenő)</option>
+    `;
+    sortSelect.addEventListener('change', applyFilters);
+    const searchButton = document.querySelector('#hotelSearchForm button[type="submit"]');
+    if (searchButton) {
+        (_a = searchButton.parentElement) === null || _a === void 0 ? void 0 : _a.insertBefore(sortSelect, searchButton.nextSibling);
+    }
 });
