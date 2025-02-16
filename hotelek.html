@@ -228,8 +228,30 @@
             }
     
             .hotel-card-right {
-                align-items: flex-start;
-            }
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px; /* Távolság a sorok között */
+}
+
+.rating-line {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Távolság a csillagok és az értékelési szám között */
+}
+
+.total-price-line {
+    white-space: nowrap; /* Megakadályozza, hogy a teljes ár és az "EUR" külön sorba kerüljön */
+}
+
+.total-price-line .currency {
+    margin-left: 4px; /* Kis távolság az ár és az "EUR" között */
+}
+
+.book-hotel-btn {
+    width: 100%; /* A gomb teljes szélességű lesz */
+    text-align: center; /* Szöveg középre igazítva */
+}
         }
     </style>
 </head>

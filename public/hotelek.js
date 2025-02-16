@@ -112,27 +112,109 @@ function displayFilteredHotels(hotels, container) {
         hotelCard.className = 'hotel-card';
         hotelCard.innerHTML = `
             <div class="hotel-card-left">
-                <img src="img/firstSlide.jpg" alt="Hotel Image" class="hotel-image">
+                <img src="img/hotels/${hotel.id}.jpg" alt="Hotel Image" class="hotel-image">
             </div>
             <div class="hotel-card-middle">
                 <div class="hotel-header">
                     <h3>${hotel.name}</h3>
-                    </div>
-                    <div class="amenities">
+                </div>
+                <div class="amenities">
                     <p>Szolgáltatások:</p>
                     <ul>${hotel.amenities.map(amenity => `<li>${amenity}</li>`).join('')}</ul>
-                    </div>
-                    <div class="price-section">     
+                </div>
+                <div class="price-section">     
                     <p>Ár/éjszaka: ${hotel.pricePerNight} EUR</p>
-                    </div>
-                    </div>
-                    <div class="hotel-card-right">
-                    <p class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⯨' : ''} ${hotel.rating}/5</p>
+                </div>
+            </div>
+            <div class="hotel-card-right">
+                <div class="rating-line">
+                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⯨' : ''}</span>
+                    <span class="rating-number">${hotel.rating}/5</span>
+                </div>
                 <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
-                <p><strong>Összérték: ${calculateTotalPrice(hotel.pricePerNight, document.getElementById('dateFromInput').value, document.getElementById('dateToInput').value)} EUR</strong></p>
+                <div class="total-price-line">
+                    <span>Összérték: ${calculateTotalPrice(hotel.pricePerNight, document.getElementById('dateFromInput').value, document.getElementById('dateToInput').value)} <span class="currency">EUR</span></span>
+                </div>
             </div>
         `;
         container.appendChild(hotelCard);
     });
 }
-document.addEventListener('DOMContentLoaded', displayHotels);
+// Szűrőpanel hozzáadása
+function addFilterPanel() {
+    const filterPanel = document.createElement('div');
+    filterPanel.className = 'filter-panel';
+    filterPanel.innerHTML = `
+        <h3>Szűrők</h3>
+        <div class="filter-group">
+            <label for="amenityFilter">Extrák:</label>
+            <select id="amenityFilter" multiple>
+                <option value="Free WiFi">Free WiFi</option>
+                <option value="Breakfast Included">Breakfast Included</option>
+                <option value="Gym">Gym</option>
+                <option value="Airport Shuttle">Airport Shuttle</option>
+                <option value="Pool">Pool</option>
+                <option value="Spa">Spa</option>
+                <option value="Sauna">Sauna</option>
+                <option value="City View">City View</option>
+                <option value="Parking">Parking</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Bar">Bar</option>
+                <option value="Conference Room">Conference Room</option>
+                <option value="Fine Dining">Fine Dining</option>
+                <option value="Rooftop Bar">Rooftop Bar</option>
+                <option value="Lake View">Lake View</option>
+                <option value="Beach Access">Beach Access</option>
+                <option value="Mountain View">Mountain View</option>
+                <option value="Business Center">Business Center</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="ratingFilter">Csillagok száma:</label>
+            <select id="ratingFilter">
+                <option value="0">Mindegy</option>
+                <option value="1">1 csillag</option>
+                <option value="2">2 csillag</option>
+                <option value="3">3 csillag</option>
+                <option value="4">4 csillag</option>
+                <option value="5">5 csillag</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="priceRange">Árintervallum:</label>
+            <input type="range" id="priceRange" min="0" max="500" step="50">
+            <span id="priceRangeValue">0 - 500 EUR</span>
+        </div>
+        <button id="applyFilters">Szűrők alkalmazása</button>
+    `;
+    const container = document.querySelector('.content-overlay');
+    container === null || container === void 0 ? void 0 : container.insertBefore(filterPanel, container.firstChild);
+    const priceRange = document.getElementById('priceRange');
+    const priceRangeValue = document.getElementById('priceRangeValue');
+    priceRange.addEventListener('input', () => {
+        priceRangeValue.textContent = `0 - ${priceRange.value} EUR`;
+    });
+    const applyFiltersButton = document.getElementById('applyFilters');
+    applyFiltersButton.addEventListener('click', () => {
+        const selectedAmenities = Array.from(document.getElementById('amenityFilter').selectedOptions).map(option => option.value);
+        const selectedRating = parseInt(document.getElementById('ratingFilter').value);
+        const selectedPrice = parseInt(priceRange.value);
+        const hotelContainer = document.getElementById('hotelList');
+        const hotels = Array.from(hotelContainer.querySelectorAll('.hotel-card')).map(card => {
+            var _a;
+            const hotelId = parseInt(((_a = card.querySelector('.book-hotel-btn')) === null || _a === void 0 ? void 0 : _a.getAttribute('data-hotel-id')) || '0');
+            return selectedHotels.find(hotel => hotel.id === hotelId);
+        }).filter(hotel => hotel !== undefined);
+        const filteredHotels = hotels.filter(hotel => {
+            const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
+            const matchesRating = selectedRating === 0 || Math.floor(hotel.rating) === selectedRating;
+            const matchesPrice = hotel.pricePerNight <= selectedPrice;
+            return matchesAmenities && matchesRating && matchesPrice;
+        });
+        displayFilteredHotels(filteredHotels, hotelContainer);
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    displayHotels();
+    addFilterPanel();
+});

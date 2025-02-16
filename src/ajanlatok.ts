@@ -84,7 +84,7 @@ async function displayCheapestFlights(selectedCity: string, guests: number, date
                             <p>Date: ${flight.Departure_Date}</p>
                             <p>Time: ${flight.Departure_Time}:00</p>
                             <p>Price per person: ${flight.Price} EUR</p>
-                            <p>Total price: ${totalPrice} EUR</p>
+                            <p><strong>Total price: ${totalPrice} EUR</strong></p>
                         </div>
                     </div>
                     <div class="flight-card-right">
@@ -135,7 +135,7 @@ async function displayPopularFlights(selectedCity: string, guests: number, dateF
                             <p>Date: ${flight.Departure_Date}</p>
                             <p>Time: ${flight.Departure_Time}:00</p>
                             <p>Price per person: ${flight.Price} EUR</p>
-                            <p>Total price: ${totalPrice} EUR</p>
+                            <p><strong>otal price: ${totalPrice} EUR</strong></p>
                         </div>
                     </div>
                     <div class="flight-card-right">

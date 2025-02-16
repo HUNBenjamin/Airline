@@ -75,7 +75,7 @@ function displayCheapestFlights(selectedCity, guests, dateFrom) {
                             <p>Date: ${flight.Departure_Date}</p>
                             <p>Time: ${flight.Departure_Time}:00</p>
                             <p>Price per person: ${flight.Price} EUR</p>
-                            <p>Total price: ${totalPrice} EUR</p>
+                            <p><strong>Total price: ${totalPrice} EUR</strong></p>
                         </div>
                     </div>
                     <div class="flight-card-right">
@@ -124,7 +124,7 @@ function displayPopularFlights(selectedCity, guests, dateFrom) {
                             <p>Date: ${flight.Departure_Date}</p>
                             <p>Time: ${flight.Departure_Time}:00</p>
                             <p>Price per person: ${flight.Price} EUR</p>
-                            <p>Total price: ${totalPrice} EUR</p>
+                            <p><strong>otal price: ${totalPrice} EUR</strong></p>
                         </div>
                     </div>
                     <div class="flight-card-right">
