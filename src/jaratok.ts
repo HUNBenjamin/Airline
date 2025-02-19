@@ -85,36 +85,19 @@ document.getElementById('destinationDropDownMenuInput')?.addEventListener("chang
     const target = event.target as HTMLSelectElement;
     To_Airport = target.value;
     AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport)
-    localStorage.setItem("planesList", JSON.stringify(AvailablePlanes));
-    console.log(AvailablePlanes);
-    
 });
 
 
-// (document.getElementById('flyingDateData') as HTMLInputElement).addEventListener("change", (event) => {
-//     const target = event.target as HTMLSelectElement;
-//     FlyingDateTime = target.value;  
-// })
 
 document.getElementById('DoneButton')?.addEventListener("click", (event) => {
-    event?.preventDefault()
-    console.log("Megy");
-    const storedPlanes = localStorage.getItem("planesList");
-    if (storedPlanes) {
-        const restoredPlanes: Plane[] = JSON.parse(storedPlanes);
-    
-        console.log("Restored Planes List:", restoredPlanes);
-        console.log(restoredPlanes);
-        AvailablePlanes = restoredPlanes;
-    }
-    // const AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport)//.filter(x => x.Departure_Date < FlyingDateTime)
-    let flightDiv = document.getElementById('fromDiv');
+    // event?.preventDefault()
+    let flightDiv = document.getElementById('fromDiv') as HTMLDivElement;
+    flightDiv.innerHTML = "";
     AvailablePlanes.forEach(element => {
-        
-        const myDiv = document.createElement('div');
+        let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
                 <div class="flight-info">
-                    <img src="img/Logo_1000-1000.png" alt="Airline Logo" width="100">
+                    <img src="img/Logo_1000-1000.png" alt="Airline Logo" width="150">
                     <div id="flightFromDataFill" class="flight-time">
                         <strong>${element.Departure_Time}</strong>
                         <span>${element.Airport_From}</span>
