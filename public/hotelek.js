@@ -28,6 +28,33 @@ function fetchPlanes() {
         return data;
     });
 }
+function saveFormData() {
+    const destinationSelect = document.getElementById('hotelDestinationSelect');
+    const guestsInput = document.getElementById('guestsInput');
+    const dateFromInput = document.getElementById('dateFromInput');
+    const dateToInput = document.getElementById('dateToInput');
+    const formData = {
+        destination: destinationSelect.value,
+        guests: guestsInput.value,
+        dateFrom: dateFromInput.value,
+        dateTo: dateToInput.value
+    };
+    localStorage.setItem('hotelFormData', JSON.stringify(formData));
+}
+function loadFormData() {
+    const formData = localStorage.getItem('hotelFormData');
+    if (formData) {
+        const parsedData = JSON.parse(formData);
+        const destinationSelect = document.getElementById('hotelDestinationSelect');
+        const guestsInput = document.getElementById('guestsInput');
+        const dateFromInput = document.getElementById('dateFromInput');
+        const dateToInput = document.getElementById('dateToInput');
+        destinationSelect.value = parsedData.destination;
+        guestsInput.value = parsedData.guests;
+        dateFromInput.value = parsedData.dateFrom;
+        dateToInput.value = parsedData.dateTo;
+    }
+}
 function initializeHotelSearch() {
     const searchForm = document.getElementById('hotelSearchForm');
     const destinationSelect = document.getElementById('hotelDestinationSelect');
@@ -42,8 +69,11 @@ function initializeHotelSearch() {
             hotel.maxGuests >= guestCount &&
             new Date(hotel.availableFrom) <= new Date(dateFrom) &&
             new Date(hotel.availableTo) >= new Date(dateTo));
+        selectedHotels = filteredHotels; // Mentjük a kiválasztott hoteleket
         displayFilteredHotels(filteredHotels, hotelContainer);
+        saveFormData();
     }));
+    loadFormData();
 }
 export function displayHotels() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -67,6 +97,13 @@ export function displayHotels() {
         }
     });
 }
+function calculateTotalPrice(pricePerNight, dateFrom, dateTo, guests) {
+    const fromDate = new Date(dateFrom);
+    const toDate = new Date(dateTo);
+    const timeDiff = toDate.getTime() - fromDate.getTime();
+    const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return pricePerNight * nights * guests;
+}
 function displayFilteredHotels(hotels, container) {
     container.innerHTML = hotels.length === 0
         ? '<div class="no-hotels">Erre az időszakra/főre nincs elérhető szállás.</div>'
@@ -75,18 +112,114 @@ function displayFilteredHotels(hotels, container) {
         const hotelCard = document.createElement('div');
         hotelCard.className = 'hotel-card';
         hotelCard.innerHTML = `
-            <h3>${hotel.name}</h3>
-            <p>Ár/éjszaka: ${hotel.pricePerNight} EUR</p>
-            <p>Max vendégek: ${hotel.maxGuests} fő</p>
-            <p>Értékelés: ${hotel.rating}/5</p>
-            <p>Elérhető: ${hotel.availableFrom} - ${hotel.availableTo}</p>
-            <div class="amenities">
-                <p>Szolgáltatások:</p>
-                <ul>${hotel.amenities.map(amenity => `<li>${amenity}</li>`).join('')}</ul>
+            <div class="hotel-card-left">
+                <img src="img/hotels/${hotel.id}.jpg" alt="Hotel Image" class="hotel-image">
             </div>
-            <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
+            <div class="hotel-card-middle">
+                <div class="hotel-header">
+                    <h3>${hotel.name}</h3>
+                </div>
+                <div class="amenities">
+                    <p>Szolgáltatások:</p>
+                    <ul>${hotel.amenities.map(amenity => `<li>${amenity}</li>`).join('')}</ul>
+                </div>
+                <div class="price-section">     
+                    <p>Ár/éjszaka: ${hotel.pricePerNight} EUR</p>
+                </div>
+            </div>
+            <div class="hotel-card-right">
+                <div class="rating-line">
+                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⯨' : ''}</span>
+                    <span class="rating-number">${hotel.rating}/5</span>
+                </div>
+                <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
+                <div class="total-price-line">
+                    <span>Összérték: <strong>${calculateTotalPrice(hotel.pricePerNight, document.getElementById('dateFromInput').value, document.getElementById('dateToInput').value, parseInt(document.getElementById('guestsInput').value))} EUR</strong></span>
+                </div>
+            </div>
         `;
         container.appendChild(hotelCard);
     });
 }
-document.addEventListener('DOMContentLoaded', displayHotels);
+function applyFilters() {
+    var _a;
+    const selectedAmenities = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+        .map(checkbox => checkbox.value);
+    const ratingElement = document.querySelector('.rating-filter .star.selected:last-child');
+    const selectedRating = ratingElement ? parseInt(ratingElement.dataset.value || "0") : 0;
+    const priceInput = document.getElementById('priceRange');
+    const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
+    const sortBy = ((_a = document.getElementById('sortSelect')) === null || _a === void 0 ? void 0 : _a.value) || "price-asc";
+    let filteredHotels = selectedHotels.filter(hotel => {
+        const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
+        const matchesRating = hotel.rating >= selectedRating;
+        const matchesPrice = hotel.pricePerNight <= selectedPrice;
+        return matchesAmenities && matchesRating && matchesPrice;
+    });
+    filteredHotels.sort((a, b) => {
+        switch (sortBy) {
+            case "price-asc": return a.pricePerNight - b.pricePerNight;
+            case "price-desc": return b.pricePerNight - a.pricePerNight;
+            case "rating-asc": return a.rating - b.rating;
+            case "rating-desc": return b.rating - a.rating;
+            default: return 0;
+        }
+    });
+    const hotelContainer = document.getElementById('hotelList');
+    if (hotelContainer) {
+        displayFilteredHotels(filteredHotels, hotelContainer);
+    }
+}
+function initializeRatingFilter() {
+    const ratingFilter = document.getElementById('ratingFilter');
+    if (!ratingFilter)
+        return;
+    ratingFilter.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.textContent = '☆';
+        star.dataset.value = i.toString();
+        star.addEventListener('click', () => {
+            const stars = ratingFilter.querySelectorAll('.star');
+            stars.forEach((s, index) => {
+                if (index < i) {
+                    s.classList.add('selected');
+                    s.textContent = '⭐️';
+                }
+                else {
+                    s.classList.remove('selected');
+                    s.textContent = '☆';
+                }
+            });
+            applyFilters();
+        });
+        ratingFilter.appendChild(star);
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    var _a;
+    displayHotels();
+    initializeRatingFilter();
+    const applyFiltersButton = document.getElementById('applyFilters');
+    if (applyFiltersButton) {
+        applyFiltersButton.classList.add('search-button');
+        applyFiltersButton.addEventListener('click', applyFilters);
+    }
+    const sortSelect = document.createElement('select');
+    sortSelect.id = 'sortSelect';
+    sortSelect.style.marginLeft = '10px';
+    sortSelect.style.padding = '5px';
+    sortSelect.style.width = 'max-content';
+    sortSelect.innerHTML = `
+        <option value="price-asc">Ár (növekvő)</option>
+        <option value="price-desc">Ár (csökkenő)</option>
+        <option value="rating-asc">Értékelés (növekvő)</option>
+        <option value="rating-desc">Értékelés (csökkenő)</option>
+    `;
+    sortSelect.addEventListener('change', applyFilters);
+    const searchButton = document.querySelector('#hotelSearchForm button[type="submit"]');
+    if (searchButton) {
+        (_a = searchButton.parentElement) === null || _a === void 0 ? void 0 : _a.insertBefore(sortSelect, searchButton.nextSibling);
+    }
+});
