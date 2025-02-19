@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _c, _d, _e;
+var _a, _b, _c;
 // interface Plane{
 //     id: number,
 //     Departure_Date: string,
@@ -54,7 +54,7 @@ function displayPlane() {
     });
 }
 displayPlane();
-(_c = document.getElementById('departureDropDownMenuInput')) === null || _c === void 0 ? void 0 : _c.addEventListener("change", (event) => {
+(_a = document.getElementById('departureDropDownMenuInput')) === null || _a === void 0 ? void 0 : _a.addEventListener("change", (event) => {
     let destinationInputes = document.getElementById('destinationDropDownMenuInput');
     const target = event.target;
     let departure = target.value;
@@ -67,7 +67,7 @@ displayPlane();
         destinationInputes === null || destinationInputes === void 0 ? void 0 : destinationInputes.appendChild(option);
     });
 });
-(_d = document.getElementById('destinationDropDownMenuInput')) === null || _d === void 0 ? void 0 : _d.addEventListener("change", (event) => {
+(_b = document.getElementById('destinationDropDownMenuInput')) === null || _b === void 0 ? void 0 : _b.addEventListener("change", (event) => {
     const target = event.target;
     To_Airport = target.value;
     AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport);
@@ -78,7 +78,7 @@ displayPlane();
 //     const target = event.target as HTMLSelectElement;
 //     FlyingDateTime = target.value;  
 // })
-(_e = document.getElementById('DoneButton')) === null || _e === void 0 ? void 0 : _e.addEventListener("click", (event) => {
+(_c = document.getElementById('DoneButton')) === null || _c === void 0 ? void 0 : _c.addEventListener("click", (event) => {
     event === null || event === void 0 ? void 0 : event.preventDefault();
     console.log("Megy");
     const storedPlanes = localStorage.getItem("planesList");
