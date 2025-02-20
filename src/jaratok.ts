@@ -41,7 +41,6 @@ async function displayPlane(type: string = 'all') {
     });
 
     let departureInputes = document.getElementById('departureDropDownMenuInput')
-
     AirportFromSorted.forEach(element => {
         const option = document.createElement('option');
         option.value = `${element}`
@@ -49,6 +48,7 @@ async function displayPlane(type: string = 'all') {
         
         departureInputes?.appendChild(option);
     });
+    
 
     
     
@@ -61,11 +61,20 @@ document.getElementById('departureDropDownMenuInput')?.addEventListener("change"
 
     const target = event.target as HTMLSelectElement;
     let departure = target.value;
+    From_Airport = departure;
     console.log(departure);
     
-    From_Airport = departure;
     let lastAirports = AllPlanes.filter(x => x.Airport_From == departure)
+    console.log(lastAirports);
+    
+    let lastAirportsSorted: Plane[] = [];
     lastAirports.forEach(element => {
+        if (!lastAirportsSorted.includes(element)) {
+            lastAirportsSorted.push(element);
+        }
+        
+    });
+    lastAirportsSorted.forEach(element => {
         const option = document.createElement('option');
         option.value = `${element.Airport_To}`
         option.innerText = `${element.Airport_To}`
@@ -91,7 +100,7 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
                 <div class="flight-info">
-                    <img src="img/cities/${element.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
+                    <img src="img/Logo_1000_200.png" class="rounded me-3" alt="Airline Logo" width="150">
                     <div id="flightFromDataFill" class="flight-time">
                         <strong>${element.Departure_Time}</strong>
                         <span>${element.Airport_From}</span>
