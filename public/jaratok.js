@@ -8,10 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a, _b, _c;
+var _a, _b, _c, _d;
 let AllPlanes;
 let From_Airport = "";
 let To_Airport = "";
+let Passangers = "";
 let FlyingDateTime = "";
 let AvailablePlanes;
 function fetchPlane() {
@@ -50,28 +51,33 @@ displayPlane();
     const target = event.target;
     let departure = target.value;
     From_Airport = departure;
-    console.log(departure);
     let lastAirports = AllPlanes.filter(x => x.Airport_From == departure);
-    console.log(lastAirports);
-    let lastAirportsSorted = [];
-    lastAirports.forEach(element => {
-        if (!lastAirportsSorted.includes(element)) {
-            lastAirportsSorted.push(element);
+    let lastAirportsName = lastAirports.map(x => x.Airport_To);
+    let lastAirportsSortedByName = [];
+    lastAirportsName.forEach(element => {
+        if (!lastAirportsSortedByName.includes(element)) {
+            lastAirportsSortedByName.push(element);
         }
     });
-    lastAirportsSorted.forEach(element => {
+    lastAirportsSortedByName.forEach(element => {
         const option = document.createElement('option');
-        option.value = `${element.Airport_To}`;
-        option.innerText = `${element.Airport_To}`;
+        option.value = `${element}`;
+        option.innerText = `${element}`;
         destinationInputes === null || destinationInputes === void 0 ? void 0 : destinationInputes.appendChild(option);
     });
 });
 (_b = document.getElementById('destinationDropDownMenuInput')) === null || _b === void 0 ? void 0 : _b.addEventListener("change", (event) => {
     const target = event.target;
     To_Airport = target.value;
-    AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport);
 });
-(_c = document.getElementById('DoneButton')) === null || _c === void 0 ? void 0 : _c.addEventListener("click", (event) => {
+(_c = document.getElementById('passangersNumber')) === null || _c === void 0 ? void 0 : _c.addEventListener("change", (event) => {
+    const target = event.target;
+    Passangers = target.value;
+    console.log(Passangers);
+    //AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_seats >= Passangers)
+    //Még string a passangers !!!!
+});
+(_d = document.getElementById('DoneButton')) === null || _d === void 0 ? void 0 : _d.addEventListener("click", (event) => {
     // event?.preventDefault()
     let flightDiv = document.getElementById('fromDiv');
     flightDiv.innerHTML = "";

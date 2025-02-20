@@ -15,6 +15,7 @@ interface Plane{
 let AllPlanes: Plane[];
 let From_Airport = "";
 let To_Airport = "";
+let Passangers = "";
 let FlyingDateTime = "";
 let AvailablePlanes: Plane[];
 
@@ -62,22 +63,19 @@ document.getElementById('departureDropDownMenuInput')?.addEventListener("change"
     const target = event.target as HTMLSelectElement;
     let departure = target.value;
     From_Airport = departure;
-    console.log(departure);
-    
     let lastAirports = AllPlanes.filter(x => x.Airport_From == departure)
-    console.log(lastAirports);
-    
-    let lastAirportsSorted: Plane[] = [];
-    lastAirports.forEach(element => {
-        if (!lastAirportsSorted.includes(element)) {
-            lastAirportsSorted.push(element);
+    let lastAirportsName = lastAirports.map(x => x.Airport_To)
+    let lastAirportsSortedByName: string[] = [];
+    lastAirportsName.forEach(element => {
+        if (!lastAirportsSortedByName.includes(element)) {
+            lastAirportsSortedByName.push(element)
         }
-        
     });
-    lastAirportsSorted.forEach(element => {
+    
+    lastAirportsSortedByName.forEach(element => {
         const option = document.createElement('option');
-        option.value = `${element.Airport_To}`
-        option.innerText = `${element.Airport_To}`
+        option.value = `${element}`
+        option.innerText = `${element}`
         
         destinationInputes?.appendChild(option);
     });
@@ -87,7 +85,18 @@ document.getElementById('departureDropDownMenuInput')?.addEventListener("change"
 document.getElementById('destinationDropDownMenuInput')?.addEventListener("change",(event) => {
     const target = event.target as HTMLSelectElement;
     To_Airport = target.value;
-    AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport)
+    
+    
+});
+
+document.getElementById('passangersNumber')?.addEventListener("change",(event) => {
+    const target = event.target as HTMLSelectElement;
+    Passangers = target.value;
+    console.log(Passangers);
+    
+    //AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_seats >= Passangers)
+    //Még string a passangers !!!!
+
 });
 
 
