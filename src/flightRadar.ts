@@ -15,155 +15,13 @@ const planeIcon = L.icon({
   iconAnchor: [16, 16],
 });
 
-const airportCoordinates = [
-  {
-    name: "Zurich",
-    lat: 47.4592,
-    lng: 8.5512,
-  },
-  {
-    name: "Frankfurt",
-    lat: 50.0379,
-    lng: 8.5622,
-  },
-  {
-    name: "Helsinki",
-    lat: 60.3176,
-    lng: 24.9500,
-  },
-  {
-    name: "Copenhagen",
-    lat: 55.6203,
-    lng: 12.6493,
-  },
-  {
-    name: "Edinburgh",
-    lat: 55.9514,
-    lng: -3.3679,
-  },
-  {
-    name: "Singapore",
-    lat: 1.3585,
-    lng: 103.9815,
-  },
-  {
-    name: "Berlin",
-    lat: 52.3545,
-    lng: 13.5074,
-  },
-  {
-    name: "London",
-    lat: 51.4651,
-    lng: -0.4569,
-  },
-  {
-    name: "San Francisco",
-    lat: 37.6235,
-    lng: -122.3815,
-  },
-  {
-    name: "Vienna",
-    lat: 48.1104,
-    lng: 16.5721,
-  },
-  {
-    name: "Lisbon",
-    lat: 38.7681,
-    lng: -9.1429,
-  },
-  {
-    name: "Bangkok",
-    lat: 13.6986,
-    lng: 100.7419,
-  },
-  {
-    name: "New York",
-    lat: 40.6291,
-    lng: -73.7750,
-  },
-  {
-    name: "Prague",
-    lat: 50.1176,
-    lng: 14.5326,
-  },
-  {
-    name: "Sydney",
-    lat: -33.9306,
-    lng: 151.1718,
-  },
-  {
-    name: "Dubai",
-    lat: 25.2662,
-    lng: 55.3473,
-  },
-  {
-    name: "Rome",
-    lat: 41.8009,
-    lng: 12.2372,
-  },
-  {
-    name: "Amsterdam",
-    lat: 52.3167,
-    lng: 4.7500,
-  },
-  {
-    name: "Paris",
-    lat: 48.9956,
-    lng: 2.5538,
-  },
-  {
-    name: "Munich",
-    lat: 48.3629,
-    lng: 11.7696,
-  },
-  {
-    name: "Budapest",
-    lat: 47.4441,
-    lng: 19.2597,
-  },
-  {
-    name: "Melbourne",
-    lat: -37.6557,
-    lng: 144.8353,
-  },
-  {
-    name: "Delhi",
-    lat: 28.5468,
-    lng: 77.0664,
-  },
-  {
-    name: "Tokyo",
-    lat: 35.5496,
-    lng: 139.7615,
-  },
-  {
-    name: "Madrid",
-    lat: 40.4843,
-    lng: -3.5754,
-  },
-  {
-    name: "Chicago",
-    lat: 41.9884,
-    lng: -87.9303,
-  },
-  {
-    name: "Oslo",
-    lat: 60.1875,
-    lng: 11.0751,
-  },
-  {
-    name: "Stockholm",
-    lat: 59.6652,
-    lng: 17.9232,
-  }
-];
 
 interface Flight {
   id: number;
   Departure_Date: string;
-  Departure_Time: number;
+  Departure_Time: string;
   Destination_Date: string;
-  Destination_Time: number;
+  Destination_Time: string;
   Airport_From: string;
   Airport_To: string;
   Price: number;
@@ -172,8 +30,26 @@ interface Flight {
   Flight_Number: string;
 }
 
-function getAirportCoordinates(airportName: string) {
-  const airport = airportCoordinates.find(coord => coord.name === airportName);
+interface AirportCoordinates{
+  name: string;
+  lat: number;
+  lng: number;
+}
+
+async function fetchAirportCoordinates(): Promise<AirportCoordinates[]> {
+  try {
+      const response = await fetch("http://localhost:3000/airportCoordinates");
+      if (!response.ok) throw new Error('Failed to fetch airport coordinates');
+      return await response.json();
+  } catch (error) {
+      console.error('Error fetching airport coordinates:', error);
+      return [];
+  }
+}
+
+async function getAirportCoordinates(airportName: string) {
+  const airports = await fetchAirportCoordinates();
+  const airport = airports.find(a => a.name === airportName);
   return airport ? { lat: airport.lat, lng: airport.lng } : null;
 }
 
@@ -188,60 +64,179 @@ async function fetchFlightsForTracker(): Promise<Flight[]> {
   }
 }
 
+function calculateCurvedPath(start: L.LatLng, end: L.LatLng, segments: number = 100): L.LatLng[] {
+  const points: L.LatLng[] = [];
+  for (let i = 0; i <= segments; i++) {
+      const fraction = i / segments;
+      
+      // Great circle interpolation
+      const lat1 = start.lat * Math.PI / 180;
+      const lon1 = start.lng * Math.PI / 180;
+      const lat2 = end.lat * Math.PI / 180;
+      const lon2 = end.lng * Math.PI / 180;
+
+      const d = 2 * Math.asin(Math.sqrt(
+          Math.pow(Math.sin((lat1 - lat2) / 2), 2) +
+          Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)
+      ));
+
+      const A = Math.sin((1 - fraction) * d) / Math.sin(d);
+      const B = Math.sin(fraction * d) / Math.sin(d);
+
+      const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
+      const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
+      const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+
+      const lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
+      const lon = Math.atan2(y, x) * 180 / Math.PI;
+
+      points.push(L.latLng(lat, lon));
+  }
+  return points;
+}
+
+// Calculate current position on path
+function calculateCurrentPosition(
+  departure: number, 
+  destination: number, 
+  departureLT: number,
+  destinationLT: number
+): number {
+  let flightDuration: number;
+  
+  // Calculate flight duration considering timezone differences
+  if (destination < departure) {
+      flightDuration = (24 - departure) + destination;
+  } else {
+      flightDuration = destination - departure;
+  }
+  
+  // Calculate progress based on local times
+  let progress: number;
+  const timezoneDiff = destinationLT - departureLT;
+  
+  if (destination < departure) {
+      if (departureLT >= departure) {
+          progress = (departureLT - departure) / flightDuration;
+      } else {
+          progress = ((24 - departure) + departureLT) / flightDuration;
+      }
+  } else {
+      progress = (departureLT - departure + timezoneDiff) / flightDuration;
+  }
+  
+  return Math.max(0, Math.min(1, progress));
+}
+
+function getLocalTime(lat: number, lng: number): number {
+  // Convert coordinates to timezone offset in hours
+  const timeZoneOffset = Math.round(lng / 15);
+  const utcTime = new Date();
+  const localHour = (utcTime.getUTCHours() + timeZoneOffset + 24) % 24;
+  const localMinutes = utcTime.getUTCMinutes();
+  return localHour + (localMinutes / 60);
+}
+
 async function initializeMap() {
   const flights = await fetchFlightsForTracker();
+  let currentVisiblePath: L.Polyline | null = null;
+
+  for (const flight of flights) {
+    const departureCoords = await getAirportCoordinates(flight.Airport_From);
+    const destinationCoords = await getAirportCoordinates(flight.Airport_To);
+    
+    if (!departureCoords || !destinationCoords) continue;
+    
+    const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
+    const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
+    
+    // Check if flight is currently active based on local times
+    const isActive = (departureLT >= parseInt(flight.Departure_Time) && 
+                     departureLT <= parseInt(flight.Destination_Time)) ||
+                    (parseInt(flight.Destination_Time) < parseInt(flight.Departure_Time) && 
+                     (departureLT >= parseInt(flight.Departure_Time) || 
+                      departureLT <= parseInt(flight.Destination_Time)));
+    
+    if (!isActive) continue;
+  }
+
   
-  const planes: { [key: number]: L.Marker } = {};
-
-  flights.forEach((flight) => {
-    const departureCoords = getAirportCoordinates(flight.Airport_From);
-    const destinationCoords = getAirportCoordinates(flight.Airport_To);
-
-    if (!departureCoords || !destinationCoords) return;
-
-    const flightPath = L.polyline(
-      [
-        [departureCoords.lat, departureCoords.lng],
-        [destinationCoords.lat, destinationCoords.lng],
-      ],
-      { color: "blue", weight: 2 }
-    ).addTo(map);
-
-    const planeMarker = L.marker(
-      [departureCoords.lat, departureCoords.lng],
-      { icon: planeIcon }
-    )
-      .addTo(map)
-      .on("click", () => {
-        planeMarker
-          .bindPopup(
-            `<b>Flight Number:</b> ${flight.Flight_Number}<br>
-             <b>Plane Type:</b> ${flight.Type_of_plane}<br>
-             <b>Departure:</b> ${flight.Airport_From}<br>
-             <b>Destination:</b> ${flight.Airport_To}<br>
-             <b>Price:</b> ${flight.Price}<br>
-             <b>Available Seats:</b> ${flight.Free_seats}`
-          )
-          .openPopup();
-
-        flightPath.setStyle({ color: "red", weight: 3 });
+  function updatePlanePositions() {
+    markers.forEach(({marker, flight, points, departureCoords, destinationCoords}) => {
+        const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
+        const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
+        
+        const progress = calculateCurrentPosition(
+            parseInt(flight.Departure_Time),
+            parseInt(flight.Destination_Time),
+            departureLT,
+            destinationLT
+        );
+        
+        const currentPointIndex = Math.floor(progress * (points.length - 1));
+        const currentPosition = points[currentPointIndex];
+        marker.setLatLng(currentPosition);
+    });
+}
+  
+  const markers: Array<{
+      marker: L.Marker,
+      flight: Flight,
+      path: L.Polyline,
+      points: L.LatLng[],
+      departureCoords: { lat: number, lng: number },
+      destinationCoords: { lat: number, lng: number }
+  }> = [];
+  
+  for (const flight of flights) {
+      const departureCoords = await getAirportCoordinates(flight.Airport_From);
+      const destinationCoords = await getAirportCoordinates(flight.Airport_To);
+      
+      if (!departureCoords || !destinationCoords) continue;
+      
+      const curvedPoints = calculateCurvedPath(
+          L.latLng(departureCoords.lat, departureCoords.lng),
+          L.latLng(destinationCoords.lat, destinationCoords.lng)
+      );
+      
+      const flightPath = L.polyline(curvedPoints, {
+          color: 'blue',
+          weight: 2,
+          opacity: 0
+      }).addTo(map);
+      
+      const planeMarker = L.marker([departureCoords.lat, departureCoords.lng], {
+          icon: planeIcon
+      }).addTo(map);
+      
+      planeMarker.on('click', () => {
+          if (currentVisiblePath) {
+              currentVisiblePath.setStyle({ opacity: 0 });
+          }
+          flightPath.setStyle({ opacity: 1 });
+          currentVisiblePath = flightPath;
+          
+          planeMarker.bindPopup(
+              `<b>Flight Number:</b> ${flight.Flight_Number}<br>
+               <b>From:</b> ${flight.Airport_From}<br>
+               <b>To:</b> ${flight.Airport_To}<br>
+               <b>Departure:</b> ${flight.Departure_Time}:00<br>
+               <b>Arrival:</b> ${flight.Destination_Time}:00`
+          ).openPopup();
       });
-
-    planes[flight.id] = planeMarker;
-});}
-
-
-// Sample flight data
-const flights = [
-  {
-    id: "1",
-    Departure_Coordinates: { lat: airportCoordinates[0].lat, lng: airportCoordinates[0].lng },  // Zurich
-    Destination_Coordinates: { lat: airportCoordinates[1].lat, lng: airportCoordinates[1].lng }, // Frankfurt
-    Departure_DateTime: "2025-06-12T16:00:00Z",
-    Destination_DateTime: "2025-06-12T19:00:00Z",
-    Flight_Number: "SKY476",
-    Plane_Type: "Boeing 787",
-  },
-];
+      
+      markers.push({
+        marker: planeMarker,
+        flight: flight,
+        path: flightPath,
+        points: curvedPoints,
+        departureCoords,
+        destinationCoords
+    });
+  }
+  
+  // Update plane positions every second
+  setInterval(updatePlanePositions, 1000);
+}
 
 initializeMap();
