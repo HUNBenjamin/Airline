@@ -17,25 +17,36 @@
             <a href="user.html" id="navbar-username">User</a>
         </nav>
     </header>
-    <div class="ms-5">
-        <div class="search-bar">
-            <form action="#" method="GET">
-                <div class="form-floating">
-                    <select class="form-select" id="departureDropDownMenuInput" aria-label="Floating label select example" required>
-                      <option selected>Departure</option>
+    <div class="flight-search-container">
+        <form id="flightSearchForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departureDropDownMenuInput">Departure:</label>
+                    <select id="departureDropDownMenuInput" required>
+                        <option value="">Select Departure</option>
                     </select>
-                    <label for="departureDropDownMenuInput">Works with selects</label>
                 </div>
-                <div class="form-floating">
-                    <select class="form-select" id="destinationDropDownMenuInput" aria-label="Floating label select example" required>
-                      <option selected>Destination</option>
+
+                <div class="form-group">
+                    <label for="destinationDropDownMenuInput">Destination:</label>
+                    <select id="destinationDropDownMenuInput">
+                        <option value="">Select Destination</option>
+                        <option value="anywhere">Bárhova</option>
                     </select>
-                    <label for="destinationDropDownMenuInput">Works with selects</label>
                 </div>
-                <input id="flyingDateData" type="date" required>
-                <button id="DoneButton">Search</button>
-            </form>
-        </div>
+
+                <div class="form-group">
+                    <label for="guestsInput">Number of Guests:</label>
+                    <input type="number" id="guestsInput" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateFromInput">Departure Date (optional):</label>
+                    <input id="flyingDateData" type="date" required>
+                </div>
+            </div>
+            <button type="submit" class="search-button" id="DoneButton">Search</button>
+        </form>
     </div>
     <div class="test mt-3 ms-5">
         <div id="fromDiv">
