@@ -49,10 +49,17 @@ displayPlane();
     let destinationInputes = document.getElementById('destinationDropDownMenuInput');
     const target = event.target;
     let departure = target.value;
-    console.log(departure);
     From_Airport = departure;
+    console.log(departure);
     let lastAirports = AllPlanes.filter(x => x.Airport_From == departure);
+    console.log(lastAirports);
+    let lastAirportsSorted = [];
     lastAirports.forEach(element => {
+        if (!lastAirportsSorted.includes(element)) {
+            lastAirportsSorted.push(element);
+        }
+    });
+    lastAirportsSorted.forEach(element => {
         const option = document.createElement('option');
         option.value = `${element.Airport_To}`;
         option.innerText = `${element.Airport_To}`;
@@ -72,7 +79,7 @@ displayPlane();
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
                 <div class="flight-info">
-                    <img src="img/cities/${element.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
+                    <img src="img/Logo_1000_200.png" class="rounded me-3" alt="Airline Logo" width="150">
                     <div id="flightFromDataFill" class="flight-time">
                         <strong>${element.Departure_Time}</strong>
                         <span>${element.Airport_From}</span>
