@@ -26,7 +26,7 @@ export async function displayPlanes(): Promise<void> {
     const departureInputes = document.getElementById('departureDropDownMenuInput');
     const destinationInputes = document.getElementById('destinationDropDownMenuInput');
     const citiesFrom = [...new Set(planes.map(x => x.Airport_From))]; 
-    
+
     citiesFrom.forEach(element => {
         const option = document.createElement('option');
         option.value = element;
@@ -34,14 +34,23 @@ export async function displayPlanes(): Promise<void> {
         departureInputes?.appendChild(option);
     });
 
-    const citiesTo = [...new Set(planes.map(x => x.Airport_To))]; 
-    citiesTo.forEach(element => {
-        const option = document.createElement('option');
-        option.value = element;
-        option.innerText = element;
-        destinationInputes?.appendChild(option);
-    });
-}
+    departureInputes?.addEventListener('change', (e) => {
+        const selectedCity = (e.target as HTMLSelectElement).value;
+        const citiesTo = [...new Set(planes
+            .filter(flight => flight.Airport_From === selectedCity)
+            .map(flight => flight.Airport_To))];
+
+        if (destinationInputes) {
+            destinationInputes.innerHTML = '<option value="">Select Destination</option><option value="anywhere">Bárhova</option>';
+
+            citiesTo.forEach(element => {
+                const option = document.createElement('option');
+                option.value = element;
+                option.innerText = element;
+                destinationInputes.appendChild(option);
+            });
+        }
+    });}
 
 let cheapestFlightIds: number[] = [];
 
@@ -59,7 +68,7 @@ async function displayCheapestFlights(selectedCity: string, guests: number, dest
                 flight => flight.Airport_From === selectedCity && flight.Airport_To === destination
             );
         }
-        
+
         if (dateFrom) {
             filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
         }
@@ -71,31 +80,41 @@ async function displayCheapestFlights(selectedCity: string, guests: number, dest
         cheapestFlightIds = cheapestFlights.map(flight => flight.id);
 
         const container = document.getElementById('cheapest-flights');
-        if (container) {
+        const title = document.getElementById('cheapest-flights-title');
+        if (container && title) {
             container.innerHTML = '';
             container.className = 'flight-list';
+
+            if (cheapestFlights.length > 0) {
+                title.style.display = 'block';
+            } else {
+                title.style.display = 'none'; 
+            }
 
             cheapestFlights.forEach(flight => {
                 const totalPrice = flight.Price * guests;
                 const card = document.createElement('div');
                 card.className = 'flight-card';
                 card.innerHTML = `
-                    <div class="flight-card-left">
-                        <img src="img/cities/${flight.Airport_To}.jpg" alt="${flight.Airport_To}" class="flight-image">
-                    </div>
-                    <div class="flight-card-middle">
-                        <div class="flight-header">
-                            <h3>${flight.Airport_From} → ${flight.Airport_To}</h3>
+                    <div class="flight-info">
+                        <img src="img/cities/${flight.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
+                        <div class="flight-time">
+                            <strong>${flight.Departure_Time}:00</strong>
+                            <span>${flight.Airport_From}</span>
                         </div>
-                        <div class="seats">
-                            <p>Date: ${flight.Departure_Date}</p>
-                            <p>Time: ${flight.Departure_Time}:00</p>
-                            <p>Price per person: ${flight.Price} EUR</p>
-                            <p><strong>Total price: ${totalPrice} EUR</strong></p>
+                        <div class="flight-time">
+                            ✈ ${flight.Flight_Number}
+                            <span>${calculator(flight.Departure_Time.toString(), flight.Destination_Time.toString())} h</span>
+                        </div>
+                        <div class="flight-time">
+                            <strong>${flight.Destination_Time}:00</strong>
+                            <span>${flight.Airport_To}</span>
                         </div>
                     </div>
-                    <div class="flight-card-right">
-                        <button class="book-flight-btn" onclick="bookFlight(${flight.id})">Book Now</button>
+                    <div class="flight-price">
+                        <h3 class="my-auto">${flight.Price} Eur</h3>
+                        <p>Total: ${totalPrice} Eur</p>
+                        <button class="select-btn ms-3" onclick="bookFlight(${flight.id})">Select</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -105,24 +124,21 @@ async function displayCheapestFlights(selectedCity: string, guests: number, dest
         console.error('Error displaying cheapest flights:', error);
     }
 }
+
 async function displayPopularFlights(selectedCity: string, guests: number, destination?: string, dateFrom?: string) {
     try {
         const flights = await fetchPlanes();
         let filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
 
         if (!selectedCity || selectedCity === "") {
-            // Ha nincs kiválasztva indulási hely, ne mutasson semmit
             filteredFlights = [];
         } else if (!destination || destination === "anywhere") {
-            // Ha a célállomás "Bárhova", akkor minden járatot megjelenít az adott indulási helyről
             filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
         } else {
-            // Egyébként normál célállomás szerint szűrünk
             filteredFlights = flights.filter(
                 flight => flight.Airport_From === selectedCity && flight.Airport_To === destination
             );
         }
-        
 
         if (dateFrom) {
             filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
@@ -134,31 +150,41 @@ async function displayPopularFlights(selectedCity: string, guests: number, desti
             .slice(0, 4);
 
         const container = document.getElementById('popular-flights');
-        if (container) {
+        const title = document.getElementById('popular-flights-title');
+        if (container && title) {
             container.innerHTML = '';
             container.className = 'flight-list';
+
+            if (popularFlights.length > 0) {
+                title.style.display = 'block';
+            } else {
+                title.style.display = 'none'; 
+            }
 
             popularFlights.forEach(flight => {
                 const totalPrice = flight.Price * guests;
                 const card = document.createElement('div');
                 card.className = 'flight-card';
                 card.innerHTML = `
-                    <div class="flight-card-left">
-                        <img src="img/cities/${flight.Airport_To}.jpg" alt="${flight.Airport_To}" class="flight-image">
-                    </div>
-                    <div class="flight-card-middle">
-                        <div class="flight-header">
-                            <h3>${flight.Airport_From} → ${flight.Airport_To}</h3>
+                    <div class="flight-info">
+                        <img src="img/cities/${flight.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
+                        <div class="flight-time">
+                            <strong>${flight.Departure_Time}:00</strong>
+                            <span>${flight.Airport_From}</span>
                         </div>
-                        <div class="seats">
-                            <p>Date: ${flight.Departure_Date}</p>
-                            <p>Time: ${flight.Departure_Time}:00</p>
-                            <p>Price per person: ${flight.Price} EUR</p>
-                            <p><strong>Total price: ${totalPrice} EUR</strong></p>
+                        <div class="flight-time">
+                            ✈ ${flight.Flight_Number}
+                            <span>${calculator(flight.Departure_Time.toString(), flight.Destination_Time.toString())} h</span>
+                        </div>
+                        <div class="flight-time">
+                            <strong>${flight.Destination_Time}:00</strong>
+                            <span>${flight.Airport_To}</span>
                         </div>
                     </div>
-                    <div class="flight-card-right">
-                        <button class="book-flight-btn" onclick="bookFlight(${flight.id})">Book Now</button>
+                    <div class="flight-price">
+                        <h3 class="my-auto">${flight.Price} Eur</h3>
+                        <p>Total: ${totalPrice} Eur</p>
+                        <button class="select-btn ms-3" onclick="bookFlight(${flight.id})">Select</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -174,6 +200,17 @@ async function displayPopularFlights(selectedCity: string, guests: number, desti
         console.error('Error displaying popular flights:', error);
     }
 }
+
+function calculator(a: string, b: string) {
+    let time1 = a.split(':');
+    let time2 = b.split(':');
+    if (Number(time1[0]) > Number(time2[0])) {
+        return 24 - Number(time1[0]) + Number(time2[0]);
+    } else {
+        return Number(time2[0]) - Number(time1[0]);
+    }
+}
+
 document.getElementById('flightSearchForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
