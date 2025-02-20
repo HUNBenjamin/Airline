@@ -30853,5 +30853,147 @@
       "availableFrom": "2025-02-13",
       "availableTo": "2025-09-03"
     }
+  ],
+  "airportCoordinates": [
+    {
+      "name": "Zurich",
+      "lat": 47.4592,
+      "lng": 8.5512
+    },
+    {
+      "name": "Frankfurt",
+      "lat": 50.0379,
+      "lng": 8.5622
+    },
+    {
+      "name": "Helsinki",
+      "lat": 60.3176,
+      "lng": 24.9500
+    },
+    {
+      "name": "Copenhagen",
+      "lat": 55.6203,
+      "lng": 12.6493
+    },
+    {
+      "name": "Edinburgh",
+      "lat": 55.9514,
+      "lng": -3.3679
+    },
+    {
+      "name": "Singapore",
+      "lat": 1.3585,
+      "lng": 103.9815
+    },
+    {
+      "name": "Berlin",
+      "lat": 52.3545,
+      "lng": 13.5074
+    },
+    {
+      "name": "London",
+      "lat": 51.4651,
+      "lng": -0.4569
+    },
+    {
+      "name": "San Francisco",
+      "lat": 37.6235,
+      "lng": -122.3815
+    },
+    {
+      "name": "Vienna",
+      "lat": 48.1104,
+      "lng": 16.5721
+    },
+    {
+      "name": "Lisbon",
+      "lat": 38.7681,
+      "lng": -9.1429
+    },
+    {
+      "name": "Bangkok",
+      "lat": 13.6986,
+      "lng": 100.7419
+    },
+    {
+      "name": "New York",
+      "lat": 40.6291,
+      "lng": -73.7750
+    },
+    {
+      "name": "Prague",
+      "lat": 50.1176,
+      "lng": 14.5326
+    },
+    {
+      "name": "Sydney",
+      "lat": -33.9306,
+      "lng": 151.1718
+    },
+    {
+      "name": "Dubai",
+      "lat": 25.2662,
+      "lng": 55.3473
+    },
+    {
+      "name": "Rome",
+      "lat": 41.8009,
+      "lng": 12.2372
+    },
+    {
+      "name": "Amsterdam",
+      "lat": 52.3167,
+      "lng": 4.7500
+    },
+    {
+      "name": "Paris",
+      "lat": 48.9956,
+      "lng": 2.5538
+    },
+    {
+      "name": "Munich",
+      "lat": 48.3629,
+      "lng": 11.7696
+    },
+    {
+      "name": "Budapest",
+      "lat": 47.4441,
+      "lng": 19.2597
+    },
+    {
+      "name": "Melbourne",
+      "lat": -37.6557,
+      "lng": 144.8353
+    },
+    {
+      "name": "Delhi",
+      "lat": 28.5468,
+      "lng": 77.0664
+    },
+    {
+      "name": "Tokyo",
+      "lat": 35.5496,
+      "lng": 139.7615
+    },
+    {
+      "name": "Madrid",
+      "lat": 40.4843,
+      "lng": -3.5754
+    },
+    {
+      "name": "Chicago",
+      "lat": 41.9884,
+      "lng": -87.9303
+    },
+    {
+      "name": "Oslo",
+      "lat": 60.1875,
+      "lng": 11.0751
+    },
+    {
+      "name": "Stockholm",
+      "lat": 59.6652,
+      "lng": 17.9232
+    }
   ]
 }
