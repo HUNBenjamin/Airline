@@ -112,9 +112,11 @@ async function displayCheapestFlights(selectedCity: string, guests: number, dest
                         </div>
                     </div>
                     <div class="flight-price">
-                        <h3 class="my-auto">${flight.Price} Eur</h3>
-                        <p>Total: ${totalPrice} Eur</p>
-                        <button class="select-btn ms-3" onclick="bookFlight(${flight.id})">Select</button>
+                        <div class="price-details">
+                            <div class="price-per-person">Price per person: $200</div>
+                            <div class="total-price">Total price: $400</div>
+                        </div>
+                        <button class="select-button">Select</button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -182,9 +184,11 @@ async function displayPopularFlights(selectedCity: string, guests: number, desti
                         </div>
                     </div>
                     <div class="flight-price">
-                        <h3 class="my-auto">${flight.Price} Eur</h3>
-                        <p>Total: ${totalPrice} Eur</p>
-                        <button class="select-btn ms-3" onclick="bookFlight(${flight.id})">Select</button>
+                        <div class="price-details">
+                            <div class="price-per-person">Price per person: $200</div>
+                            <div class="total-price">Total price: $400</div>
+                        </div>
+                        <button class="select-button">Select</button>
                     </div>
                 `;
                 container.appendChild(card);
