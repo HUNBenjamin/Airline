@@ -1,9 +1,9 @@
 interface Plane{
     id: number,
     Departure_Date: string,
-    Departure_Time: number,
+    Departure_Time: string,
     Destination_Date: string,
-    Destination_Time: number,
+    Destination_Time: string,
     Airport_From: string,
     Airport_To: string,
     Price: number,
@@ -11,22 +11,6 @@ interface Plane{
     Free_seats: number,
     Flight_Number: string,
 }
-
-// interface Plane{
-//     id: number,
-//     Departure_Date: string,
-//     Departure_Time: number,
-//     Destination_Date: string,
-//     Destination_Time: number,
-//     Airport_From: string,
-//     Airport_To: string,
-//     Late: number,
-//     Gate: string,
-//     Price: number,
-//     Type_of_plane: string,
-//     Free_seats: number,
-//     Flight_Number: string,
-// };
 
 let AllPlanes: Plane[];
 let From_Airport = "";
@@ -48,9 +32,17 @@ async function displayPlane(type: string = 'all') {
     AllPlanes = plane;
     
     let citiesFrom = plane.map(x => x.Airport_From)
+    let AirportFromSorted: string[] = [];
+    citiesFrom.forEach(element => {
+        if (!AirportFromSorted.includes(element)) {
+            AirportFromSorted.push(element);
+        }
+        
+    });
+
     let departureInputes = document.getElementById('departureDropDownMenuInput')
 
-    citiesFrom.forEach(element => {
+    AirportFromSorted.forEach(element => {
         const option = document.createElement('option');
         option.value = `${element}`
         option.innerText = `${element}`
@@ -69,6 +61,8 @@ document.getElementById('departureDropDownMenuInput')?.addEventListener("change"
 
     const target = event.target as HTMLSelectElement;
     let departure = target.value;
+    console.log(departure);
+    
     From_Airport = departure;
     let lastAirports = AllPlanes.filter(x => x.Airport_From == departure)
     lastAirports.forEach(element => {
@@ -97,14 +91,14 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
                 <div class="flight-info">
-                    <img src="img/Logo_1000-1000.png" alt="Airline Logo" width="150">
+                    <img src="img/cities/${element.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
                     <div id="flightFromDataFill" class="flight-time">
                         <strong>${element.Departure_Time}</strong>
                         <span>${element.Airport_From}</span>
                     </div>
                     <div id="flightCodeAndNumberFill" class="flight-time">
                         ✈ ${element.Flight_Number}
-                        <span>${element.Destination_Time - element.Departure_Time}</span>
+                        <span>${calculator(element.Departure_Time, element.Destination_Time)} h</span>
                     </div>
                     <div id="flightToDataFill" class="flight-time">
                         <strong>${element.Destination_Time}</strong>
@@ -112,7 +106,7 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
                     </div>
                 </div>
                 <div id="filghtPriceFill" class="flight-price">
-                    <p class="my-auto">${element.Price} Eur</p>
+                    <h3 class="my-auto">${element.Price} Eur</h3    >
                     <!-- <div style="color: red; font-size: 18px;"><strong>Ft25,529</strong></div> -->
                     <button class="select-btn ms-3">Select</button>
                 </div>
@@ -123,3 +117,17 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
         flightDiv?.appendChild(myDiv);
     });
 })
+
+function calculator(a: string, b: string) {
+    let time1 = a.split(':')
+    let time2 = b.split(':')
+    if (Number(time1[0]) > Number(time2[0])){
+        return 24 - Number(time1[0]) + Number(time2[0])
+    }
+    else{
+        return  Number(time2[0]) - Number(time1[0]) 
+    }
+        
+
+
+}

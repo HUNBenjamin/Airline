@@ -96,7 +96,7 @@ function initializeHotelSearch() {
             new Date(hotel.availableTo) >= new Date(dateTo)
         );
 
-        selectedHotels = filteredHotels; // Mentjük a kiválasztott hoteleket
+        selectedHotels = filteredHotels; 
         displayFilteredHotels(filteredHotels, hotelContainer);
         saveFormData();
     });
@@ -163,7 +163,7 @@ function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void
             </div>
             <div class="hotel-card-right">
                 <div class="rating-line">
-                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⯨' : ''}</span>
+                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '' : ''}</span>
                     <span class="rating-number">${hotel.rating}/5</span>
                 </div>
                 <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>

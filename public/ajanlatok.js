@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a;
+var _a, _b;
 export function fetchPlanes() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch("http://localhost:3000/userFlights");
@@ -23,16 +23,14 @@ export function displayPlanes() {
         const planes = yield fetchPlanes();
         const departureInputes = document.getElementById('departureDropDownMenuInput');
         const destinationInputes = document.getElementById('destinationDropDownMenuInput');
-        const citiesFrom = [...new Set(planes.map(x => x.Airport_From))]; // Egyedi indulási városok
-        // Indulási városok feltöltése
+        const citiesFrom = [...new Set(planes.map(x => x.Airport_From))];
         citiesFrom.forEach(element => {
             const option = document.createElement('option');
             option.value = element;
             option.innerText = element;
             departureInputes === null || departureInputes === void 0 ? void 0 : departureInputes.appendChild(option);
         });
-        // Célállomások feltöltése (kivéve "Bárhova")
-        const citiesTo = [...new Set(planes.map(x => x.Airport_To))]; // Egyedi célállomások
+        const citiesTo = [...new Set(planes.map(x => x.Airport_To))];
         citiesTo.forEach(element => {
             const option = document.createElement('option');
             option.value = element;
@@ -42,12 +40,20 @@ export function displayPlanes() {
     });
 }
 let cheapestFlightIds = [];
-function displayCheapestFlights(selectedCity, guests, dateFrom) {
+function displayCheapestFlights(selectedCity, guests, destination, dateFrom) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const flights = yield fetchPlanes();
             let filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
-            // Dátum szűrés, ha meg van adva
+            if (!selectedCity || selectedCity === "") {
+                filteredFlights = [];
+            }
+            else if (!destination || destination === "anywhere") {
+                filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
+            }
+            else {
+                filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity && flight.Airport_To === destination);
+            }
             if (dateFrom) {
                 filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
             }
@@ -91,12 +97,23 @@ function displayCheapestFlights(selectedCity, guests, dateFrom) {
         }
     });
 }
-function displayPopularFlights(selectedCity, guests, dateFrom) {
+function displayPopularFlights(selectedCity, guests, destination, dateFrom) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const flights = yield fetchPlanes();
             let filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
-            // Dátum szűrés, ha meg van adva
+            if (!selectedCity || selectedCity === "") {
+                // Ha nincs kiválasztva indulási hely, ne mutasson semmit
+                filteredFlights = [];
+            }
+            else if (!destination || destination === "anywhere") {
+                // Ha a célállomás "Bárhova", akkor minden járatot megjelenít az adott indulási helyről
+                filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
+            }
+            else {
+                // Egyébként normál célállomás szerint szűrünk
+                filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity && flight.Airport_To === destination);
+            }
             if (dateFrom) {
                 filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
             }
@@ -124,7 +141,7 @@ function displayPopularFlights(selectedCity, guests, dateFrom) {
                             <p>Date: ${flight.Departure_Date}</p>
                             <p>Time: ${flight.Departure_Time}:00</p>
                             <p>Price per person: ${flight.Price} EUR</p>
-                            <p><strong>otal price: ${totalPrice} EUR</strong></p>
+                            <p><strong>Total price: ${totalPrice} EUR</strong></p>
                         </div>
                     </div>
                     <div class="flight-card-right">
@@ -153,17 +170,28 @@ function displayPopularFlights(selectedCity, guests, dateFrom) {
     const guestsInput = document.getElementById('guestsInput');
     const dateFromInput = document.getElementById('dateFromInput');
     const selectedCity = departureSelect.value;
+    const destination = destinationSelect.value;
     const guests = parseInt(guestsInput.value);
-    const dateFrom = dateFromInput.value || undefined; // Dátum opcionális
-    if (destinationSelect.value === "anywhere") {
-        // Ha "Bárhova" van kiválasztva, akkor minden célállomásra mutatjuk a repjegyeket
-        displayCheapestFlights(selectedCity, guests, dateFrom);
-        displayPopularFlights(selectedCity, guests, dateFrom);
+    const dateFrom = dateFromInput.value || undefined;
+    displayCheapestFlights(selectedCity, guests, destination, dateFrom);
+    displayPopularFlights(selectedCity, guests, destination, dateFrom);
+}));
+(_b = document.getElementById('flightSearchForm')) === null || _b === void 0 ? void 0 : _b.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
+    e.preventDefault();
+    const departureSelect = document.getElementById('departureDropDownMenuInput');
+    const destinationSelect = document.getElementById('destinationDropDownMenuInput');
+    const guestsInput = document.getElementById('guestsInput');
+    const dateFromInput = document.getElementById('dateFromInput');
+    const selectedCity = departureSelect.value;
+    const guests = parseInt(guestsInput.value);
+    const dateFrom = dateFromInput.value || undefined;
+    if (destinationSelect.value === "anywhere" || destinationSelect.value === "") {
+        displayCheapestFlights(selectedCity, guests, undefined, dateFrom);
+        displayPopularFlights(selectedCity, guests, undefined, dateFrom);
     }
     else {
-        // Ha konkrét célállomás van kiválasztva, akkor csak azokat mutatjuk
-        displayCheapestFlights(selectedCity, guests, dateFrom);
-        displayPopularFlights(selectedCity, guests, dateFrom);
+        displayCheapestFlights(selectedCity, guests, destinationSelect.value, dateFrom);
+        displayPopularFlights(selectedCity, guests, destinationSelect.value, dateFrom);
     }
 }));
 document.addEventListener('DOMContentLoaded', () => {

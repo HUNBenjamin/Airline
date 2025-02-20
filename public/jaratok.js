@@ -9,21 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var _a, _b, _c;
-// interface Plane{
-//     id: number,
-//     Departure_Date: string,
-//     Departure_Time: number,
-//     Destination_Date: string,
-//     Destination_Time: number,
-//     Airport_From: string,
-//     Airport_To: string,
-//     Late: number,
-//     Gate: string,
-//     Price: number,
-//     Type_of_plane: string,
-//     Free_seats: number,
-//     Flight_Number: string,
-// };
 let AllPlanes;
 let From_Airport = "";
 let To_Airport = "";
@@ -44,8 +29,14 @@ function displayPlane() {
         const plane = yield fetchPlane();
         AllPlanes = plane;
         let citiesFrom = plane.map(x => x.Airport_From);
-        let departureInputes = document.getElementById('departureDropDownMenuInput');
+        let AirportFromSorted = [];
         citiesFrom.forEach(element => {
+            if (!AirportFromSorted.includes(element)) {
+                AirportFromSorted.push(element);
+            }
+        });
+        let departureInputes = document.getElementById('departureDropDownMenuInput');
+        AirportFromSorted.forEach(element => {
             const option = document.createElement('option');
             option.value = `${element}`;
             option.innerText = `${element}`;
@@ -58,6 +49,7 @@ displayPlane();
     let destinationInputes = document.getElementById('destinationDropDownMenuInput');
     const target = event.target;
     let departure = target.value;
+    console.log(departure);
     From_Airport = departure;
     let lastAirports = AllPlanes.filter(x => x.Airport_From == departure);
     lastAirports.forEach(element => {
@@ -80,14 +72,14 @@ displayPlane();
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
                 <div class="flight-info">
-                    <img src="img/Logo_1000-1000.png" alt="Airline Logo" width="150">
+                    <img src="img/cities/${element.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
                     <div id="flightFromDataFill" class="flight-time">
                         <strong>${element.Departure_Time}</strong>
                         <span>${element.Airport_From}</span>
                     </div>
                     <div id="flightCodeAndNumberFill" class="flight-time">
                         ✈ ${element.Flight_Number}
-                        <span>${element.Destination_Time - element.Departure_Time}</span>
+                        <span>${calculator(element.Departure_Time, element.Destination_Time)} h</span>
                     </div>
                     <div id="flightToDataFill" class="flight-time">
                         <strong>${element.Destination_Time}</strong>
@@ -95,7 +87,7 @@ displayPlane();
                     </div>
                 </div>
                 <div id="filghtPriceFill" class="flight-price">
-                    <p class="my-auto">${element.Price} Eur</p>
+                    <h3 class="my-auto">${element.Price} Eur</h3    >
                     <!-- <div style="color: red; font-size: 18px;"><strong>Ft25,529</strong></div> -->
                     <button class="select-btn ms-3">Select</button>
                 </div>
@@ -104,3 +96,13 @@ displayPlane();
         flightDiv === null || flightDiv === void 0 ? void 0 : flightDiv.appendChild(myDiv);
     });
 });
+function calculator(a, b) {
+    let time1 = a.split(':');
+    let time2 = b.split(':');
+    if (Number(time1[0]) > Number(time2[0])) {
+        return 24 - Number(time1[0]) + Number(time2[0]);
+    }
+    else {
+        return Number(time2[0]) - Number(time1[0]);
+    }
+}
