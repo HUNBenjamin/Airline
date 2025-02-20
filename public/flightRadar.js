@@ -13,11 +13,11 @@ const map = L.map("map").setView([47.3769, 8.5417], 5); // Center on Europe
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors",
 }).addTo(map);
-// Custom plane icon
 const planeIcon = L.icon({
-    iconUrl: "../img/flightRadarPlaneIcon.png", // Replace with your plane image
-    iconSize: [32, 32], // Adjust as needed
+    iconUrl: "../img/flightRadarPlaneIcon.png",
+    iconSize: [32, 32],
     iconAnchor: [16, 16],
+    rotationOrigin: 'center center'
 });
 function fetchAirportCoordinates() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -76,6 +76,13 @@ function calculateCurvedPath(start, end, segments = 100) {
     }
     return points;
 }
+function calculateHeading(currentPoint, nextPoint) {
+    const dx = nextPoint.lng - currentPoint.lng;
+    const dy = nextPoint.lat - currentPoint.lat;
+    let heading = Math.atan2(dx, dy) * (180 / Math.PI);
+    // Adjust heading to match plane icon's default orientation
+    return heading + 90;
+}
 // Calculate current position on path
 function calculateCurrentPosition(departure, destination, departureLT, destinationLT) {
     let flightDuration;
@@ -114,6 +121,7 @@ function initializeMap() {
     return __awaiter(this, void 0, void 0, function* () {
         const flights = yield fetchFlightsForTracker();
         let currentVisiblePath = null;
+        const markers = [];
         for (const flight of flights) {
             const departureCoords = yield getAirportCoordinates(flight.Airport_From);
             const destinationCoords = yield getAirportCoordinates(flight.Airport_To);
@@ -121,30 +129,8 @@ function initializeMap() {
                 continue;
             const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
             const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
-            // Check if flight is currently active based on local times
-            const isActive = (departureLT >= parseInt(flight.Departure_Time) &&
-                departureLT <= parseInt(flight.Destination_Time)) ||
-                (parseInt(flight.Destination_Time) < parseInt(flight.Departure_Time) &&
-                    (departureLT >= parseInt(flight.Departure_Time) ||
-                        departureLT <= parseInt(flight.Destination_Time)));
-            if (!isActive)
-                continue;
-        }
-        function updatePlanePositions() {
-            markers.forEach(({ marker, flight, points, departureCoords, destinationCoords }) => {
-                const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
-                const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
-                const progress = calculateCurrentPosition(parseInt(flight.Departure_Time), parseInt(flight.Destination_Time), departureLT, destinationLT);
-                const currentPointIndex = Math.floor(progress * (points.length - 1));
-                const currentPosition = points[currentPointIndex];
-                marker.setLatLng(currentPosition);
-            });
-        }
-        const markers = [];
-        for (const flight of flights) {
-            const departureCoords = yield getAirportCoordinates(flight.Airport_From);
-            const destinationCoords = yield getAirportCoordinates(flight.Airport_To);
-            if (!departureCoords || !destinationCoords)
+            const progress = calculateCurrentPosition(parseInt(flight.Departure_Time), parseInt(flight.Destination_Time), departureLT, destinationLT);
+            if (progress <= 0 || progress >= 1)
                 continue;
             const curvedPoints = calculateCurvedPath(L.latLng(departureCoords.lat, departureCoords.lng), L.latLng(destinationCoords.lat, destinationCoords.lng));
             const flightPath = L.polyline(curvedPoints, {
@@ -152,8 +138,12 @@ function initializeMap() {
                 weight: 2,
                 opacity: 0
             }).addTo(map);
-            const planeMarker = L.marker([departureCoords.lat, departureCoords.lng], {
-                icon: planeIcon
+            const currentPointIndex = Math.floor(progress * (curvedPoints.length - 1));
+            const nextPointIndex = Math.min(currentPointIndex + 1, curvedPoints.length - 1);
+            const currentPosition = curvedPoints[currentPointIndex];
+            const planeMarker = L.marker([currentPosition.lat, currentPosition.lng], {
+                icon: planeIcon,
+                rotationAngle: calculateHeading(currentPosition, curvedPoints[nextPointIndex])
             }).addTo(map);
             planeMarker.on('click', () => {
                 if (currentVisiblePath) {
@@ -176,7 +166,20 @@ function initializeMap() {
                 destinationCoords
             });
         }
-        // Update plane positions every second
+        function updatePlanePositions() {
+            markers.forEach(({ marker, flight, points, departureCoords, destinationCoords }) => {
+                const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
+                const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
+                const progress = calculateCurrentPosition(parseInt(flight.Departure_Time), parseInt(flight.Destination_Time), departureLT, destinationLT);
+                const currentPointIndex = Math.floor(progress * (points.length - 1));
+                const nextPointIndex = Math.min(currentPointIndex + 1, points.length - 1);
+                const currentPosition = points[currentPointIndex];
+                const heading = calculateHeading(points[currentPointIndex], points[nextPointIndex]);
+                marker.setLatLng(currentPosition);
+                // @ts-ignore - Leaflet typings don't include setRotationAngle
+                marker.setRotationAngle(heading);
+            });
+        }
         setInterval(updatePlanePositions, 1000);
     });
 }
