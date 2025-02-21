@@ -146,13 +146,13 @@ function applyFilters() {
     const selectedAmenities = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
         .map(checkbox => checkbox.value);
     const ratingElement = document.querySelector('.rating-filter .star.selected:last-child');
-    const selectedRating = ratingElement ? parseInt(ratingElement.dataset.value || "0") : 0;
+    const selectedRating = ratingElement ? parseFloat(ratingElement.dataset.value || "0") : 0; // parseFloat használata
     const priceInput = document.getElementById('priceRange');
     const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
     const sortBy = ((_a = document.getElementById('sortSelect')) === null || _a === void 0 ? void 0 : _a.value) || "price-asc";
     let filteredHotels = selectedHotels.filter(hotel => {
         const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
-        const matchesRating = hotel.rating >= selectedRating;
+        const matchesRating = selectedRating === 0 || hotel.rating === selectedRating; // Pontos egyezés
         const matchesPrice = hotel.pricePerNight <= selectedPrice;
         return matchesAmenities && matchesRating && matchesPrice;
     });
@@ -179,7 +179,7 @@ function initializeRatingFilter() {
         const star = document.createElement('span');
         star.className = 'star';
         star.textContent = '☆';
-        star.dataset.value = i.toString();
+        star.dataset.value = i.toString(); // Itt tároljuk a csillag értékét (1-5)
         star.addEventListener('click', () => {
             const stars = ratingFilter.querySelectorAll('.star');
             stars.forEach((s, index) => {
@@ -192,7 +192,7 @@ function initializeRatingFilter() {
                     s.textContent = '☆';
                 }
             });
-            applyFilters();
+            applyFilters(); // Szűrés alkalmazása
         });
         ratingFilter.appendChild(star);
     }

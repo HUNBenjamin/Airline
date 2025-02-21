@@ -30852,6 +30852,1493 @@
       "rating": 4.7,
       "availableFrom": "2025-02-13",
       "availableTo": "2025-09-03"
+    },
+    {
+      "id": 141,
+      "name": "Frankfurt Elegance Hotel",
+      "city": "Frankfurt",
+      "pricePerNight": 200,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Airport Shuttle",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 142,
+      "name": "Frankfurt Cozy Inn",
+      "city": "Frankfurt",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-10-15"
+    },
+    {
+      "id": 143,
+      "name": "Frankfurt Luxury Palace",
+      "city": "Frankfurt",
+      "pricePerNight": 300,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Airport Shuttle",
+        "Room Service",
+        "City View",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 144,
+      "name": "New York Premium Suites",
+      "city": "New York",
+      "pricePerNight": 250,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Airport Shuttle",
+        "Room Service",
+        "City View"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 145,
+      "name": "New York Budget Stay",
+      "city": "New York",
+      "pricePerNight": 90,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-20"
+    },
+    {
+      "id": 146,
+      "name": "New York Skyline Luxury",
+      "city": "New York",
+      "pricePerNight": 350,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Airport Shuttle",
+        "Room Service",
+        "City View",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 147,
+      "name": "San Francisco Ocean View Hotel",
+      "city": "San Francisco",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Ocean View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 148,
+      "name": "San Francisco Simple Stay",
+      "city": "San Francisco",
+      "pricePerNight": 85,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-10"
+    },
+    {
+      "id": 149,
+      "name": "San Francisco Golden Gate Luxury",
+      "city": "San Francisco",
+      "pricePerNight": 320,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Ocean View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 150,
+      "name": "Dublin Royal Hotel",
+      "city": "Dublin",
+      "pricePerNight": 210,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Airport Shuttle",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 151,
+      "name": "Dublin Comfort Inn",
+      "city": "Dublin",
+      "pricePerNight": 75,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-25"
+    },
+    {
+      "id": 152,
+      "name": "Dublin Castle Luxury",
+      "city": "Dublin",
+      "pricePerNight": 280,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Airport Shuttle",
+        "Room Service",
+        "City View",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 153,
+      "name": "Zurich Alpine Retreat",
+      "city": "Zurich",
+      "pricePerNight": 230,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Mountain View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 154,
+      "name": "Zurich Simple Stay",
+      "city": "Zurich",
+      "pricePerNight": 95,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-30"
+    },
+    {
+      "id": 155,
+      "name": "Zurich Luxury Mountain View",
+      "city": "Zurich",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Mountain View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 156,
+      "name": "Singapore Marina Bay Suites",
+      "city": "Singapore",
+      "pricePerNight": 240,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Marina Bay View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 157,
+      "name": "Singapore Budget Inn",
+      "city": "Singapore",
+      "pricePerNight": 90,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-15"
+    },
+    {
+      "id": 158,
+      "name": "Singapore Luxury Skyline",
+      "city": "Singapore",
+      "pricePerNight": 330,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Marina Bay View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 159,
+      "name": "Berlin Central Plaza",
+      "city": "Berlin",
+      "pricePerNight": 200,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 160,
+      "name": "Berlin Cozy Stay",
+      "city": "Berlin",
+      "pricePerNight": 85,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-20"
+    },
+    {
+      "id": 161,
+      "name": "Berlin Luxury Palace",
+      "city": "Berlin",
+      "pricePerNight": 290,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 162,
+      "name": "Delhi Royal Palace Hotel",
+      "city": "Delhi",
+      "pricePerNight": 210,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 163,
+      "name": "Delhi Budget Inn",
+      "city": "Delhi",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 164,
+      "name": "Delhi Luxury Heritage",
+      "city": "Delhi",
+      "pricePerNight": 300,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 165,
+      "name": "Oslo Fjord View Hotel",
+      "city": "Oslo",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Fjord View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 166,
+      "name": "Oslo Simple Stay",
+      "city": "Oslo",
+      "pricePerNight": 95,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-10"
+    },
+    {
+      "id": 167,
+      "name": "Oslo Luxury Fjord Retreat",
+      "city": "Oslo",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Fjord View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 168,
+      "name": "Stockholm Royal Suites",
+      "city": "Stockholm",
+      "pricePerNight": 230,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 169,
+      "name": "Stockholm Budget Inn",
+      "city": "Stockholm",
+      "pricePerNight": 90,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-25"
+    },
+    {
+      "id": 170,
+      "name": "Stockholm Luxury Archipelago View",
+      "city": "Stockholm",
+      "pricePerNight": 320,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Archipelago View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 171,
+      "name": "Sydney Harbour View Hotel",
+      "city": "Sydney",
+      "pricePerNight": 240,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Harbour View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 172,
+      "name": "Sydney Budget Stay",
+      "city": "Sydney",
+      "pricePerNight": 95,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-15"
+    },
+    {
+      "id": 173,
+      "name": "Sydney Luxury Opera House View",
+      "city": "Sydney",
+      "pricePerNight": 330,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Opera House View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 174,
+      "name": "Munich Bavarian Retreat",
+      "city": "Munich",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 175,
+      "name": "Munich Simple Stay",
+      "city": "Munich",
+      "pricePerNight": 85,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-20"
+    },
+    {
+      "id": 176,
+      "name": "Munich Luxury Castle View",
+      "city": "Munich",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Castle View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 177,
+      "name": "Vienna Imperial Suites",
+      "city": "Vienna",
+      "pricePerNight": 230,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 178,
+      "name": "Vienna Budget Inn",
+      "city": "Vienna",
+      "pricePerNight": 90,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-25"
+    },
+    {
+      "id": 179,
+      "name": "Vienna Luxury Palace",
+      "city": "Vienna",
+      "pricePerNight": 320,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 180,
+      "name": "Prague Castle View Hotel",
+      "city": "Prague",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Castle View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 181,
+      "name": "Prague Budget Stay",
+      "city": "Prague",
+      "pricePerNight": 85,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-20"
+    },
+    {
+      "id": 182,
+      "name": "Prague Luxury River View",
+      "city": "Prague",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "River View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 183,
+      "name": "Budapest Danube View Hotel",
+      "city": "Budapest",
+      "pricePerNight": 210,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Danube View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 184,
+      "name": "Budapest Budget Inn",
+      "city": "Budapest",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 185,
+      "name": "Budapest Luxury Thermal Spa",
+      "city": "Budapest",
+      "pricePerNight": 300,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Thermal Baths",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 186,
+      "name": "Dubai Skyline Suites",
+      "city": "Dubai",
+      "pricePerNight": 250,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 187,
+      "name": "Dubai Budget Stay",
+      "city": "Dubai",
+      "pricePerNight": 95,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-09-15"
+    },
+    {
+      "id": 188,
+      "name": "Dubai Luxury Burj View",
+      "city": "Dubai",
+      "pricePerNight": 350,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Burj Khalifa View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 189,
+      "name": "Tokyo Skyline Suites",
+      "city": "Tokyo",
+      "pricePerNight": 240,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 190,
+      "name": "Tokyo Budget Inn",
+      "city": "Tokyo",
+      "pricePerNight": 90,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-25"
+    },
+    {
+      "id": 191,
+      "name": "Tokyo Luxury Tower View",
+      "city": "Tokyo",
+      "pricePerNight": 340,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Tokyo Tower View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 192,
+      "name": "Paris Eiffel View Hotel",
+      "city": "Paris",
+      "pricePerNight": 230,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Eiffel Tower View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 193,
+      "name": "Paris Budget Stay",
+      "city": "Paris",
+      "pricePerNight": 85,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-20"
+    },
+    {
+      "id": 194,
+      "name": "Paris Luxury Champs-Élysées",
+      "city": "Paris",
+      "pricePerNight": 330,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Champs-Élysées View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 195,
+      "name": "Amsterdam Canal View Hotel",
+      "city": "Amsterdam",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Canal View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 196,
+      "name": "Amsterdam Budget Inn",
+      "city": "Amsterdam",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 197,
+      "name": "Amsterdam Luxury Canal Palace",
+      "city": "Amsterdam",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Canal View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 198,
+      "name": "Lisbon Ocean View Hotel",
+      "city": "Lisbon",
+      "pricePerNight": 210,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Ocean View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 199,
+      "name": "Lisbon Budget Stay",
+      "city": "Lisbon",
+      "pricePerNight": 75,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-25"
+    },
+    {
+      "id": 200,
+      "name": "Lisbon Luxury Castle View",
+      "city": "Lisbon",
+      "pricePerNight": 300,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Castle View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 201,
+      "name": "Rome Colosseum View Hotel",
+      "city": "Rome",
+      "pricePerNight": 230,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Colosseum View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 202,
+      "name": "Rome Budget Inn",
+      "city": "Rome",
+      "pricePerNight": 85,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-20"
+    },
+    {
+      "id": 203,
+      "name": "Rome Luxury Vatican View",
+      "city": "Rome",
+      "pricePerNight": 320,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Vatican View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 204,
+      "name": "Chicago Lake View Hotel",
+      "city": "Chicago",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Lake View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 205,
+      "name": "Chicago Budget Stay",
+      "city": "Chicago",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 206,
+      "name": "Chicago Luxury Skyline View",
+      "city": "Chicago",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Skyline View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 207,
+      "name": "Barcelona Beach View Hotel",
+      "city": "Barcelona",
+      "pricePerNight": 230,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Beach View",
+        "Room Service"
+      ],
+      "rating": 4.9,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 208,
+      "name": "Barcelona Budget Inn",
+      "city": "Barcelona",
+      "pricePerNight": 85,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.7,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-08-20"
+    },
+    {
+      "id": 209,
+      "name": "Barcelona Luxury Sagrada View",
+      "city": "Barcelona",
+      "pricePerNight": 320,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Sagrada Familia View",
+        "Room Service",
+        "Private Balcony"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 210,
+      "name": "Madrid Royal Palace Hotel",
+      "city": "Madrid",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "City View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 211,
+      "name": "Madrid Budget Stay",
+      "city": "Madrid",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 212,
+      "name": "Madrid Luxury Prado View",
+      "city": "Madrid",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Prado Museum View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 213,
+      "name": "Bangkok Riverside Hotel",
+      "city": "Bangkok",
+      "pricePerNight": 210,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Riverside View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 214,
+      "name": "Bangkok Budget Inn",
+      "city": "Bangkok",
+      "pricePerNight": 75,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-25"
+    },
+    {
+      "id": 215,
+      "name": "Bangkok Luxury Skyline View",
+      "city": "Bangkok",
+      "pricePerNight": 300,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Skyline View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 216,
+      "name": "Melbourne Beach View Hotel",
+      "city": "Melbourne",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Beach View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 217,
+      "name": "Melbourne Budget Stay",
+      "city": "Melbourne",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 218,
+      "name": "Melbourne Luxury Yarra View",
+      "city": "Melbourne",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Yarra River View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 219,
+      "name": "Helsinki Sea View Hotel",
+      "city": "Helsinki",
+      "pricePerNight": 210,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Sea View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 220,
+      "name": "Helsinki Budget Inn",
+      "city": "Helsinki",
+      "pricePerNight": 75,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.6,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-25"
+    },
+    {
+      "id": 221,
+      "name": "Helsinki Luxury Archipelago View",
+      "city": "Helsinki",
+      "pricePerNight": 300,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Archipelago View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 222,
+      "name": "Copenhagen Harbor View Hotel",
+      "city": "Copenhagen",
+      "pricePerNight": 220,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Harbor View",
+        "Room Service"
+      ],
+      "rating": 4.8,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
+    },
+    {
+      "id": 223,
+      "name": "Copenhagen Budget Stay",
+      "city": "Copenhagen",
+      "pricePerNight": 80,
+      "maxGuests": 2,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included"
+      ],
+      "rating": 3.5,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-07-30"
+    },
+    {
+      "id": 224,
+      "name": "Copenhagen Luxury Nyhavn View",
+      "city": "Copenhagen",
+      "pricePerNight": 310,
+      "maxGuests": 4,
+      "amenities": [
+        "Free WiFi",
+        "Breakfast Included",
+        "Spa",
+        "Pool",
+        "Fitness Center",
+        "Nyhavn View",
+        "Room Service",
+        "Private Terrace"
+      ],
+      "rating": 5.0,
+      "availableFrom": "2025-02-13",
+      "availableTo": "2025-12-31"
     }
   ],
   "airportCoordinates": [

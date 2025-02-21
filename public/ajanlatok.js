@@ -102,8 +102,8 @@ function displayCheapestFlights(selectedCity, guests, destination, dateFrom) {
                     </div>
                     <div class="flight-price">
                         <div class="price-details">
-                            <div class="price-per-person">Price per person: $200</div>
-                            <div class="total-price">Total price: $400</div>
+                            <div class="price-per-person">Price per person: ${flight.Price} EUR</div>
+                            <div class="total-price"><strong>Total price: ${totalPrice} EUR</strong></div>
                         </div>
                         <button class="select-button">Select</button>
                     </div>
@@ -171,8 +171,8 @@ function displayPopularFlights(selectedCity, guests, destination, dateFrom) {
                     </div>
                     <div class="flight-price">
                         <div class="price-details">
-                            <div class="price-per-person">Price per person: $200</div>
-                            <div class="total-price">Total price: $400</div>
+                            <div class="price-per-person">Price per person: ${flight.Price} EUR</div>
+                            <div class="total-price"><strong>Total price: ${totalPrice} EUR</strong></div>
                         </div>
                         <button class="select-button">Select</button>
                     </div>

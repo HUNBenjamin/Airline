@@ -148,6 +148,29 @@ header nav a:hover {
     cursor: pointer;
 }
 
+.flight-price {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flight-price .price-details {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.flight-price .select-button {
+    margin-left: 15px;
+    background: #0047ab;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 
 
 
