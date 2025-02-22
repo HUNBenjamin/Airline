@@ -93,7 +93,7 @@
         }
 
         .hotel-search-container button {
-            background-color: #3498db;
+            background-color: #6a0dad;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -102,7 +102,7 @@
         }
 
         .hotel-search-container button:hover {
-            background-color: #2980b9;
+            background-color: #5a0ca0;
         }
 
         .hotel-card {
@@ -223,6 +223,20 @@
             font-weight: bold;
         }
 
+        .search-button {
+                background-color: #6a0dad;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            
+            .search-button:hover {
+                background-color: #5a0ca0;
+            }
+
         @media (max-width: 768px) {
             .content-overlay {
                 flex-direction: column;
@@ -258,7 +272,7 @@
                 gap: 25px;
             }
             .search-button {
-                background-color: #3498db;
+                background-color: #6a0dad;
                 color: white;
                 border: none;
                 padding: 10px 20px;
@@ -268,7 +282,7 @@
             }
             
             .search-button:hover {
-                background-color: #2980b9;
+                background-color: #5a0ca0;
             }
             
             .rating-filter {
@@ -297,7 +311,8 @@
             <a href="jaratok.html">Flights</a>
             <a href="hotelek.html">Hotels</a>
             <a href="ajanlatok.html">Offers</a>
-            <a href="user.html">User</a>
+            <a href="flightRadar.html">FlightRadar</a>
+            <a href="user.html" id="navbar-username">User</a>
         </nav>
     </header>
     <div class="container">
@@ -332,9 +347,9 @@
                     <div id="ratingFilter" class="rating-filter"></div>
                 </div>
                 <div class="filter-group">
-                    <label for="priceRange">Árintervallum (fő/éj):</label>
-                    <input type="range" id="priceRange" min="0" max="500" step="50">
-                    <span id="priceRangeValue">0 - 500 EUR</span>
+                    <label for="priceRange">Ár szűrő:</label>
+                    <input type="range" id="priceRange" name="priceRange" min="0" max="500" value="500">
+                    <span id="priceValue">500 EUR</span>
                 </div>
                 <button id="applyFilters" class="search-button">Szűrők alkalmazása</button>
             </div>

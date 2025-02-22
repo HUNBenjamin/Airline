@@ -135,8 +135,6 @@ function calculateTotalPrice(pricePerNight: number, dateFrom: string, dateTo: st
     return pricePerNight * nights * guests;
 }
 
-
-
 function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void {
     container.innerHTML = hotels.length === 0 
         ? '<div class="no-hotels">Erre az időszakra/főre nincs elérhető szállás.</div>'
@@ -173,65 +171,112 @@ function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void
             </div>
         `;
         container.appendChild(hotelCard);
-    });}
 
-    function applyFilters() {
-        const selectedAmenities = Array.from(document.querySelectorAll<HTMLInputElement>('.checkbox-group input:checked'))
-            .map(checkbox => checkbox.value);
-        const ratingElement = document.querySelector<HTMLElement>('.rating-filter .star.selected:last-child');
-        const selectedRating = ratingElement ? parseFloat(ratingElement.dataset.value || "0") : 0; // parseFloat használata
-        const priceInput = document.getElementById('priceRange') as HTMLInputElement | null;
-        const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
-        const sortBy = (document.getElementById('sortSelect') as HTMLSelectElement | null)?.value || "price-asc";
-    
-        let filteredHotels = selectedHotels.filter(hotel => {
-            const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
-            const matchesRating = selectedRating === 0 || hotel.rating === selectedRating; // Pontos egyezés
-            const matchesPrice = hotel.pricePerNight <= selectedPrice;
-            return matchesAmenities && matchesRating && matchesPrice;
-        });
-    
-        filteredHotels.sort((a, b) => {
-            switch (sortBy) {
-                case "price-asc": return a.pricePerNight - b.pricePerNight;
-                case "price-desc": return b.pricePerNight - a.pricePerNight;
-                case "rating-asc": return a.rating - b.rating;
-                case "rating-desc": return b.rating - a.rating;
-                default: return 0;
+        // Foglalás gomb eseménykezelője
+        const bookButton = hotelCard.querySelector('.book-hotel-btn') as HTMLButtonElement;
+        bookButton.addEventListener('click', () => {
+            const hotelId = bookButton.dataset.hotelId;
+            const guests = parseInt((document.getElementById('guestsInput') as HTMLInputElement).value);
+            if (hotelId) {
+                bookHotel(parseInt(hotelId), hotel.name);
             }
+        });    });
+}
+
+async function bookHotel(hotelId: number, hotelName: string): Promise<void> {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+
+    currentUser.hotelBookings.push(hotelId);
+    setCurrentUser(currentUser);
+
+    try {
+        const response = await fetch(`http://localhost:3000/users/${currentUser.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentUser),
         });
-    
-        const hotelContainer = document.getElementById('hotelList') as HTMLDivElement | null;
-        if (hotelContainer) {
-            displayFilteredHotels(filteredHotels, hotelContainer);
-        }
+
+        if (!response.ok) throw new Error('Failed to update user on server');
+    } catch (error) {
+        console.error('Error updating user:', error);
     }
-    function initializeRatingFilter() {
-        const ratingFilter = document.getElementById('ratingFilter');
-        if (!ratingFilter) return;
-        ratingFilter.innerHTML = '';
-    
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('span');
-            star.className = 'star';
-            star.textContent = '☆';
-            star.dataset.value = i.toString(); // Itt tároljuk a csillag értékét (1-5)
-            star.addEventListener('click', () => {
-                const stars = ratingFilter.querySelectorAll('.star');
-                stars.forEach((s, index) => {
-                    if (index < i) {
-                        s.classList.add('selected');
-                        s.textContent = '⭐️';
-                    } else {
-                        s.classList.remove('selected');
-                        s.textContent = '☆';
-                    }
-                });
-                applyFilters(); // Szűrés alkalmazása
+
+    alert(`Hotel foglalás ${hotelName} sikeresen létrehozva!`);
+}
+
+// Add these function declarations
+export function getCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+}
+export function setCurrentUser(user: any) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+}
+
+// Define the User interface
+interface User {
+    hotelBookings: number[];
+    // Add other properties as needed
+}
+function applyFilters() {
+    const selectedAmenities = Array.from(document.querySelectorAll<HTMLInputElement>('.checkbox-group input:checked'))
+        .map(checkbox => checkbox.value);
+    const ratingElement = document.querySelector<HTMLElement>('.rating-filter .star.selected:last-child');
+    const selectedRating = ratingElement ? parseFloat(ratingElement.dataset.value || "0") : 0;
+    const priceInput = document.getElementById('priceRange') as HTMLInputElement | null;
+    const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
+    const sortBy = (document.getElementById('sortSelect') as HTMLSelectElement | null)?.value || "price-asc";
+
+    let filteredHotels = selectedHotels.filter(hotel => {
+        const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
+        const matchesRating = selectedRating === 0 || (hotel.rating >= selectedRating - 0.5 && hotel.rating <= selectedRating); // Módosított feltétel
+        const matchesPrice = hotel.pricePerNight <= selectedPrice;
+        return matchesAmenities && matchesRating && matchesPrice;
+    });
+
+    filteredHotels.sort((a, b) => {
+        switch (sortBy) {
+            case "price-asc": return a.pricePerNight - b.pricePerNight;
+            case "price-desc": return b.pricePerNight - a.pricePerNight;
+            case "rating-asc": return a.rating - b.rating;
+            case "rating-desc": return b.rating - a.rating;
+            default: return 0;
+        }
+    });
+
+    const hotelContainer = document.getElementById('hotelList') as HTMLDivElement | null;
+    if (hotelContainer) {
+        displayFilteredHotels(filteredHotels, hotelContainer);
+    }
+}
+
+function initializeRatingFilter() {
+    const ratingFilter = document.getElementById('ratingFilter');
+    if (!ratingFilter) return;
+    ratingFilter.innerHTML = '';
+
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.textContent = '☆';
+        star.dataset.value = i.toString(); // Itt tároljuk a csillag értékét (1-5)
+        star.addEventListener('click', () => {
+            const stars = ratingFilter.querySelectorAll('.star');
+            stars.forEach((s, index) => {
+                if (index < i) {
+                    s.classList.add('selected');
+                    s.textContent = '⭐️';
+                } else {
+                    s.classList.remove('selected');
+                    s.textContent = '☆';
+                }
             });
-            ratingFilter.appendChild(star);
-        }
+            applyFilters(); // Szűrés alkalmazása
+        });
+        ratingFilter.appendChild(star);
     }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     displayHotels();
@@ -255,9 +300,18 @@ document.addEventListener('DOMContentLoaded', () => {
         <option value="rating-desc">Értékelés (csökkenő)</option>
     `;
     sortSelect.addEventListener('change', applyFilters);
-    
+
     const searchButton = document.querySelector('#hotelSearchForm button[type="submit"]');
     if (searchButton) {
         searchButton.parentElement?.insertBefore(sortSelect, searchButton.nextSibling);
+    }
+
+    const priceRangeInput = document.getElementById('priceRange') as HTMLInputElement | null;
+    const priceValueDisplay = document.getElementById('priceValue') as HTMLSpanElement | null;
+
+    if (priceRangeInput && priceValueDisplay) {
+        priceRangeInput.addEventListener('input', () => {
+            priceValueDisplay.textContent = `${priceRangeInput.value} EUR`;
+        });
     }
 });

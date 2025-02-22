@@ -139,20 +139,59 @@ function displayFilteredHotels(hotels, container) {
             </div>
         `;
         container.appendChild(hotelCard);
+        // Foglalás gomb eseménykezelője
+        const bookButton = hotelCard.querySelector('.book-hotel-btn');
+        bookButton.addEventListener('click', () => {
+            const hotelId = bookButton.dataset.hotelId;
+            const guests = parseInt(document.getElementById('guestsInput').value);
+            if (hotelId) {
+                bookHotel(parseInt(hotelId), hotel.name);
+            }
+        });
     });
+}
+function bookHotel(hotelId, hotelName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentUser = getCurrentUser();
+        if (!currentUser)
+            return;
+        currentUser.hotelBookings.push(hotelId);
+        setCurrentUser(currentUser);
+        try {
+            const response = yield fetch(`http://localhost:3000/users/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentUser),
+            });
+            if (!response.ok)
+                throw new Error('Failed to update user on server');
+        }
+        catch (error) {
+            console.error('Error updating user:', error);
+        }
+        alert(`Hotel foglalás ${hotelName} sikeresen létrehozva!`);
+    });
+}
+// Add these function declarations
+export function getCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+}
+export function setCurrentUser(user) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
 }
 function applyFilters() {
     var _a;
     const selectedAmenities = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
         .map(checkbox => checkbox.value);
     const ratingElement = document.querySelector('.rating-filter .star.selected:last-child');
-    const selectedRating = ratingElement ? parseFloat(ratingElement.dataset.value || "0") : 0; // parseFloat használata
+    const selectedRating = ratingElement ? parseFloat(ratingElement.dataset.value || "0") : 0;
     const priceInput = document.getElementById('priceRange');
     const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
     const sortBy = ((_a = document.getElementById('sortSelect')) === null || _a === void 0 ? void 0 : _a.value) || "price-asc";
     let filteredHotels = selectedHotels.filter(hotel => {
         const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
-        const matchesRating = selectedRating === 0 || hotel.rating === selectedRating; // Pontos egyezés
+        const matchesRating = selectedRating === 0 || (hotel.rating >= selectedRating - 0.5 && hotel.rating <= selectedRating); // Módosított feltétel
         const matchesPrice = hotel.pricePerNight <= selectedPrice;
         return matchesAmenities && matchesRating && matchesPrice;
     });
@@ -221,5 +260,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.querySelector('#hotelSearchForm button[type="submit"]');
     if (searchButton) {
         (_a = searchButton.parentElement) === null || _a === void 0 ? void 0 : _a.insertBefore(sortSelect, searchButton.nextSibling);
+    }
+    const priceRangeInput = document.getElementById('priceRange');
+    const priceValueDisplay = document.getElementById('priceValue');
+    if (priceRangeInput && priceValueDisplay) {
+        priceRangeInput.addEventListener('input', () => {
+            priceValueDisplay.textContent = `${priceRangeInput.value} EUR`;
+        });
     }
 });

@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 window.cancelBooking = cancelBooking;
+window.cancelHotelBooking = cancelHotelBooking;
 window.resetBookings = resetBookings;
 function cancelBooking(flightId) {
     activeBookingIds = activeBookingIds.filter(id => id !== flightId);
@@ -18,7 +19,51 @@ function cancelBooking(flightId) {
     localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
     alert(`Foglalás ${flightId} sikeresen törölve!`);
 }
-// Utility functions for localStorage management
+function fetchHotelById(hotelId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const response = yield fetch(`http://localhost:3000/hotels/${hotelId}`);
+            if (!response.ok)
+                throw new Error('Failed to fetch hotel data');
+            return yield response.json();
+        }
+        catch (error) {
+            console.error('Error fetching hotel:', error);
+            return null;
+        }
+    });
+}
+function cancelHotelBooking(hotelId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentUser = getCurrentUser();
+        if (!currentUser)
+            return;
+        const hotel = yield fetchHotelById(hotelId);
+        if (!hotel) {
+            alert('Hiba történt a hotel adatainak lekérésekor.');
+            return;
+        }
+        currentUser.hotelBookings = currentUser.hotelBookings.filter((id) => id !== hotelId);
+        setCurrentUser(currentUser);
+        try {
+            const response = yield fetch(`http://localhost:3000/users/${currentUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentUser),
+            });
+            if (!response.ok)
+                throw new Error('Failed to update user on server');
+        }
+        catch (error) {
+            console.error('Error updating user:', error);
+        }
+        const hotelElement = document.getElementById(`hotel-booking-${hotelId}`);
+        if (hotelElement) {
+            hotelElement.remove();
+        }
+        alert(`A(z) ${hotel.name} hotel foglalása sikeresen törölve!`);
+    });
+}
 export function getCurrentUser() {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
@@ -31,7 +76,6 @@ export function clearCurrentUser() {
 }
 let activeBookingIds = [1, 2, 3];
 let allFlights = [];
-//activebookingids by all the records in json
 function fetchFlights() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -52,11 +96,9 @@ const fetchallFlightsData = () => __awaiter(void 0, void 0, void 0, function* ()
     localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
     return flights;
 });
-// Utility function to redirect to a specific page
 function redirectToPage(page) {
     window.location.href = page;
 }
-// Handle login form submission
 function handleLogin(event) {
     return __awaiter(this, void 0, void 0, function* () {
         event.preventDefault();
@@ -65,7 +107,16 @@ function handleLogin(event) {
         const users = yield fetchUsers();
         const user = users.find((u) => u.email === email && u.password === password);
         if (user) {
-            setCurrentUser(user);
+            try {
+                const response = yield fetch(`http://localhost:3000/users/${user.id}`);
+                if (!response.ok)
+                    throw new Error('Failed to fetch user data');
+                const updatedUser = yield response.json();
+                setCurrentUser(updatedUser);
+            }
+            catch (error) {
+                console.error('Error fetching user data:', error);
+            }
             updateNavbarUsername();
             redirectToPage('./user.html');
         }
@@ -86,7 +137,6 @@ function updateNavbarUsername() {
         }
     }
 }
-// Handle register form submission
 function handleRegister(event) {
     return __awaiter(this, void 0, void 0, function* () {
         event.preventDefault();
@@ -99,7 +149,7 @@ function handleRegister(event) {
             alert('Az email már használatban van.');
             return;
         }
-        const newUser = { name, phone, email, password, bookings: [] };
+        const newUser = { name, phone, email, password, bookings: [], hotelBookings: [] };
         try {
             const response = yield fetch("http://localhost:3000/users", {
                 method: 'POST',
@@ -115,7 +165,6 @@ function handleRegister(event) {
         }
     });
 }
-// Fetch all users
 function fetchUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -130,15 +179,13 @@ function fetchUsers() {
         }
     });
 }
-// Handle user page interactions
 function setupUserPage() {
     const currentUser = getCurrentUser();
-    updateNavbarUsername(); // Add this at the start
+    updateNavbarUsername();
     if (!currentUser) {
         redirectToPage('./login.html');
         return;
     }
-    // Get DOM elements
     const userNameSpan = document.getElementById('user-name');
     const userEmailSpan = document.getElementById('user-email');
     const userPhoneSpan = document.getElementById('user-phone');
@@ -148,40 +195,51 @@ function setupUserPage() {
     const editProfileForm = document.getElementById('edit-profile-form');
     const profileEditForm = document.getElementById('profile-edit-form');
     const cancelEditButton = document.getElementById('cancel-edit');
-    // Display user info
     if (userNameSpan)
         userNameSpan.textContent = currentUser.name;
     if (userEmailSpan)
         userEmailSpan.textContent = currentUser.email;
     if (userPhoneSpan)
         userPhoneSpan.textContent = currentUser.phone;
-    // Display bookings
     const displayBookings = () => __awaiter(this, void 0, void 0, function* () {
         if (!bookingsList)
             return;
         try {
             const flights = yield fetchFlights();
-            console.log("All flights:", flights);
+            const hotels = yield fetchHotels();
             const activeFlights = flights.filter(flight => activeBookingIds.includes(Number(flight.id)));
-            console.log("Active flights:", activeFlights);
-            if (activeFlights.length === 0) {
+            const activeHotels = hotels.filter((hotel) => currentUser.hotelBookings.includes(Number(hotel.id)));
+            if (activeFlights.length === 0 && activeHotels.length === 0) {
                 bookingsList.innerHTML = '<li class="list-group-item">Nincsenek aktív foglalások</li>';
                 bookingsList.insertAdjacentHTML('afterend', '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>');
                 return;
             }
-            const bookingsHTML = activeFlights.map(flight => `
-                <li class="list-group-item" id="booking-${flight.id}" style="display: flex; align-items: center;">
-                    <div style="flex-grow: 1;">
-                        <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
-                        ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
-                        Plane: ${flight.Plane_Type}<br>
-                        Price: ${flight.Price} USD<br>
-                        <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
-                    </div>
-                    <img src="${flight.Image}" alt="${flight.Plane_Type}" style="max-width: 200px; margin: 10px;">
-                </li>
-
-            `).join('');
+            const bookingsHTML = [
+                ...activeFlights.map(flight => `
+                    <li class="list-group-item" id="booking-${flight.id}" style="display: flex; align-items: center;">
+                        <div style="flex-grow: 1;">
+                            <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
+                            ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
+                            Plane: ${flight.Plane_Type}<br>
+                            Price: ${flight.Price} USD<br>
+                            <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
+                        </div>
+                        <img src="${flight.Image}" alt="${flight.Plane_Type}" style="max-width: 200px; margin: 10px;">
+                    </li>
+                `),
+                ...activeHotels.map((hotel) => `
+                    <li class="list-group-item" id="hotel-booking-${hotel.id}" style="display: flex; align-items: center;">
+                        <div style="flex-grow: 1;">
+                            <strong>${hotel.name}</strong><br>
+                            ${hotel.city}<br>
+                            ${hotel.availableFrom} - ${hotel.availableTo}<br>
+                            Price: ${hotel.pricePerNight} EUR/night<br>
+                            <button class="btn btn-danger btn-sm mt-2" onclick="cancelHotelBooking(${hotel.id})">Lemondás</button>
+                        </div>
+                        <img src="img/hotels/${hotel.id}.jpg" alt="${hotel.name}" style="max-width: 200px; margin: 10px;">
+                    </li>
+                `)
+            ].join('');
             bookingsList.innerHTML = bookingsHTML;
             bookingsList.insertAdjacentHTML('afterend', '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>');
         }
@@ -190,9 +248,21 @@ function setupUserPage() {
             bookingsList.innerHTML = '<li class="list-group-item">Hiba történt a foglalások betöltésekor</li>';
         }
     });
-    // Call displayBookings
+    function fetchHotels() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const response = yield fetch("http://localhost:3000/hotels");
+                if (!response.ok)
+                    throw new Error('Failed to fetch hotels');
+                return yield response.json();
+            }
+            catch (error) {
+                console.error('Error fetching hotels:', error);
+                return [];
+            }
+        });
+    }
     displayBookings();
-    // Setup profile editing
     if (editProfileButton) {
         editProfileButton.addEventListener('click', () => {
             if (editProfileForm) {
@@ -232,7 +302,6 @@ function setupUserPage() {
             alert('Profil sikeresen frissítve!');
         });
     }
-    // Setup logout
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
             clearCurrentUser();
@@ -244,6 +313,11 @@ function setupUserPage() {
 function resetBookings() {
     return __awaiter(this, void 0, void 0, function* () {
         activeBookingIds = [1, 2, 3];
+        const currentUser = getCurrentUser();
+        if (currentUser) {
+            currentUser.hotelBookings = [];
+            setCurrentUser(currentUser);
+        }
         localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
         setupUserPage();
     });
@@ -251,17 +325,20 @@ function resetBookings() {
 function initializeActiveBookings() {
     const savedBookings = localStorage.getItem('activeBookings');
     activeBookingIds = savedBookings ? JSON.parse(savedBookings) : [];
-    // For testing, you can initialize with some flights
+    const currentUser = getCurrentUser();
+    if (currentUser && !currentUser.hotelBookings) {
+        currentUser.hotelBookings = [];
+        setCurrentUser(currentUser);
+    }
     if (activeBookingIds.length === 0) {
-        activeBookingIds = [1, 2, 3]; // Add some initial bookings
+        activeBookingIds = [1, 2, 3];
         localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
     }
 }
-// Initialize the page based on contextfunction init() {
 function init() {
     fetchallFlightsData();
     initializeActiveBookings();
-    updateNavbarUsername(); // Add this line
+    updateNavbarUsername();
     if (document.getElementById('login-form')) {
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
@@ -271,10 +348,5 @@ function init() {
     else if (document.getElementById('user-name')) {
         setupUserPage();
     }
-    const savedBookings = localStorage.getItem('activeBookings');
-    if (savedBookings) {
-        activeBookingIds = JSON.parse(savedBookings);
-    }
 }
-// Run initialization
 init();
