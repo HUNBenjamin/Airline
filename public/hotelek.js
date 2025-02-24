@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var _a;
 let selectedHotels = [];
 export function fetchHotels() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -129,7 +130,7 @@ function displayFilteredHotels(hotels, container) {
             </div>
             <div class="hotel-card-right">
                 <div class="rating-line">
-                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '' : ''}</span>
+                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⭐️' : ''}</span>
                     <span class="rating-number">${hotel.rating}/5</span>
                 </div>
                 <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
@@ -139,7 +140,6 @@ function displayFilteredHotels(hotels, container) {
             </div>
         `;
         container.appendChild(hotelCard);
-        // Foglalás gomb eseménykezelője
         const bookButton = hotelCard.querySelector('.book-hotel-btn');
         bookButton.addEventListener('click', () => {
             const hotelId = bookButton.dataset.hotelId;
@@ -155,7 +155,15 @@ function bookHotel(hotelId, hotelName) {
         const currentUser = getCurrentUser();
         if (!currentUser)
             return;
+        const dateFrom = document.getElementById('dateFromInput').value;
+        const dateTo = document.getElementById('dateToInput').value;
+        const guests = parseInt(document.getElementById('guestsInput').value);
         currentUser.hotelBookings.push(hotelId);
+        if (!currentUser.hotelBookingDates) {
+            currentUser.hotelBookingDates = {};
+        }
+        currentUser.hotelBookingDates[hotelId] = { dateFrom, dateTo, guests };
+        currentUser.guests = guests;
         setCurrentUser(currentUser);
         try {
             const response = yield fetch(`http://localhost:3000/users/${currentUser.id}`, {
@@ -169,10 +177,9 @@ function bookHotel(hotelId, hotelName) {
         catch (error) {
             console.error('Error updating user:', error);
         }
-        alert(`Hotel foglalás ${hotelName} sikeresen létrehozva!`);
+        alert(`${hotelName} foglalása sikeresen létrehozva!`);
     });
 }
-// Add these function declarations
 export function getCurrentUser() {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
@@ -180,12 +187,11 @@ export function getCurrentUser() {
 export function setCurrentUser(user) {
     localStorage.setItem('currentUser', JSON.stringify(user));
 }
+let selectedRating = 0;
 function applyFilters() {
     var _a;
     const selectedAmenities = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
         .map(checkbox => checkbox.value);
-    const ratingElement = document.querySelector('.rating-filter .star.selected:last-child');
-    const selectedRating = ratingElement ? parseFloat(ratingElement.dataset.value || "0") : 0;
     const priceInput = document.getElementById('priceRange');
     const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
     const sortBy = ((_a = document.getElementById('sortSelect')) === null || _a === void 0 ? void 0 : _a.value) || "price-asc";
@@ -218,7 +224,7 @@ function initializeRatingFilter() {
         const star = document.createElement('span');
         star.className = 'star';
         star.textContent = '☆';
-        star.dataset.value = i.toString(); // Itt tároljuk a csillag értékét (1-5)
+        star.dataset.value = i.toString();
         star.addEventListener('click', () => {
             const stars = ratingFilter.querySelectorAll('.star');
             stars.forEach((s, index) => {
@@ -231,11 +237,12 @@ function initializeRatingFilter() {
                     s.textContent = '☆';
                 }
             });
-            applyFilters(); // Szűrés alkalmazása
+            selectedRating = i;
         });
         ratingFilter.appendChild(star);
     }
 }
+(_a = document.getElementById('filterButton')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', applyFilters);
 document.addEventListener('DOMContentLoaded', () => {
     var _a;
     displayHotels();

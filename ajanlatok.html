@@ -18,7 +18,8 @@
             <a href="jaratok.html">Flights</a>
             <a href="hotelek.html">Hotels</a>
             <a href="ajanlatok.html">Offers</a>
-            <a href="user.html">User</a>
+            <a href="flightRadar.html">FlightRadar</a>
+            <a href="user.html" id="navbar-username">User</a>
         </nav>
     </header>
     <div class="container">
@@ -54,9 +55,9 @@
                     <button type="submit" class="search-button">Search</button>
                 </form>
             </div>
-            <h2 id="cheapest-flights-title" style="display: none;">Cheapest Flights</h2>
+            <h2 id="cheapest-flights-title" style="display: none;" class="text-center">Cheapest Flights</h2>
             <div id="cheapest-flights" class="flight-list"></div>
-            <h2 id="popular-flights-title" style="display: none;">Popular Flights</h2>
+            <h2 id="popular-flights-title" style="display: none;" class="text-center">Popular Flights</h2>
             <div id="popular-flights" class="flight-list"></div>
         </div>
     </div>
@@ -67,19 +68,20 @@
     <div class="info-cards">
         <div class="info-card">
             <h3>Flight Delays</h3>
-            <p>Check real-time updates on flight schedules.</p>
+            <p>Stay informed with up-to-the-minute flight information, including any changes to schedules, delays, or cancellations.</p>
         </div>
         <div class="info-card">
             <h3>Booking Tips</h3>
-            <p>Find out how to make secure bookings through verified platforms.</p>
+            <p>Get tips on comparing prices and finding the best deals while ensuring your booking process is safe and straightforward.</p>
         </div>
         <div class="info-card">
             <h3>Special Offers</h3>
-            <p>Explore our latest discounts and deals for your next trip.</p>
+            <p>Check out exclusive promotions and limited-time offers to save on your upcoming travels.</p>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0v8FqG7WQvEEwTR4/Jd/csyZ0Fh5J6MZxk1wW+vP4tXgpoDs" crossorigin="anonymous"></script>
     <script type="module" src="./public/ajanlatok.js"></script>
+    <script type="module" src="./public/login.js"></script>
 </body>
 </html>

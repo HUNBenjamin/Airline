@@ -48,6 +48,74 @@ export function displayPlanes() {
     });
 }
 let cheapestFlightIds = [];
+function bookFlight(flightId, totalPrice, guests, flightNumber) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const currentUser = getCurrentUser();
+        if (currentUser === null) {
+            alert('Kérlek, először jelentkezz be!');
+            window.location.href = './login.html';
+            return;
+        }
+        const updatedUser = Object.assign(Object.assign({}, currentUser), { guests });
+        if (!('bookings' in updatedUser)) {
+            updatedUser.bookings = [];
+        }
+        updatedUser.bookings.push(flightId);
+        try {
+            const response = yield fetch(`http://localhost:3000/users/${updatedUser.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedUser),
+            });
+            if (!response.ok)
+                throw new Error('Failed to update user on server');
+            let activeBookingIds = JSON.parse(localStorage.getItem('activeBookings') || '[]');
+            activeBookingIds.push(flightId);
+            localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+            alert(`${flightNumber} járat foglalása sikeres!`);
+        }
+        catch (error) {
+            console.error('Error updating user:', error);
+            alert('Hiba történt a foglalás során.');
+        }
+    });
+}
+function getCurrentUser() {
+    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+}
+function addSelectButtonListeners() {
+    const selectButtons = document.querySelectorAll('.select-button');
+    selectButtons.forEach(button => {
+        button.replaceWith(button.cloneNode(true));
+    });
+    document.querySelectorAll('.select-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            var _a, _b, _c, _d;
+            const flightCard = e.target.closest('.flight-card');
+            if (flightCard) {
+                const flightId = parseInt(((_a = flightCard.querySelector('.flight-info')) === null || _a === void 0 ? void 0 : _a.getAttribute('data-flight-id')) || '0');
+                const totalPrice = parseInt(((_c = (_b = flightCard.querySelector('.total-price')) === null || _b === void 0 ? void 0 : _b.textContent) === null || _c === void 0 ? void 0 : _c.replace(/\D/g, '')) || '0');
+                const flightNumber = ((_d = flightCard.querySelector('.flight-info')) === null || _d === void 0 ? void 0 : _d.getAttribute('flight.Flight_Number')) || 'Ismeretlen';
+                const guestsInput = document.getElementById('guestsInput');
+                const guests = parseInt((guestsInput === null || guestsInput === void 0 ? void 0 : guestsInput.value) || '1');
+                bookFlight(flightId, totalPrice, guests, flightNumber);
+            }
+        });
+    });
+}
+function addFlightIdsToCards() {
+    const flightCards = document.querySelectorAll('.flight-card');
+    flightCards.forEach(card => {
+        var _a, _b, _c;
+        const flightId = (_a = card.querySelector('.flight-info')) === null || _a === void 0 ? void 0 : _a.getAttribute('data-flight-id');
+        if (!flightId) {
+            const flightIdFromData = (_b = card.querySelector('.flight-info')) === null || _b === void 0 ? void 0 : _b.getAttribute('data-flight-id');
+            if (flightIdFromData) {
+                (_c = card.querySelector('.flight-info')) === null || _c === void 0 ? void 0 : _c.setAttribute('data-flight-id', flightIdFromData);
+            }
+        }
+    });
+}
 function displayCheapestFlights(selectedCity, guests, destination, dateFrom) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -85,7 +153,7 @@ function displayCheapestFlights(selectedCity, guests, destination, dateFrom) {
                     const card = document.createElement('div');
                     card.className = 'flight-card';
                     card.innerHTML = `
-                    <div class="flight-info">
+                    <div class="flight-info" data-flight-id="${flight.id}">
                         <img src="img/cities/${flight.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
                         <div class="flight-time">
                             <strong>${flight.Departure_Time}:00</strong>
@@ -102,8 +170,8 @@ function displayCheapestFlights(selectedCity, guests, destination, dateFrom) {
                     </div>
                     <div class="flight-price">
                         <div class="price-details">
-                            <div class="price-per-person">Price per person: $200</div>
-                            <div class="total-price">Total price: $400</div>
+                            <div class="price-per-person">Price per person: ${flight.Price} EUR</div>
+                            <div class="total-price"><strong>Total price: ${totalPrice} EUR</strong></div>
                         </div>
                         <button class="select-button">Select</button>
                     </div>
@@ -111,6 +179,8 @@ function displayCheapestFlights(selectedCity, guests, destination, dateFrom) {
                     container.appendChild(card);
                 });
             }
+            addSelectButtonListeners();
+            addFlightIdsToCards();
         }
         catch (error) {
             console.error('Error displaying cheapest flights:', error);
@@ -154,7 +224,7 @@ function displayPopularFlights(selectedCity, guests, destination, dateFrom) {
                     const card = document.createElement('div');
                     card.className = 'flight-card';
                     card.innerHTML = `
-                    <div class="flight-info">
+                    <div class="flight-info" data-flight-id="${flight.id}">
                         <img src="img/cities/${flight.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
                         <div class="flight-time">
                             <strong>${flight.Departure_Time}:00</strong>
@@ -171,8 +241,8 @@ function displayPopularFlights(selectedCity, guests, destination, dateFrom) {
                     </div>
                     <div class="flight-price">
                         <div class="price-details">
-                            <div class="price-per-person">Price per person: $200</div>
-                            <div class="total-price">Total price: $400</div>
+                            <div class="price-per-person">Price per person: ${flight.Price} EUR</div>
+                            <div class="total-price"><strong>Total price: ${totalPrice} EUR</strong></div>
                         </div>
                         <button class="select-button">Select</button>
                     </div>
@@ -180,12 +250,8 @@ function displayPopularFlights(selectedCity, guests, destination, dateFrom) {
                     container.appendChild(card);
                 });
             }
-            if (popularFlights.length === 0) {
-                const noFlightsMessage = document.createElement('div');
-                noFlightsMessage.className = 'no-flights';
-                noFlightsMessage.innerHTML = `<h3>No popular flights available from ${selectedCity}</h3>`;
-                container === null || container === void 0 ? void 0 : container.appendChild(noFlightsMessage);
-            }
+            addSelectButtonListeners();
+            addFlightIdsToCards();
         }
         catch (error) {
             console.error('Error displaying popular flights:', error);

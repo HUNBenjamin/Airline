@@ -161,7 +161,7 @@ function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void
             </div>
             <div class="hotel-card-right">
                 <div class="rating-line">
-                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '' : ''}</span>
+                    <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⭐️' : ''}</span>
                     <span class="rating-number">${hotel.rating}/5</span>
                 </div>
                 <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
@@ -172,7 +172,6 @@ function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void
         `;
         container.appendChild(hotelCard);
 
-        // Foglalás gomb eseménykezelője
         const bookButton = hotelCard.querySelector('.book-hotel-btn') as HTMLButtonElement;
         bookButton.addEventListener('click', () => {
             const hotelId = bookButton.dataset.hotelId;
@@ -187,7 +186,20 @@ async function bookHotel(hotelId: number, hotelName: string): Promise<void> {
     const currentUser = getCurrentUser();
     if (!currentUser) return;
 
+    const dateFrom = (document.getElementById('dateFromInput') as HTMLInputElement).value;
+    const dateTo = (document.getElementById('dateToInput') as HTMLInputElement).value;
+    const guests = parseInt((document.getElementById('guestsInput') as HTMLInputElement).value);
+
     currentUser.hotelBookings.push(hotelId);
+
+    if (!currentUser.hotelBookingDates) {
+        currentUser.hotelBookingDates = {};
+    }
+
+    currentUser.hotelBookingDates[hotelId] = { dateFrom, dateTo, guests };
+
+    currentUser.guests = guests;
+
     setCurrentUser(currentUser);
 
     try {
@@ -202,10 +214,9 @@ async function bookHotel(hotelId: number, hotelName: string): Promise<void> {
         console.error('Error updating user:', error);
     }
 
-    alert(`Hotel foglalás ${hotelName} sikeresen létrehozva!`);
+    alert(`${hotelName} foglalása sikeresen létrehozva!`);
 }
 
-// Add these function declarations
 export function getCurrentUser() {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
@@ -214,16 +225,17 @@ export function setCurrentUser(user: any) {
     localStorage.setItem('currentUser', JSON.stringify(user));
 }
 
-// Define the User interface
 interface User {
-    hotelBookings: number[];
-    // Add other properties as needed
+    hotelBookings: number[]; 
+    hotelBookingDates: { [hotelId: number]: { dateFrom: string; dateTo: string } }; 
+    
 }
+
+let selectedRating = 0; 
+
 function applyFilters() {
     const selectedAmenities = Array.from(document.querySelectorAll<HTMLInputElement>('.checkbox-group input:checked'))
         .map(checkbox => checkbox.value);
-    const ratingElement = document.querySelector<HTMLElement>('.rating-filter .star.selected:last-child');
-    const selectedRating = ratingElement ? parseFloat(ratingElement.dataset.value || "0") : 0;
     const priceInput = document.getElementById('priceRange') as HTMLInputElement | null;
     const selectedPrice = priceInput ? parseInt(priceInput.value) : 0;
     const sortBy = (document.getElementById('sortSelect') as HTMLSelectElement | null)?.value || "price-asc";
@@ -260,7 +272,7 @@ function initializeRatingFilter() {
         const star = document.createElement('span');
         star.className = 'star';
         star.textContent = '☆';
-        star.dataset.value = i.toString(); // Itt tároljuk a csillag értékét (1-5)
+        star.dataset.value = i.toString(); 
         star.addEventListener('click', () => {
             const stars = ratingFilter.querySelectorAll('.star');
             stars.forEach((s, index) => {
@@ -272,11 +284,13 @@ function initializeRatingFilter() {
                     s.textContent = '☆';
                 }
             });
-            applyFilters(); // Szűrés alkalmazása
+            selectedRating = i; 
         });
         ratingFilter.appendChild(star);
     }
 }
+
+document.getElementById('filterButton')?.addEventListener('click', applyFilters);
 
 document.addEventListener('DOMContentLoaded', () => {
     displayHotels();

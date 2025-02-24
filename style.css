@@ -139,13 +139,17 @@ header nav a:hover {
     color: gray;
     font-size: 20px;
 }
-.select-btn {
-    background: #0047ab;
+.select-button {
+    background: #6a0dad;
     color: white;
     padding: 8px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.select-button:hover {
+    background: #5a0ca0;
 }
 
 .flight-price {
@@ -163,7 +167,7 @@ header nav a:hover {
 
 .flight-price .select-button {
     margin-left: 15px;
-    background: #0047ab;
+    background: #6a0dad;
     color: white;
     padding: 8px 15px;
     border: none;

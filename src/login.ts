@@ -143,7 +143,7 @@ async function handleRegister(event: SubmitEvent) {
         return;
     }
 
-    const newUser = { name, phone, email, password, bookings: [], hotelBookings: [] };
+    const newUser = { name, phone, email, password, bookings: [], hotelBookings: [], guests: 1 };
     try {
         const response = await fetch("http://localhost:3000/users", {
             method: 'POST',
@@ -192,7 +192,6 @@ function setupUserPage() {
     if (userEmailSpan) userEmailSpan.textContent = currentUser.email;
     if (userPhoneSpan) userPhoneSpan.textContent = currentUser.phone;
 
-    
     const displayBookings = async () => {
         if (!bookingsList) return;
 
@@ -202,11 +201,28 @@ function setupUserPage() {
 
             const activeFlights = flights.filter(flight => 
                 activeBookingIds.includes(Number(flight.id))
-            );
+            ).map(flight => {
+                const totalPrice = flight.Price * (currentUser.guests || 1);
+                return { ...flight, totalPrice };
+            });
 
             const activeHotels = hotels.filter((hotel: { id: string }) => 
-                currentUser.hotelBookings.includes(Number(hotel.id)) 
-            );
+                currentUser.hotelBookings.includes(Number(hotel.id))
+            ).map((hotel: any) => {
+                const bookingDates = currentUser.hotelBookingDates?.[hotel.id];
+                if (!bookingDates) {
+                    console.error('Nincsenek dátumok ehhez a foglaláshoz:', hotel.id);
+                    return null;
+                }
+        
+                const totalPrice = calculateTotalPrice(
+                    hotel.pricePerNight,
+                    bookingDates.dateFrom,
+                    bookingDates.dateTo,
+                    bookingDates.guests || 1
+                );
+                return { ...hotel, totalPrice, bookingDates };
+            }).filter((hotel): hotel is NonNullable<typeof hotel> => hotel !== null);
 
             if (activeFlights.length === 0 && activeHotels.length === 0) {
                 bookingsList.innerHTML = '<li class="list-group-item">Nincsenek aktív foglalások</li>';
@@ -223,20 +239,20 @@ function setupUserPage() {
                             <strong>${flight.Airport_From} - ${flight.Airport_To}</strong><br>
                             ${flight.Departure_Date} ${flight.Departure_Time} - ${flight.Destination_Date} ${flight.Destination_Time}<br>
                             Plane: ${flight.Plane_Type}<br>
-                            Price: ${flight.Price} USD<br>
+                            <strong>Price: ${flight.totalPrice} EUR</strong><br>
                             <button class="btn btn-danger btn-sm mt-2" onclick="cancelBooking(${flight.id})">Lemondás</button>
                         </div>
                         <img src="${flight.Image}" alt="${flight.Plane_Type}" style="max-width: 200px; margin: 10px;">
                     </li>
                 `),
 
-                ...activeHotels.map((hotel: { id: string; name: string; city: string; availableFrom: string; availableTo: string; pricePerNight: number }) => `
+                ...activeHotels.map((hotel: { id: string; name: string; city: string; bookingDates: { dateFrom: string; dateTo: string }; pricePerNight: number; totalPrice: number }) => `
                     <li class="list-group-item" id="hotel-booking-${hotel.id}" style="display: flex; align-items: center;">
                         <div style="flex-grow: 1;">
                             <strong>${hotel.name}</strong><br>
                             ${hotel.city}<br>
-                            ${hotel.availableFrom} - ${hotel.availableTo}<br>
-                            Price: ${hotel.pricePerNight} EUR/night<br>
+                            ${hotel.bookingDates.dateFrom} - ${hotel.bookingDates.dateTo}<br>
+                            <strong>Price: ${hotel.totalPrice} EUR</strong><br>
                             <button class="btn btn-danger btn-sm mt-2" onclick="cancelHotelBooking(${hotel.id})">Lemondás</button>
                         </div>
                         <img src="img/hotels/${hotel.id}.jpg" alt="${hotel.name}" style="max-width: 200px; margin: 10px;">
@@ -252,7 +268,7 @@ function setupUserPage() {
             console.error('Error displaying bookings:', error);
             bookingsList.innerHTML = '<li class="list-group-item">Hiba történt a foglalások betöltésekor</li>';
         }
-    };
+    };    
     async function fetchHotels(): Promise<any[]> {
         try {
             const response = await fetch("http://localhost:3000/hotels");
@@ -318,6 +334,39 @@ function setupUserPage() {
     }
 }
 
+export async function addBooking(flightId: number) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        alert('Kérlek, először jelentkezz be!');
+        redirectToPage('./login.html');
+        return;
+    }
+
+    if (!currentUser.bookings) {
+        currentUser.bookings = [];
+    }
+    currentUser.bookings.push(flightId);
+
+    try {
+        const response = await fetch(`http://localhost:3000/users/${currentUser.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentUser),
+        });
+
+        if (!response.ok) throw new Error('Failed to update user on server');
+
+        activeBookingIds.push(flightId);
+        localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
+
+        alert('Foglalás sikeres!');
+        redirectToPage('./user.html');
+    } catch (error) {
+        console.error('Error updating user:', error);
+        alert('Hiba történt a foglalás során.');
+    }
+}
+
 async function resetBookings() {
     activeBookingIds = [1, 2, 3];
     const currentUser = getCurrentUser();
@@ -359,3 +408,12 @@ function init() {
 }
 
 init();
+
+function calculateTotalPrice(pricePerNight: number, dateFrom: string, dateTo: string, guests: number): number {
+    const fromDate = new Date(dateFrom);
+    const toDate = new Date(dateTo);
+    const timeDiff = toDate.getTime() - fromDate.getTime();
+    const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+    return pricePerNight * nights * guests;
+}
