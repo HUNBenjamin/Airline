@@ -8,15 +8,15 @@ interface Plane{
     Airport_To: string,
     Price: number,
     Type_of_plane: string,
-    Free_seats: number,
+    Free_Seats: number,
     Flight_Number: string,
 }
 
 let AllPlanes: Plane[];
 let From_Airport = "";
 let To_Airport = "";
-let Passangers = "";
-let FlyingDateTime = "";
+let Passangers: number = 1;
+let FlyingDateTime = "2025-03-19";
 let AvailablePlanes: Plane[];
 
 async function fetchPlane() : Promise<Plane[]> {
@@ -91,18 +91,20 @@ document.getElementById('destinationDropDownMenuInput')?.addEventListener("chang
 
 document.getElementById('passangersNumber')?.addEventListener("change",(event) => {
     const target = event.target as HTMLSelectElement;
-    Passangers = target.value;
-    console.log(Passangers);
-    
-    //AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_seats >= Passangers)
-    //Még string a passangers !!!!
+    let x = target.value;
+    Passangers = +x;
+});
 
+document.getElementById('flyingDateData')?.addEventListener("change",(event) => {
+    const target = event.target as HTMLSelectElement;
+    FlyingDateTime = target.value;
 });
 
 
 
 document.getElementById('DoneButton')?.addEventListener("click", (event) => {
-    // event?.preventDefault()
+    event?.preventDefault()
+    AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_Seats >= Passangers).filter(x => x.Departure_Date >= FlyingDateTime);
     let flightDiv = document.getElementById('fromDiv') as HTMLDivElement;
     flightDiv.innerHTML = "";
     AvailablePlanes.forEach(element => {
@@ -124,9 +126,11 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
                     </div>
                 </div>
                 <div id="filghtPriceFill" class="flight-price">
-                    <h3 class="my-auto">${element.Price} Eur</h3    >
-                    <!-- <div style="color: red; font-size: 18px;"><strong>Ft25,529</strong></div> -->
-                    <button class="select-btn ms-3">Select</button>
+                    <div class="price-details">
+                            <div class="price-per-person">Price per person: ${element.Price} EUR</div> 
+                            <div class="total-price"><strong>Total price: ${element.Price * Passangers} EUR</strong></div>
+                        </div>
+                    <button class="select-button ms-3">Select</button>
                 </div>
             </div>`;
             console.log(myDiv);

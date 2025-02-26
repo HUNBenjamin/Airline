@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e;
 let AllPlanes;
 let From_Airport = "";
 let To_Airport = "";
-let Passangers = "";
-let FlyingDateTime = "";
+let Passangers = 1;
+let FlyingDateTime = "2025-03-19";
 let AvailablePlanes;
 function fetchPlane() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -72,13 +72,16 @@ displayPlane();
 });
 (_c = document.getElementById('passangersNumber')) === null || _c === void 0 ? void 0 : _c.addEventListener("change", (event) => {
     const target = event.target;
-    Passangers = target.value;
-    console.log(Passangers);
-    //AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_seats >= Passangers)
-    //Még string a passangers !!!!
+    let x = target.value;
+    Passangers = +x;
 });
-(_d = document.getElementById('DoneButton')) === null || _d === void 0 ? void 0 : _d.addEventListener("click", (event) => {
-    // event?.preventDefault()
+(_d = document.getElementById('flyingDateData')) === null || _d === void 0 ? void 0 : _d.addEventListener("change", (event) => {
+    const target = event.target;
+    FlyingDateTime = target.value;
+});
+(_e = document.getElementById('DoneButton')) === null || _e === void 0 ? void 0 : _e.addEventListener("click", (event) => {
+    event === null || event === void 0 ? void 0 : event.preventDefault();
+    AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_Seats >= Passangers).filter(x => x.Departure_Date >= FlyingDateTime);
     let flightDiv = document.getElementById('fromDiv');
     flightDiv.innerHTML = "";
     AvailablePlanes.forEach(element => {
@@ -100,9 +103,11 @@ displayPlane();
                     </div>
                 </div>
                 <div id="filghtPriceFill" class="flight-price">
-                    <h3 class="my-auto">${element.Price} Eur</h3    >
-                    <!-- <div style="color: red; font-size: 18px;"><strong>Ft25,529</strong></div> -->
-                    <button class="select-btn ms-3">Select</button>
+                    <div class="price-details">
+                            <div class="price-per-person">Price per person: ${element.Price} EUR</div> 
+                            <div class="total-price"><strong>Total price: ${element.Price * Passangers} EUR</strong></div>
+                        </div>
+                    <button class="select-button ms-3">Select</button>
                 </div>
             </div>`;
         console.log(myDiv);

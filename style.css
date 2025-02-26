@@ -105,17 +105,26 @@ header nav a:hover {
 #destinationDropDownMenuInput {
     min-width: 200px;
 }
-
+#MyBgWhite{
+    background-color: rgb(255, 255, 255 ,0.8);
+    padding-top: 30px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    margin: 20px 40px;
+    
+}
 .flight-card {
-    display: flex;
     align-items: center;
     justify-content: space-between;
     border: 1px solid #ddd;
     padding: 15px;
     border-radius: 8px;
     width: auto;
-    background: #fff;
+    background: rgb(255, 255, 255);
     margin-right: 20px;
+}
+.flight-card::before{
+    opacity: 0.4;
 }
 .flight-info {
     display: flex;
