@@ -1,3 +1,5 @@
+import { log } from "console";
+
 interface Plane{
     id: number,
     Departure_Date: string,
@@ -100,6 +102,14 @@ document.getElementById('flyingDateData')?.addEventListener("change",(event) => 
     FlyingDateTime = target.value;
 });
 
+export const savePlanesToStorage = (planes: Plane[]) => {
+    localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
+}
+export const getPlanesFromStorage = (): Plane[] => {
+    const storedPlanes = localStorage.getItem('AvailablePlanes');
+    return storedPlanes ? JSON.parse(storedPlanes) : [];
+}
+
 
 
 document.getElementById('DoneButton')?.addEventListener("click", (event) => {
@@ -107,6 +117,8 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
     AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_Seats >= Passangers).filter(x => x.Departure_Date >= FlyingDateTime);
     let flightDiv = document.getElementById('fromDiv') as HTMLDivElement;
     flightDiv.innerHTML = "";
+    let i = 0;
+    savePlanesToStorage(AvailablePlanes);
     AvailablePlanes.forEach(element => {
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
@@ -130,13 +142,11 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
                             <div class="price-per-person">Price per person: ${element.Price} EUR</div> 
                             <div class="total-price"><strong>Total price: ${element.Price * Passangers} EUR</strong></div>
                         </div>
-                    <button class="select-button ms-3">Select</button>
+                    <a href="reservation.html" id="selectedPlane" class="select-button ms-3">Select</a>
                 </div>
             </div>`;
-            console.log(myDiv);
-            
-        
         flightDiv?.appendChild(myDiv);
+        i++;
     });
 })
 

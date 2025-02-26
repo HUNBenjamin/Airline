@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -79,11 +78,20 @@ displayPlane();
     const target = event.target;
     FlyingDateTime = target.value;
 });
+export const savePlanesToStorage = (planes) => {
+    localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
+};
+export const getPlanesFromStorage = () => {
+    const storedPlanes = localStorage.getItem('AvailablePlanes');
+    return storedPlanes ? JSON.parse(storedPlanes) : [];
+};
 (_e = document.getElementById('DoneButton')) === null || _e === void 0 ? void 0 : _e.addEventListener("click", (event) => {
     event === null || event === void 0 ? void 0 : event.preventDefault();
     AvailablePlanes = AllPlanes.filter(x => x.Airport_From == From_Airport).filter(x => x.Airport_To == To_Airport).filter(x => x.Free_Seats >= Passangers).filter(x => x.Departure_Date >= FlyingDateTime);
     let flightDiv = document.getElementById('fromDiv');
     flightDiv.innerHTML = "";
+    let i = 0;
+    savePlanesToStorage(AvailablePlanes);
     AvailablePlanes.forEach(element => {
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
@@ -107,11 +115,11 @@ displayPlane();
                             <div class="price-per-person">Price per person: ${element.Price} EUR</div> 
                             <div class="total-price"><strong>Total price: ${element.Price * Passangers} EUR</strong></div>
                         </div>
-                    <button class="select-button ms-3">Select</button>
+                    <a href="reservation.html" id="selectedPlane" class="select-button ms-3">Select</a>
                 </div>
             </div>`;
-        console.log(myDiv);
         flightDiv === null || flightDiv === void 0 ? void 0 : flightDiv.appendChild(myDiv);
+        i++;
     });
 });
 function calculator(a, b) {
