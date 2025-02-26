@@ -1,7 +1,6 @@
 import * as Leaflet from "leaflet";
 const L = window.L as typeof Leaflet;
 
-
 interface Flight {
   id: number;
   Departure_Date: string;
@@ -100,13 +99,19 @@ function calculateCurvedPath(start: L.LatLng, end: L.LatLng, segments: number = 
   }
   return points;
 }
+function calculateHeading(start: L.LatLng, end: L.LatLng): number {
+  const startLat = start.lat * Math.PI / 180;
+  const startLng = start.lng * Math.PI / 180;
+  const endLat = end.lat * Math.PI / 180;
+  const endLng = end.lng * Math.PI / 180;
 
-function calculateHeading(currentPoint: L.LatLng, nextPoint: L.LatLng): number {
-  const dx = nextPoint.lng - currentPoint.lng;
-  const dy = nextPoint.lat - currentPoint.lat;
-  let heading = Math.atan2(dx, dy) * (180 / Math.PI);
-  // Adjust heading to match plane icon's default orientation
-  return heading + 90;
+  const dLng = endLng - startLng;
+
+  const y = Math.sin(dLng) * Math.cos(endLat);
+  const x = Math.cos(startLat) * Math.sin(endLat) -
+           Math.sin(startLat) * Math.cos(endLat) * Math.cos(dLng);
+
+  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
 }
 
 // Calculate current position on path
@@ -179,41 +184,43 @@ async function initializeMap() {
           destinationLT
       );
       
-      if (progress <= 0 || progress >= 1) continue;
+      //if (progress <= 0 || progress >= 1) continue;
       
       const curvedPoints = calculateCurvedPath(
-          L.latLng(departureCoords.lat, departureCoords.lng),
-          L.latLng(destinationCoords.lat, destinationCoords.lng)
-      );
+        L.latLng(departureCoords.lat, departureCoords.lng),
+        L.latLng(destinationCoords.lat, destinationCoords.lng),
+        200  // Increase segments for smoother curves
+    );
       
-      const flightPath = L.polyline(curvedPoints, {
-          color: 'blue',
-          weight: 2,
-          opacity: 0
-      }).addTo(map);
+    const flightPath = L.polyline(curvedPoints, {
+      color: 'blue',
+      weight: 2,
+      opacity: 0,
+      smoothFactor: 1
+    }).addTo(map);
       
-      const currentPointIndex = Math.floor(progress * (curvedPoints.length - 1));
-      const nextPointIndex = Math.min(currentPointIndex + 1, curvedPoints.length - 1);
-      const currentPosition = curvedPoints[currentPointIndex];
-      
+    const currentPointIndex = Math.floor(progress * (curvedPoints.length - 1));
+    const nextPointIndex = Math.min(currentPointIndex + 1, curvedPoints.length - 1);
+    const currentPosition = curvedPoints[currentPointIndex];
+    const heading = calculateHeading(currentPosition, curvedPoints[nextPointIndex]);
 
-      interface ExtendedMarkerOptions extends L.MarkerOptions {
-        rotationAngle?: number;
-      }
+        const marker = L.marker(currentPosition, {
+            icon: planeIcon
+        }).addTo(map);
 
-      const planeMarker = L.marker([currentPosition.lat, currentPosition.lng], {
-        icon: planeIcon,
-        rotationAngle: calculateHeading(currentPosition, curvedPoints[nextPointIndex])
-      } as ExtendedMarkerOptions).addTo(map);
+        const icon = marker.getElement();
+        if (icon) {
+            icon.style.transform += ` rotate(${heading}deg)`;
+        }
       
-      planeMarker.on('click', () => {
+      marker.on('click', () => {
           if (currentVisiblePath) {
               currentVisiblePath.setStyle({ opacity: 0 });
           }
           flightPath.setStyle({ opacity: 1 });
           currentVisiblePath = flightPath;
           
-          planeMarker.bindPopup(
+          marker.bindPopup(
               `<b>Flight Number:</b> ${flight.Flight_Number}<br>
                <b>From:</b> ${flight.Airport_From}<br>
                <b>To:</b> ${flight.Airport_To}<br>
@@ -223,7 +230,7 @@ async function initializeMap() {
       });
       
       markers.push({
-          marker: planeMarker,
+          marker: marker,
           flight: flight,
           path: flightPath,
           points: curvedPoints,
@@ -233,26 +240,28 @@ async function initializeMap() {
   }
   
   function updatePlanePositions() {
-    markers.forEach(({marker, flight, points, departureCoords, destinationCoords}) => {
-        const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
-        const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
-        
-        const progress = calculateCurrentPosition(
-            parseInt(flight.Departure_Time),
-            parseInt(flight.Destination_Time),
-            departureLT,
-            destinationLT
-        );
-        
-        const currentPointIndex = Math.floor(progress * (points.length - 1));
-        const nextPointIndex = Math.min(currentPointIndex + 1, points.length - 1);
-        const currentPosition = points[currentPointIndex];
-        const heading = calculateHeading(points[currentPointIndex], points[nextPointIndex]);
-        
-        marker.setLatLng(currentPosition);
-        // @ts-ignore - Leaflet typings don't include setRotationAngle
-        marker.setRotationAngle(heading);
-    });
+      markers.forEach(({marker, flight, points, departureCoords, destinationCoords}) => {
+          const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
+          const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
+          
+          const progress = calculateCurrentPosition(
+              parseInt(flight.Departure_Time),
+              parseInt(flight.Destination_Time),
+              departureLT,
+              destinationLT
+          );
+          
+          const currentPointIndex = Math.floor(progress * (points.length - 1));
+          const nextPointIndex = Math.min(currentPointIndex + 1, points.length - 1);
+          const currentPosition = points[currentPointIndex];
+          const heading = calculateHeading(currentPosition, points[nextPointIndex]);
+          
+          marker.setLatLng(currentPosition);
+          const icon = marker.getElement();
+          if (icon) {
+              icon.style.transform = `translate3d(0,0,0) rotate(${heading}deg)`;
+          }
+      });
   }
   
   setInterval(updatePlanePositions, 1000);
