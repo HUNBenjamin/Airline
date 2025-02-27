@@ -29,7 +29,6 @@
     </div>`;
     flightDiv?.appendChild(myDiv);
 if (limiter == false) {
-    console.log("Kész");
     
     let questionsDiv = document.createElement("div");
     questionsDiv.innerHTML +=
@@ -70,13 +69,20 @@ if (limiter == false) {
                 <td><a href="#" id="fareSelectButtonBasic" class="btn">Select Basic</a></td>
                 <td><a href="#" id="fareSelectButtonRegular" class="btn">Select Regular</a></td>
                 <td><a href="#" id="fareSelectButtonPlus" class="btn">Select Plus</a></td>
-                <td><a href="#" id="fareSelectButtonFlexiP" class="btn">Select Flexi Plus</a></td>
+                <td><a href="#" id="fareSelectButtonFlexiPlus" class="btn">Select Flexi Plus</a></td>
             </tr>
         </table>
     </div>`;
     questions.appendChild(questionsDiv);
 }
-document.getElementById("fareSelectButtonBasic")!.addEventListener("click", () => {
+//const target = event.target as HTMLSelectElement; console.log(target.firstChild!.nodeValue);
+document.getElementById("fareSelectButtonBasic")!.addEventListener("click", (event) => { FareCompleated(data.price!, 1); });
+document.getElementById("fareSelectButtonRegular")!.addEventListener("click", (event) => { FareCompleated(data.price!, 1.15); });
+document.getElementById("fareSelectButtonPlus")!.addEventListener("click", (event) => { FareCompleated(data.price!, 1.35); });
+document.getElementById("fareSelectButtonFlexiPlus")!.addEventListener("click", (event) => { FareCompleated(data.price!, 1.5); })
+
+function FareCompleated(realPrice:string , plusPrice: number) {
+    data.price = `${(Number(realPrice) * plusPrice)}`;
     limiter = true;
     (document.getElementById("reservationQuestions") as HTMLDivElement).innerHTML = '';
     let questionsDiv = document.createElement("div");
@@ -84,10 +90,8 @@ document.getElementById("fareSelectButtonBasic")!.addEventListener("click", () =
     `<div>
         <h1 class="my-5" >Choosed ✅ </h1>
     </div>`;
-    console.log("Basic");
     questions.append(questionsDiv);
-
-})
+}
 
 function stringToInt(a: string, b: string) {
   return Number(a) * Number(b);
