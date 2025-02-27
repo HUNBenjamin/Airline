@@ -9,7 +9,7 @@ interface Plane{
     Airport_From: string,
     Airport_To: string,
     Price: number,
-    Type_of_plane: string,
+    Plane_Type: string,
     Free_Seats: number,
     Flight_Number: string,
 }
@@ -142,13 +142,20 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
                             <div class="price-per-person">Price per person: ${element.Price} EUR</div> 
                             <div class="total-price"><strong>Total price: ${element.Price * Passangers} EUR</strong></div>
                         </div>
-                    <a href="reservation.html" id="selectedPlane" class="select-button ms-3">Select</a>
+                    <a href="reservation.html?departureDate=${element.Departure_Date}&departureTime=${element.Departure_Time}&destinationDate=${element.Destination_Date}&destinationTime=${element.Destination_Time}&airportFrom=${element.Airport_From}&airportTo=${element.Airport_To}&price=${element.Price}&typeOfPlane=${element.Plane_Type}&freeSeats=${element.Free_Seats}&flightNumber=${element.Flight_Number}&passangers=${Passangers}&departureAirport=${element.Airport_From}&destinationAirport=${element.Airport_To}" id="selectedPlane" class="select-button ms-3">Select</a> 
                 </div>
             </div>`;
-        flightDiv?.appendChild(myDiv);
+        flightDiv?.appendChild(myDiv);//&destination=London&date=2025-03-20&passengers=2
         i++;
     });
 })
+
+
+// let flightDiv = document.getElementById('fromDiv') as HTMLDivElement;
+
+    
+    
+    // });
 
 function calculator(a: string, b: string) {
     let time1 = a.split(':')
@@ -159,7 +166,4 @@ function calculator(a: string, b: string) {
     else{
         return  Number(time2[0]) - Number(time1[0]) 
     }
-        
-
-
 }
