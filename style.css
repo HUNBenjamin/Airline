@@ -395,3 +395,63 @@ header nav a:hover {
         align-items: flex-start;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+h1 {
+    color: #6a0dad;
+    text-align: center;
+}
+.fare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.fare-table th, .fare-table td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+}
+.fare-table th {
+    background-color: #6a0dad;
+    color: white;
+}
+.btn {
+    background-color: #6a0dad;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+}
+.btn:hover {
+    background-color: #540b8c;
+}
+.checkmark {
+    color: #6a0dad;
+    font-weight: bold;
+}

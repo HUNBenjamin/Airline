@@ -1,5 +1,3 @@
-import { log } from "console";
-
 interface Plane{
     id: number,
     Departure_Date: string,
@@ -9,7 +7,7 @@ interface Plane{
     Airport_From: string,
     Airport_To: string,
     Price: number,
-    Type_of_plane: string,
+    Plane_Type: string,
     Free_Seats: number,
     Flight_Number: string,
 }
@@ -28,19 +26,18 @@ async function fetchPlane() : Promise<Plane[]> {
     }
     const data = await response.json();
     return data;
-}
+};
 
 async function displayPlane(type: string = 'all') {
     const plane = await fetchPlane();
     AllPlanes = plane;
-    
     let citiesFrom = plane.map(x => x.Airport_From)
     let AirportFromSorted: string[] = [];
+
     citiesFrom.forEach(element => {
         if (!AirportFromSorted.includes(element)) {
             AirportFromSorted.push(element);
         }
-        
     });
 
     let departureInputes = document.getElementById('departureDropDownMenuInput')
@@ -48,69 +45,34 @@ async function displayPlane(type: string = 'all') {
         const option = document.createElement('option');
         option.value = `${element}`
         option.innerText = `${element}`
-        
         departureInputes?.appendChild(option);
     });
-    
-
-    
-    
-}
+};
 
 displayPlane()
 
 document.getElementById('departureDropDownMenuInput')?.addEventListener("change",(event) => {
     let destinationInputes = document.getElementById('destinationDropDownMenuInput')
-
     const target = event.target as HTMLSelectElement;
-    let departure = target.value;
-    From_Airport = departure;
-    let lastAirports = AllPlanes.filter(x => x.Airport_From == departure)
-    let lastAirportsName = lastAirports.map(x => x.Airport_To)
+    From_Airport = target.value;
+    let lastAirportsName = AllPlanes.filter(x => x.Airport_From == target.value).map(x => x.Airport_To)
     let lastAirportsSortedByName: string[] = [];
+
     lastAirportsName.forEach(element => {
-        if (!lastAirportsSortedByName.includes(element)) {
-            lastAirportsSortedByName.push(element)
-        }
+        if (!lastAirportsSortedByName.includes(element)) { lastAirportsSortedByName.push(element) }
     });
     
     lastAirportsSortedByName.forEach(element => {
         const option = document.createElement('option');
         option.value = `${element}`
         option.innerText = `${element}`
-        
         destinationInputes?.appendChild(option);
     });
-    
-
-})
-document.getElementById('destinationDropDownMenuInput')?.addEventListener("change",(event) => {
-    const target = event.target as HTMLSelectElement;
-    To_Airport = target.value;
-    
-    
 });
 
-document.getElementById('passangersNumber')?.addEventListener("change",(event) => {
-    const target = event.target as HTMLSelectElement;
-    let x = target.value;
-    Passangers = +x;
-});
-
-document.getElementById('flyingDateData')?.addEventListener("change",(event) => {
-    const target = event.target as HTMLSelectElement;
-    FlyingDateTime = target.value;
-});
-
-export const savePlanesToStorage = (planes: Plane[]) => {
-    localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
-}
-export const getPlanesFromStorage = (): Plane[] => {
-    const storedPlanes = localStorage.getItem('AvailablePlanes');
-    return storedPlanes ? JSON.parse(storedPlanes) : [];
-}
-
-
+document.getElementById('destinationDropDownMenuInput')?.addEventListener("change",(event) => { const target = event.target as HTMLSelectElement; To_Airport = target.value; });
+document.getElementById('passangersNumber')?.addEventListener("change",(event) => { const target = event.target as HTMLSelectElement; Passangers = Number(target.value); });
+document.getElementById('flyingDateData')?.addEventListener("change",(event) => { const target = event.target as HTMLSelectElement; FlyingDateTime = target.value; });
 
 document.getElementById('DoneButton')?.addEventListener("click", (event) => {
     event?.preventDefault()
@@ -142,7 +104,7 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
                             <div class="price-per-person">Price per person: ${element.Price} EUR</div> 
                             <div class="total-price"><strong>Total price: ${element.Price * Passangers} EUR</strong></div>
                         </div>
-                    <a href="reservation.html" id="selectedPlane" class="select-button ms-3">Select</a>
+                    <a href="reservation.html?departureDate=${element.Departure_Date}&departureTime=${element.Departure_Time}&destinationDate=${element.Destination_Date}&destinationTime=${element.Destination_Time}&airportFrom=${element.Airport_From}&airportTo=${element.Airport_To}&price=${element.Price}&typeOfPlane=${element.Plane_Type}&freeSeats=${element.Free_Seats}&flightNumber=${element.Flight_Number}&passangers=${Passangers}&departureAirport=${element.Airport_From}&destinationAirport=${element.Airport_To}" id="selectedPlane" class="select-button ms-3">Select</a> 
                 </div>
             </div>`;
         flightDiv?.appendChild(myDiv);
@@ -159,7 +121,12 @@ function calculator(a: string, b: string) {
     else{
         return  Number(time2[0]) - Number(time1[0]) 
     }
-        
+}
 
-
+export const savePlanesToStorage = (planes: Plane[]) => {
+    localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
+}
+export const getPlanesFromStorage = (): Plane[] => {
+    const storedPlanes = localStorage.getItem('AvailablePlanes');
+    return storedPlanes ? JSON.parse(storedPlanes) : [];
 }
