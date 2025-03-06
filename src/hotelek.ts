@@ -184,7 +184,15 @@ function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void
 
 async function bookHotel(hotelId: number, hotelName: string): Promise<void> {
     const currentUser = getCurrentUser();
-    if (!currentUser) return;
+    
+    // Ha nincs bejelentkezve, akkor figyelmeztetés és átirányítás
+    if (!currentUser) {
+        const shouldRedirect = confirm("A foglaláshoz be kell jelentkezned. Kattints az 'OK' gombra a bejelentkezéshez.");
+        if (shouldRedirect) {
+            window.location.href = './login.html';
+        }
+        return;
+    }
 
     const dateFrom = (document.getElementById('dateFromInput') as HTMLInputElement).value;
     const dateTo = (document.getElementById('dateToInput') as HTMLInputElement).value;
@@ -326,6 +334,46 @@ document.addEventListener('DOMContentLoaded', () => {
     if (priceRangeInput && priceValueDisplay) {
         priceRangeInput.addEventListener('input', () => {
             priceValueDisplay.textContent = `${priceRangeInput.value} EUR`;
+        });
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const dateFromInput = document.getElementById("dateFromInput") as HTMLInputElement;
+    const dateToInput = document.getElementById("dateToInput") as HTMLInputElement;
+    const guestsInput = document.getElementById("guestsInput") as HTMLInputElement;
+
+    if (guestsInput) {
+        guestsInput.value = "1"; // Default guest count is 1
+        guestsInput.min = "1";
+    }
+
+    if (dateFromInput && dateToInput) {
+        const today = new Date();
+        const todayStr = today.toISOString().split("T")[0];
+        dateFromInput.value = todayStr;
+        dateFromInput.min = todayStr;
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split("T")[0];
+        dateToInput.value = tomorrowStr;
+        dateToInput.min = tomorrowStr;
+
+        dateFromInput.addEventListener("change", () => {
+            const selectedDate = new Date(dateFromInput.value);
+            if (!isNaN(selectedDate.getTime())) {
+                // Set minimum departure date to the next day
+                const nextDay = new Date(selectedDate);
+                nextDay.setDate(nextDay.getDate() + 1);
+                const minDate = nextDay.toISOString().split("T")[0];
+                dateToInput.min = minDate;
+
+                // Adjust departure date if it's before the minimum date
+                if (dateToInput.value && dateToInput.value < minDate) {
+                    dateToInput.value = minDate;
+                }
+            }
         });
     }
 });
