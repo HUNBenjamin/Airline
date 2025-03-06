@@ -1,7 +1,6 @@
 import * as Leaflet from "leaflet";
 const L = window.L as typeof Leaflet;
 
-
 interface Flight {
   id: number;
   Departure_Date: string;
@@ -22,15 +21,11 @@ interface AirportCoordinates{
   lng: number;
 }
 
-
-
-// Initialize the map
-const map = L.map("map").setView([47.3769, 8.5417], 5); // Center on Europe
+const map = L.map("map").setView([47.3769, 8.5417], 5);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors",
 }).addTo(map);
 
-// Custom plane icon
 interface ExtendedIconOptions extends L.IconOptions {
   rotationOrigin?: string;
 }
@@ -71,61 +66,57 @@ async function fetchFlightsForTracker(): Promise<Flight[]> {
 }
 
 function calculateCurvedPath(start: L.LatLng, end: L.LatLng, segments: number = 100): L.LatLng[] {
-  const points: L.LatLng[] = [];
+    const points: L.LatLng[] = [];
+    let startLng = start.lng;
+    let endLng = end.lng;
+    
+    if (Math.abs(startLng - endLng) > 180) {
+        if (startLng < 0) {
+            startLng += 360;
+        } else {
+            endLng += 360;
+        }
+    }
+    
+    const adjustedStart = L.latLng(start.lat, startLng);
+    const adjustedEnd = L.latLng(end.lat, endLng);
 
-  // Handle antimeridian crossing
-  const startLng = start.lng;
-  const endLng = end.lng;
-  const deltaLng = endLng - startLng;
+    for (let i = 0; i <= segments; i++) {
+        const fraction = i / segments;
+        
+        const lat1 = adjustedStart.lat * Math.PI / 180;
+        const lon1 = adjustedStart.lng * Math.PI / 180;
+        const lat2 = adjustedEnd.lat * Math.PI / 180;
+        const lon2 = adjustedEnd.lng * Math.PI / 180;
 
-  // Normalize longitudes for shortest path
-  const normalizedEndLng = Math.abs(deltaLng) > 180
-    ? endLng - Math.sign(deltaLng) * 360
-    : endLng;
+        const d = 2 * Math.asin(Math.sqrt(
+            Math.pow(Math.sin((lat1 - lat2) / 2), 2) +
+            Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)
+        ));
 
-  for (let i = 0; i <= segments; i++) {
-    const fraction = i / segments;
+        const A = Math.sin((1 - fraction) * d) / Math.sin(d);
+        const B = Math.sin(fraction * d) / Math.sin(d);
 
-    // Great circle interpolation
-    const lat1 = start.lat * Math.PI / 180;
-    const lon1 = startLng * Math.PI / 180;
-    const lat2 = end.lat * Math.PI / 180;
-    const lon2 = normalizedEndLng * Math.PI / 180;
+        const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
+        const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
+        const z = A * Math.sin(lat1) + B * Math.sin(lat2);
 
-    const d = 2 * Math.asin(Math.sqrt(
-      Math.pow(Math.sin((lat1 - lat2) / 2), 2) +
-      Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)
-    ));
+        let lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
+        let lng = Math.atan2(y, x) * 180 / Math.PI;
+        lng = ((lng + 180) % 360) - 180;
 
-    const A = Math.sin((1 - fraction) * d) / Math.sin(d);
-    const B = Math.sin(fraction * d) / Math.sin(d);
-
-    const x = A * Math.cos(lat1) * Math.cos(lon1) + B * Math.cos(lat2) * Math.cos(lon2);
-    const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
-    const z = A * Math.sin(lat1) + B * Math.sin(lat2);
-
-    const lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
-    let lon = Math.atan2(y, x) * 180 / Math.PI;
-
-    // Handle longitude wrapping
-    if (lon < -180) lon += 360;
-    if (lon > 180) lon -= 360;
-
-    points.push(L.latLng(lat, lon));
-  }
-  return points;
+        points.push(L.latLng(lat, lng));
+    }
+    return points;
 }
-
 
 function calculateHeading(currentPoint: L.LatLng, nextPoint: L.LatLng): number {
   const dx = nextPoint.lng - currentPoint.lng;
   const dy = nextPoint.lat - currentPoint.lat;
   let heading = Math.atan2(dx, dy) * (180 / Math.PI);
-  // Adjust heading to match plane icon's default orientation
   return heading + 90;
 }
 
-// Calculate current position on path
 function calculateCurrentPosition(
   departure: number, 
   destination: number, 
@@ -134,14 +125,12 @@ function calculateCurrentPosition(
 ): number {
   let flightDuration: number;
   
-  // Calculate flight duration considering timezone differences
   if (destination < departure) {
       flightDuration = (24 - departure) + destination;
   } else {
       flightDuration = destination - departure;
   }
   
-  // Calculate progress based on local times
   let progress: number;
   const timezoneDiff = destinationLT - departureLT;
   
@@ -159,7 +148,6 @@ function calculateCurrentPosition(
 }
 
 function getLocalTime(lat: number, lng: number): number {
-  // Convert coordinates to timezone offset in hours
   const timeZoneOffset = Math.round(lng / 15);
   const utcTime = new Date();
   const localHour = (utcTime.getUTCHours() + timeZoneOffset + 24) % 24;
@@ -169,11 +157,11 @@ function getLocalTime(lat: number, lng: number): number {
 
 async function initializeMap() {
   const flights = await fetchFlightsForTracker();
-  let currentVisiblePath: L.Polyline | null = null;
+  let currentVisiblePaths: L.LayerGroup | null = null;
   const markers: Array<{
       marker: L.Marker,
       flight: Flight,
-      path: L.Polyline,
+      paths: L.LayerGroup,
       points: L.LatLng[],
       departureCoords: {lat: number, lng: number},
       destinationCoords: {lat: number, lng: number}
@@ -202,16 +190,24 @@ async function initializeMap() {
           L.latLng(destinationCoords.lat, destinationCoords.lng)
       );
       
-      const flightPath = L.polyline(curvedPoints, {
+      const currentPointIndex = Math.floor(progress * (curvedPoints.length - 1));
+      
+      const completedPath = L.polyline(curvedPoints.slice(0, currentPointIndex + 1), {
+          color: 'red',
+          weight: 2,
+          opacity: 0
+      }).addTo(map);
+
+      const remainingPath = L.polyline(curvedPoints.slice(currentPointIndex), {
           color: 'blue',
           weight: 2,
           opacity: 0
       }).addTo(map);
+
+      const pathGroup = L.layerGroup([completedPath, remainingPath]);
       
-      const currentPointIndex = Math.floor(progress * (curvedPoints.length - 1));
-      const nextPointIndex = Math.min(currentPointIndex + 1, curvedPoints.length - 1);
       const currentPosition = curvedPoints[currentPointIndex];
-      
+      const nextPointIndex = Math.min(currentPointIndex + 1, curvedPoints.length - 1);
 
       interface ExtendedMarkerOptions extends L.MarkerOptions {
         rotationAngle?: number;
@@ -223,11 +219,16 @@ async function initializeMap() {
       } as ExtendedMarkerOptions).addTo(map);
       
       planeMarker.on('click', () => {
-          if (currentVisiblePath) {
-              currentVisiblePath.setStyle({ opacity: 0 });
+          if (currentVisiblePaths) {
+              currentVisiblePaths.eachLayer((layer) => {
+                  if (layer instanceof L.Polyline) {
+                      layer.setStyle({ opacity: 0 });
+                  }
+              });
           }
-          flightPath.setStyle({ opacity: 1 });
-          currentVisiblePath = flightPath;
+          completedPath.setStyle({ opacity: 1 });
+          remainingPath.setStyle({ opacity: 1 });
+          currentVisiblePaths = pathGroup;
           
           planeMarker.bindPopup(
               `<b>Flight Number:</b> ${flight.Flight_Number}<br>
@@ -241,7 +242,7 @@ async function initializeMap() {
       markers.push({
           marker: planeMarker,
           flight: flight,
-          path: flightPath,
+          paths: pathGroup,
           points: curvedPoints,
           departureCoords,
           destinationCoords
@@ -249,7 +250,7 @@ async function initializeMap() {
   }
   
   function updatePlanePositions() {
-    markers.forEach(({marker, flight, points, departureCoords, destinationCoords}) => {
+    markers.forEach(({marker, flight, points, departureCoords, destinationCoords, paths}) => {
         const departureLT = getLocalTime(departureCoords.lat, departureCoords.lng);
         const destinationLT = getLocalTime(destinationCoords.lat, destinationCoords.lng);
         
@@ -265,14 +266,25 @@ async function initializeMap() {
         const currentPosition = points[currentPointIndex];
         const heading = calculateHeading(points[currentPointIndex], points[nextPointIndex]);
         
+        paths.clearLayers();
+        const completedPath = L.polyline(points.slice(0, currentPointIndex + 1), {
+            color: 'red',
+            weight: 2,
+            opacity: paths.getLayers().length > 0 ? 1 : 0
+        }).addTo(paths);
+        const remainingPath = L.polyline(points.slice(currentPointIndex), {
+            color: 'blue',
+            weight: 2,
+            opacity: paths.getLayers().length > 0 ? 1 : 0
+        }).addTo(paths);
+        
         marker.setLatLng(currentPosition);
-        // @ts-ignore - Leaflet typings don't include setRotationAngle
+        // @ts-ignore
         marker.setRotationAngle(heading);
     });
   }
   
   setInterval(updatePlanePositions, 1000);
 }
-
 
 initializeMap();
