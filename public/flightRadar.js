@@ -56,13 +56,21 @@ function fetchFlightsForTracker() {
 }
 function calculateCurvedPath(start, end, segments = 100) {
     const points = [];
+    // Handle antimeridian crossing
+    const startLng = start.lng;
+    const endLng = end.lng;
+    const deltaLng = endLng - startLng;
+    // Normalize longitudes for shortest path
+    const normalizedEndLng = Math.abs(deltaLng) > 180
+        ? endLng - Math.sign(deltaLng) * 360
+        : endLng;
     for (let i = 0; i <= segments; i++) {
         const fraction = i / segments;
         // Great circle interpolation
         const lat1 = start.lat * Math.PI / 180;
-        const lon1 = start.lng * Math.PI / 180;
+        const lon1 = startLng * Math.PI / 180;
         const lat2 = end.lat * Math.PI / 180;
-        const lon2 = end.lng * Math.PI / 180;
+        const lon2 = normalizedEndLng * Math.PI / 180;
         const d = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((lat1 - lat2) / 2), 2) +
             Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
         const A = Math.sin((1 - fraction) * d) / Math.sin(d);
@@ -71,7 +79,12 @@ function calculateCurvedPath(start, end, segments = 100) {
         const y = A * Math.cos(lat1) * Math.sin(lon1) + B * Math.cos(lat2) * Math.sin(lon2);
         const z = A * Math.sin(lat1) + B * Math.sin(lat2);
         const lat = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))) * 180 / Math.PI;
-        const lon = Math.atan2(y, x) * 180 / Math.PI;
+        let lon = Math.atan2(y, x) * 180 / Math.PI;
+        // Handle longitude wrapping
+        if (lon < -180)
+            lon += 360;
+        if (lon > 180)
+            lon -= 360;
         points.push(L.latLng(lat, lon));
     }
     return points;
