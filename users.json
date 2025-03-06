@@ -28609,7 +28609,18 @@
       "phone": "+123456789",
       "email": "a@b.c",
       "password": "12345",
-      "bookings": []
+      "bookings": [],
+      "hotelBookings": [
+        142
+      ],
+      "hotelBookingDates": {
+        "142": {
+          "dateFrom": "2025-03-06",
+          "dateTo": "2025-03-07",
+          "guests": 1
+        }
+      },
+      "guests": 1
     }
   ],
   "hotels": [
