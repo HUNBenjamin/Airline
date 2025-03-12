@@ -8,6 +8,7 @@ let planeSeatsList = {
     B787: [[4, 3, 2], [26, 3, 3]],
     AA350: [[8, 3, 2], [31, 3, 3]]
 };
+let isBuisness = false;
 let data = getQueryParams();
 console.log(data);
 const questions = document.getElementById("reservation");
@@ -49,7 +50,7 @@ if (limiter == false) {
                 <th>Basic</th>
                 <th>Regular</th>
                 <th>Plus</th>
-                <th>Flexi Plus</th>
+                <th>Buisness</th>
             </tr>
             <tr>
                 <td>1 small bag ✅</td>
@@ -61,7 +62,7 @@ if (limiter == false) {
                 <td>No reserved seat ❌</td>
                 <td>Specific seat selection ✅</td>
                 <td>Specific seat selection ✅</td>
-                <td>Any seat on the plane ✅</td>
+                <td>Buisness seat on the plane ✅</td>
             </tr>
             <tr>
                 <td>No priority boarding ❌</td>
@@ -79,7 +80,7 @@ if (limiter == false) {
                 <td><a href="#" id="fareSelectButtonBasic" class="btn">Select Basic</a></td>
                 <td><a href="#" id="fareSelectButtonRegular" class="btn">Select Regular</a></td>
                 <td><a href="#" id="fareSelectButtonPlus" class="btn">Select Plus</a></td>
-                <td><a href="#" id="fareSelectButtonFlexiPlus" class="btn">Select Flexi Plus</a></td>
+                <td><a href="#" id="fareSelectButtonFlexiPlus" class="btn">Select Buisness</a></td>
             </tr>
         </table>
     </div>`;
@@ -89,7 +90,11 @@ if (limiter == false) {
 document.getElementById("fareSelectButtonBasic").addEventListener("click", (event) => { FareCompleated(data.price, 1); });
 document.getElementById("fareSelectButtonRegular").addEventListener("click", (event) => { FareCompleated(data.price, 1.15); });
 document.getElementById("fareSelectButtonPlus").addEventListener("click", (event) => { FareCompleated(data.price, 1.35); });
-document.getElementById("fareSelectButtonFlexiPlus").addEventListener("click", (event) => { FareCompleated(data.price, 1.5); });
+document.getElementById("fareSelectButtonFlexiPlus").addEventListener("click", (event) => {
+    FareCompleated(data.price, 1.5);
+    isBuisness = true;
+    console.log("jaja");
+});
 function FareCompleated(realPrice, plusPrice) {
     data.price = `${(Number(realPrice) * plusPrice)}`;
     limiter = true;
@@ -151,15 +156,15 @@ function PlaneSeatsMaker(PlaneName) {
         businessLabel.textContent = "Business Class";
         planeContainer.appendChild(businessLabel);
         // Generate Business Class
-        createSeatRows(planeConfig[0], planeContainer, "business", Number(data.freeSeats));
+        createSeatRows(planeConfig[0], planeContainer, "business", Number(data.freeSeats), isBuisness);
         const economyLabel = document.createElement("h3");
         economyLabel.textContent = "Economy Class";
         planeContainer.appendChild(economyLabel);
         // Generate Economy Class
-        createSeatRows(planeConfig[1], planeContainer, "economy", Number(data.freeSeats));
+        createSeatRows(planeConfig[1], planeContainer, "economy", Number(data.freeSeats), isBuisness);
     }
 }
-function createSeatRows(config, container, classType, emptySeats) {
+function createSeatRows(config, container, classType, emptySeats, isBuisness) {
     const [rows, columns, seatsPerColumn] = config;
     let freeSpace = emptySeats;
     for (let r = 1; r <= rows; r++) {
@@ -171,19 +176,52 @@ function createSeatRows(config, container, classType, emptySeats) {
                 const seatButton = document.createElement("button");
                 seatButton.classList.add("seat", classType);
                 seatButton.textContent = seatLabel;
-                if (Math.random() < 0.2 && freeSpace > 0) {
-                    seatButton.addEventListener("click", () => {
-                        if (!seatButton.classList.contains("taken")) {
-                            seatButton.classList.toggle("selected");
+                console.log("itt");
+                if (isBuisness == true) {
+                    console.log("igaz");
+                    if (classType != "buisness") {
+                        console.log("igen");
+                        if (Math.random() < 0.2 && freeSpace > 0) {
+                            seatButton.addEventListener("click", () => {
+                                if (!seatButton.classList.contains("taken")) {
+                                    seatButton.classList.toggle("selected");
+                                }
+                            });
+                            freeSpace--;
                         }
-                    });
-                    freeSpace--;
+                        else {
+                            seatButton.classList.add("taken");
+                            seatButton.disabled = true;
+                        }
+                    }
+                    else {
+                        console.log("2igen");
+                        seatButton.classList.add("taken");
+                        seatButton.disabled = true;
+                    }
+                    rowDiv.appendChild(seatButton);
                 }
-                else {
-                    seatButton.classList.add("taken");
-                    seatButton.disabled = true;
+                else if (isBuisness == false) {
+                    if (classType != "buisness") {
+                        if (Math.random() < 0.2 && freeSpace > 0) {
+                            seatButton.addEventListener("click", () => {
+                                if (!seatButton.classList.contains("taken")) {
+                                    seatButton.classList.toggle("selected");
+                                }
+                            });
+                            freeSpace--;
+                        }
+                        else {
+                            seatButton.classList.add("taken");
+                            seatButton.disabled = true;
+                        }
+                    }
+                    else {
+                        seatButton.classList.add("taken");
+                        seatButton.disabled = true;
+                    }
+                    rowDiv.appendChild(seatButton);
                 }
-                rowDiv.appendChild(seatButton);
             }
             if (c < columns - 1) {
                 const aisle = document.createElement("div");
@@ -192,5 +230,25 @@ function createSeatRows(config, container, classType, emptySeats) {
             }
         }
         container.appendChild(rowDiv);
+    }
+}
+function AvailableSeat(config, classType, emptySeats, r, c, s) {
+    const [rows, columns, seatsPerColumn] = config;
+    let freeSpace = emptySeats;
+    const seatLabel = `${r}${String.fromCharCode(65 + c * seatsPerColumn + s)}`;
+    const seatButton = document.createElement("button");
+    seatButton.classList.add("seat", classType);
+    seatButton.textContent = seatLabel;
+    if (Math.random() < 0.2 && freeSpace > 0) {
+        seatButton.addEventListener("click", () => {
+            if (!seatButton.classList.contains("taken")) {
+                seatButton.classList.toggle("selected");
+            }
+        });
+        freeSpace--;
+    }
+    else {
+        seatButton.classList.add("taken");
+        seatButton.disabled = true;
     }
 }
