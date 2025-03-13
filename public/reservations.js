@@ -8,7 +8,9 @@ let planeSeatsList = {
     B787: [[4, 3, 2], [26, 3, 3]],
     AA350: [[8, 3, 2], [31, 3, 3]]
 };
-let isBuisness = false;
+let start = false;
+let seatsNumber = [];
+let isbusiness = false;
 let data = getQueryParams();
 console.log(data);
 const questions = document.getElementById("reservation");
@@ -50,7 +52,7 @@ if (limiter == false) {
                 <th>Basic</th>
                 <th>Regular</th>
                 <th>Plus</th>
-                <th>Buisness</th>
+                <th>business</th>
             </tr>
             <tr>
                 <td>1 small bag ✅</td>
@@ -62,7 +64,7 @@ if (limiter == false) {
                 <td>No reserved seat ❌</td>
                 <td>Specific seat selection ✅</td>
                 <td>Specific seat selection ✅</td>
-                <td>Buisness seat on the plane ✅</td>
+                <td>business seat on the plane ✅</td>
             </tr>
             <tr>
                 <td>No priority boarding ❌</td>
@@ -80,21 +82,17 @@ if (limiter == false) {
                 <td><a href="#" id="fareSelectButtonBasic" class="btn">Select Basic</a></td>
                 <td><a href="#" id="fareSelectButtonRegular" class="btn">Select Regular</a></td>
                 <td><a href="#" id="fareSelectButtonPlus" class="btn">Select Plus</a></td>
-                <td><a href="#" id="fareSelectButtonFlexiPlus" class="btn">Select Buisness</a></td>
+                <td><a href="#" id="fareSelectButtonFlexiPlus" class="btn">Select business</a></td>
             </tr>
         </table>
     </div>`;
     questions.appendChild(questionsDiv);
 }
 //const target = event.target as HTMLSelectElement; console.log(target.firstChild!.nodeValue);
-document.getElementById("fareSelectButtonBasic").addEventListener("click", (event) => { FareCompleated(data.price, 1); });
-document.getElementById("fareSelectButtonRegular").addEventListener("click", (event) => { FareCompleated(data.price, 1.15); });
-document.getElementById("fareSelectButtonPlus").addEventListener("click", (event) => { FareCompleated(data.price, 1.35); });
-document.getElementById("fareSelectButtonFlexiPlus").addEventListener("click", (event) => {
-    FareCompleated(data.price, 1.5);
-    isBuisness = true;
-    console.log("jaja");
-});
+document.getElementById("fareSelectButtonBasic").addEventListener("click", (event) => { start = true; FareCompleated(data.price, 1); });
+document.getElementById("fareSelectButtonRegular").addEventListener("click", (event) => { start = true; FareCompleated(data.price, 1.15); });
+document.getElementById("fareSelectButtonPlus").addEventListener("click", (event) => { start = true; FareCompleated(data.price, 1.35); });
+document.getElementById("fareSelectButtonFlexiPlus").addEventListener("click", (event) => { start = true; isbusiness = true; FareCompleated(data.price, 1.5); });
 function FareCompleated(realPrice, plusPrice) {
     data.price = `${(Number(realPrice) * plusPrice)}`;
     limiter = true;
@@ -156,17 +154,18 @@ function PlaneSeatsMaker(PlaneName) {
         businessLabel.textContent = "Business Class";
         planeContainer.appendChild(businessLabel);
         // Generate Business Class
-        createSeatRows(planeConfig[0], planeContainer, "business", Number(data.freeSeats), isBuisness);
+        createSeatRows(planeConfig[0], planeContainer, "business", Number(data.freeSeats), isbusiness);
         const economyLabel = document.createElement("h3");
         economyLabel.textContent = "Economy Class";
         planeContainer.appendChild(economyLabel);
         // Generate Economy Class
-        createSeatRows(planeConfig[1], planeContainer, "economy", Number(data.freeSeats), isBuisness);
+        createSeatRows(planeConfig[1], planeContainer, "economy", Number(data.freeSeats), isbusiness);
     }
 }
-function createSeatRows(config, container, classType, emptySeats, isBuisness) {
+function createSeatRows(config, container, classType, emptySeats, isbusiness) {
     const [rows, columns, seatsPerColumn] = config;
-    let freeSpace = emptySeats;
+    let empty = (rows * columns * seatsPerColumn);
+    let freeSpace = emptySeats; // ezt kell használni aránnyal a kommentnél 
     for (let r = 1; r <= rows; r++) {
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("row");
@@ -176,16 +175,17 @@ function createSeatRows(config, container, classType, emptySeats, isBuisness) {
                 const seatButton = document.createElement("button");
                 seatButton.classList.add("seat", classType);
                 seatButton.textContent = seatLabel;
-                console.log("itt");
-                if (isBuisness == true) {
-                    console.log("igaz");
-                    if (classType != "buisness") {
-                        console.log("igen");
-                        if (Math.random() < 0.2 && freeSpace > 0) {
-                            seatButton.addEventListener("click", () => {
+                if (isbusiness == true) {
+                    if (classType == "business") {
+                        // if (Math.random() < 0.2 && freeSpace > 0) {
+                        if (Math.random() < freeSpace / empty) {
+                            seatButton.addEventListener("click", (event) => {
+                                let mostFoglalt = false;
                                 if (!seatButton.classList.contains("taken")) {
                                     seatButton.classList.toggle("selected");
+                                    mostFoglalt = true;
                                 }
+                                SeatCheck(event, mostFoglalt);
                             });
                             freeSpace--;
                         }
@@ -195,19 +195,21 @@ function createSeatRows(config, container, classType, emptySeats, isBuisness) {
                         }
                     }
                     else {
-                        console.log("2igen");
                         seatButton.classList.add("taken");
                         seatButton.disabled = true;
                     }
                     rowDiv.appendChild(seatButton);
                 }
-                else if (isBuisness == false) {
-                    if (classType != "buisness") {
+                else if (isbusiness == false) {
+                    if (classType != "business") {
                         if (Math.random() < 0.2 && freeSpace > 0) {
-                            seatButton.addEventListener("click", () => {
+                            seatButton.addEventListener("click", (event) => {
+                                let mostFoglalt = false;
                                 if (!seatButton.classList.contains("taken")) {
                                     seatButton.classList.toggle("selected");
+                                    mostFoglalt = true;
                                 }
+                                SeatCheck(event, mostFoglalt);
                             });
                             freeSpace--;
                         }
@@ -230,6 +232,35 @@ function createSeatRows(config, container, classType, emptySeats, isBuisness) {
             }
         }
         container.appendChild(rowDiv);
+    }
+}
+function SeatCheck(event, nowReserved) {
+    const target = event.target;
+    let info = target.classList.value;
+    let seatText = target.textContent;
+    console.log(seatsNumber);
+    console.log(seatsNumber.length);
+    console.log(Number(data.passangers));
+    if (seatsNumber.length == Number(data.passangers)) {
+        if (seatsNumber.includes(seatText)) {
+            let newSeatsNumber = seatsNumber.filter(x => x != seatText);
+            seatsNumber = [];
+            seatsNumber = newSeatsNumber;
+            console.log(seatsNumber);
+        }
+        if (info.includes('business')) {
+            info = `seat business`;
+        }
+        else {
+            info = `seat economy`;
+        }
+        target.classList.remove(`selected`);
+    }
+    else {
+        if (!seatsNumber.includes(seatText)) {
+            seatsNumber.push(seatText);
+            console.log(seatsNumber);
+        }
     }
 }
 function AvailableSeat(config, classType, emptySeats, r, c, s) {
