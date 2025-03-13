@@ -9,6 +9,7 @@ let planeSeatsList = {
     AA350: [[8, 3, 2], [31, 3, 3]]
 };
 let start = false;
+let reservationDatas = [];
 let seatsNumber = [];
 let isbusiness = false;
 let data = getQueryParams();
@@ -100,7 +101,7 @@ function FareCompleated(realPrice, plusPrice) {
     let questionsDiv = document.createElement("div");
     questionsDiv.innerHTML +=
         `<div>
-        <h1 class="my-5" >Choosed ✅ </h1>
+        <h1 class="my-5">Reserved ✅ </h1>
     </div>`;
     questions.append(questionsDiv);
     console.log(data.price);
@@ -146,7 +147,8 @@ function PlaneFinder(PlaneName) {
 function PlaneSeatsMaker(PlaneName) {
     let plane = PlaneFinder(PlaneName);
     const planeConfig = Object(planeSeatsList)[plane];
-    const planeContainer = document.getElementById("plane");
+    const planeContainer = document.getElementById("plan");
+    planeContainer.id = "plane";
     if (planeContainer && planeConfig) {
         planeContainer.innerHTML = ""; // Clear previous content
         // Labels
@@ -160,12 +162,14 @@ function PlaneSeatsMaker(PlaneName) {
         planeContainer.appendChild(economyLabel);
         // Generate Economy Class
         createSeatRows(planeConfig[1], planeContainer, "economy", Number(data.freeSeats), isbusiness);
+        SeatReservationFixButton();
     }
 }
 function createSeatRows(config, container, classType, emptySeats, isbusiness) {
     const [rows, columns, seatsPerColumn] = config;
     let empty = (rows * columns * seatsPerColumn);
-    let freeSpace = emptySeats; // ezt kell használni aránnyal a kommentnél 
+    let businessSeats = (emptySeats / 10 * 2);
+    let freeSpace = emptySeats;
     for (let r = 1; r <= rows; r++) {
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("row");
@@ -177,17 +181,15 @@ function createSeatRows(config, container, classType, emptySeats, isbusiness) {
                 seatButton.textContent = seatLabel;
                 if (isbusiness == true) {
                     if (classType == "business") {
-                        // if (Math.random() < 0.2 && freeSpace > 0) {
-                        if (Math.random() < freeSpace / empty) {
+                        if (Math.random() <= businessSeats / empty) {
+                            console.log(businessSeats / empty);
                             seatButton.addEventListener("click", (event) => {
-                                let mostFoglalt = false;
                                 if (!seatButton.classList.contains("taken")) {
                                     seatButton.classList.toggle("selected");
-                                    mostFoglalt = true;
                                 }
-                                SeatCheck(event, mostFoglalt);
+                                SeatCheck(event);
                             });
-                            freeSpace--;
+                            businessSeats--;
                         }
                         else {
                             seatButton.classList.add("taken");
@@ -198,18 +200,17 @@ function createSeatRows(config, container, classType, emptySeats, isbusiness) {
                         seatButton.classList.add("taken");
                         seatButton.disabled = true;
                     }
+                    empty--;
                     rowDiv.appendChild(seatButton);
                 }
                 else if (isbusiness == false) {
                     if (classType != "business") {
-                        if (Math.random() < 0.2 && freeSpace > 0) {
+                        if (Math.random() <= freeSpace / empty) {
                             seatButton.addEventListener("click", (event) => {
-                                let mostFoglalt = false;
                                 if (!seatButton.classList.contains("taken")) {
                                     seatButton.classList.toggle("selected");
-                                    mostFoglalt = true;
                                 }
-                                SeatCheck(event, mostFoglalt);
+                                SeatCheck(event);
                             });
                             freeSpace--;
                         }
@@ -222,6 +223,7 @@ function createSeatRows(config, container, classType, emptySeats, isbusiness) {
                         seatButton.classList.add("taken");
                         seatButton.disabled = true;
                     }
+                    empty--;
                     rowDiv.appendChild(seatButton);
                 }
             }
@@ -234,19 +236,15 @@ function createSeatRows(config, container, classType, emptySeats, isbusiness) {
         container.appendChild(rowDiv);
     }
 }
-function SeatCheck(event, nowReserved) {
+function SeatCheck(event) {
     const target = event.target;
     let info = target.classList.value;
     let seatText = target.textContent;
-    console.log(seatsNumber);
-    console.log(seatsNumber.length);
-    console.log(Number(data.passangers));
     if (seatsNumber.length == Number(data.passangers)) {
         if (seatsNumber.includes(seatText)) {
             let newSeatsNumber = seatsNumber.filter(x => x != seatText);
             seatsNumber = [];
             seatsNumber = newSeatsNumber;
-            console.log(seatsNumber);
         }
         if (info.includes('business')) {
             info = `seat business`;
@@ -282,4 +280,21 @@ function AvailableSeat(config, classType, emptySeats, r, c, s) {
         seatButton.classList.add("taken");
         seatButton.disabled = true;
     }
+}
+function SeatReservationFixButton() {
+    var _a;
+    const seatReservationFixButton = document.createElement("div");
+    seatReservationFixButton.innerHTML = `<a href="#" id="fixReservationButton" class="btn">Fix seat(s) reservation</a>`;
+    (_a = document.getElementById("reservationButtonDiv")) === null || _a === void 0 ? void 0 : _a.appendChild(seatReservationFixButton);
+    document.getElementById("fixReservationButton").addEventListener("click", () => {
+        document.getElementById("reservationButtonDiv").innerHTML = "";
+        let ja = document.getElementById("plane");
+        ja.innerHTML = "";
+        ja.id = "planee";
+        let questionsDiv = document.createElement("div");
+        questionsDiv.innerHTML += `<div> <h1 class="my-5 mx-5">Seat(s) reserved ✅ </h1> </div>`;
+        questions.append(questionsDiv);
+        //Ezt kell valahogy átadnom a user-be
+        reservationDatas = [seatsNumber, data.price, data.passangers, data.flightNumber, data.departureAirport, data.departureDate, data.departureTime, data.destinationAirport, data.departureDate, data.destinationTime, data.typeOfPlane, data.flightNumber];
+    });
 }

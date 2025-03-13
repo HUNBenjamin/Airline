@@ -11,6 +11,7 @@ let planeSeatsList = {
   
   
   let start = false;
+  let reservationDatas: any = [];
   let seatsNumber: string[] = [];
   let isbusiness = false;
   let data = getQueryParams();
@@ -106,7 +107,7 @@ function FareCompleated(realPrice:string , plusPrice: number) {
     let questionsDiv = document.createElement("div");
     questionsDiv.innerHTML +=
     `<div>
-        <h1 class="my-5" >Choosed ✅ </h1>
+        <h1 class="my-5">Reserved ✅ </h1>
     </div>`;
     questions.append(questionsDiv);
     console.log(data.price);
@@ -158,7 +159,8 @@ function PlaneFinder(PlaneName: string) {
 function PlaneSeatsMaker(PlaneName: string) {
     let plane = PlaneFinder(PlaneName)
     const planeConfig = Object(planeSeatsList)[plane]
-    const planeContainer = document.getElementById("plane");
+    const planeContainer = document.getElementById("plan");
+    planeContainer!.id = "plane";
     
     if (planeContainer && planeConfig) {
         planeContainer.innerHTML = ""; // Clear previous content
@@ -177,14 +179,18 @@ function PlaneSeatsMaker(PlaneName: string) {
         
         // Generate Economy Class
         createSeatRows(planeConfig[1], planeContainer, "economy", Number(data.freeSeats), isbusiness);
+
+        SeatReservationFixButton()
     }
+
 }
     
 
 function createSeatRows(config: number[], container: Element, classType: string, emptySeats: number, isbusiness: boolean) {
     const [rows, columns, seatsPerColumn] = config;
     let empty = (rows * columns * seatsPerColumn)
-    let freeSpace = emptySeats // ezt kell használni aránnyal a kommentnél 
+    let businessSeats = (emptySeats/10 *2)
+    let freeSpace = emptySeats
     for (let r = 1; r <= rows; r++) {
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("row");
@@ -199,43 +205,41 @@ function createSeatRows(config: number[], container: Element, classType: string,
                 if (isbusiness == true) {
                     
                     if (classType == "business") {
-                        // if (Math.random() < 0.2 && freeSpace > 0) {
-                        if (Math.random() < freeSpace / empty) {
+                        if (Math.random() <= businessSeats / empty) {
+                            console.log(businessSeats / empty);
                             seatButton.addEventListener("click", (event) => {
-                                let mostFoglalt = false
                                 if (!seatButton.classList.contains("taken")) {
                                     seatButton.classList.toggle("selected");
-                                    mostFoglalt = true
                                 }
-                                SeatCheck(event, mostFoglalt)
+                                SeatCheck(event)
                             });
-                            freeSpace --;
-                        }else{
+                            businessSeats --;
+                        }
+                        else{
                             seatButton.classList.add("taken");
                             seatButton.disabled = true;
                         }
                     }
                     else{
-                        
                         seatButton.classList.add("taken");
                         seatButton.disabled = true;
                     }
+                    empty --;
                     rowDiv.appendChild(seatButton);
                 }
                 else if (isbusiness == false) {
                     
                     if (classType != "business") {
-                        if (Math.random() < 0.2 && freeSpace > 0) {
+                        if (Math.random() <= freeSpace / empty) {
                             seatButton.addEventListener("click", (event) => {
-                                let mostFoglalt = false
                                 if (!seatButton.classList.contains("taken")) {
                                     seatButton.classList.toggle("selected");
-                                    mostFoglalt = true
                                 }
-                                SeatCheck(event, mostFoglalt)
+                                SeatCheck(event);
                             });
                             freeSpace --;
-                        }else{
+                        }
+                        else{
                             seatButton.classList.add("taken");
                             seatButton.disabled = true;
                         }
@@ -244,6 +248,7 @@ function createSeatRows(config: number[], container: Element, classType: string,
                         seatButton.classList.add("taken");
                         seatButton.disabled = true;
                     }
+                    empty --;
                     rowDiv.appendChild(seatButton);
                 }
             }
@@ -253,36 +258,24 @@ function createSeatRows(config: number[], container: Element, classType: string,
                 rowDiv.appendChild(aisle);
             }
         }
-
         container.appendChild(rowDiv);
     }
 }
-function SeatCheck(event: any, nowReserved: boolean){
+
+
+function SeatCheck(event: any){
     const target = event.target as HTMLSelectElement;
     let info = target.classList.value
     let seatText = target.textContent
-    console.log(seatsNumber);
-    console.log(seatsNumber.length);
-    console.log(Number(data.passangers));
-    
-
-
     if (seatsNumber.length == Number(data.passangers)) {
         if (seatsNumber.includes(seatText!)) {
             let newSeatsNumber = seatsNumber.filter(x => x != seatText);
             seatsNumber = [];
             seatsNumber = newSeatsNumber;
-            console.log(seatsNumber);
         }
-        if (info.includes('business')){
-            info = `seat business`
-        } 
-        else{
-            info = `seat economy`
-        }
+        if (info.includes('business')) { info = `seat business` } 
+        else { info = `seat economy` }
         target.classList.remove(`selected`)
-        
-    
     }
     else{
         if (!seatsNumber.includes(seatText!)) {
@@ -311,4 +304,24 @@ function AvailableSeat(config: number[], classType: string, emptySeats: number, 
         seatButton.disabled = true;
     }
 }
+
+function SeatReservationFixButton() {
+    const seatReservationFixButton = document.createElement("div");
+    seatReservationFixButton.innerHTML = `<a href="#" id="fixReservationButton" class="btn">Fix seat(s) reservation</a>`
+    document.getElementById("reservationButtonDiv")?.appendChild(seatReservationFixButton);
+    document.getElementById("fixReservationButton")!.addEventListener("click", () => {
+        (document.getElementById("reservationButtonDiv") as HTMLDivElement).innerHTML = "";
+        let ja = (document.getElementById("plane") as HTMLDivElement);
+        ja.innerHTML = "";
+        ja.id = "planee";
+        let questionsDiv = document.createElement("div");
+        questionsDiv.innerHTML += `<div> <h1 class="my-5 mx-5">Seat(s) reserved ✅ </h1> </div>`;
+        questions.append(questionsDiv);
+        //Ezt kell valahogy átadnom a user-be
+        reservationDatas = [seatsNumber, data.price, data.passangers, data.flightNumber, data.departureAirport, data.departureDate, data.departureTime, data.destinationAirport, data.departureDate, data.destinationTime, data.typeOfPlane, data.flightNumber];
+
+    });
+}
+
+
 
