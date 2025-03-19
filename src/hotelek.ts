@@ -44,42 +44,50 @@ async function fetchPlanes(): Promise<Flight[]> {
     return data;
 }
 
-function saveFormData() {
-    const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
-    const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
-    const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
-    const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
+// function saveFormData() {
+//     const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
+//     const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
+//     const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
+//     const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
 
-    const formData = {
-        destination: destinationSelect.value,
-        guests: guestsInput.value,
-        dateFrom: dateFromInput.value,
-        dateTo: dateToInput.value
-    };
+//     const formData = {
+//         destination: destinationSelect.value,
+//         guests: guestsInput.value,
+//         dateFrom: dateFromInput.value,
+//         dateTo: dateToInput.value
+//     };
 
-    localStorage.setItem('hotelFormData', JSON.stringify(formData));
-}
+//     localStorage.setItem('hotelFormData', JSON.stringify(formData));
+// }
 
-function loadFormData() {
-    const formData = localStorage.getItem('hotelFormData');
-    if (formData) {
-        const parsedData = JSON.parse(formData);
-        const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
-        const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
-        const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
-        const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
+// function loadFormData() {
+//     const formData = localStorage.getItem('hotelFormData');
+//     if (formData) {
+//         const parsedData = JSON.parse(formData);
+//         const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
+//         const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
+//         const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
+//         const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
 
-        destinationSelect.value = parsedData.destination;
-        guestsInput.value = parsedData.guests;
-        dateFromInput.value = parsedData.dateFrom;
-        dateToInput.value = parsedData.dateTo;
-    }
-}
+//         destinationSelect.value = parsedData.destination;
+//         guestsInput.value = parsedData.guests;
+//         dateFromInput.value = parsedData.dateFrom;
+//         dateToInput.value = parsedData.dateTo;
+//     }
+// }
 
 function initializeHotelSearch() {
     const searchForm = document.getElementById('hotelSearchForm') as HTMLFormElement;
     const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
     const hotelContainer = document.getElementById('hotelList') as HTMLDivElement;
+
+    destinationSelect.addEventListener('change', () => {
+        const selectedCity = destinationSelect.value;
+        if (selectedCity) {
+            const newUrl = `${window.location.pathname}?selectedCity=${encodeURIComponent(selectedCity)}`;
+            history.pushState(null, '', newUrl);
+        }
+    });
 
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -98,10 +106,7 @@ function initializeHotelSearch() {
 
         selectedHotels = filteredHotels; 
         displayFilteredHotels(filteredHotels, hotelContainer);
-        saveFormData();
     });
-
-    loadFormData();
 }
 
 export async function displayHotels(): Promise<void> {
@@ -298,6 +303,18 @@ function initializeRatingFilter() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCity = urlParams.get('selectedCity');
+    const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
+
+    if (selectedCity && destinationSelect) {
+        destinationSelect.value = selectedCity;
+        // Opcionálisan indíts egy keresést is, ha a város már be van állítva
+        destinationSelect.dispatchEvent(new Event('change'));
+    }
+});
+
 document.getElementById('filterButton')?.addEventListener('click', applyFilters);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -335,6 +352,22 @@ document.addEventListener('DOMContentLoaded', () => {
         priceRangeInput.addEventListener('input', () => {
             priceValueDisplay.textContent = `${priceRangeInput.value} EUR`;
         });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Get the city from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCity = urlParams.get('selectedCity');
+    
+    // Get the city select element
+    const citySelect = document.getElementById('citySelect') as HTMLSelectElement;
+    
+    if (selectedCity && citySelect) {
+        // Set the selected city in the dropdown
+        citySelect.value = selectedCity;
+        // Trigger the change event to load hotels for this city
+        citySelect.dispatchEvent(new Event('change'));
     }
 });
 

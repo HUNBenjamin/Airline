@@ -455,3 +455,76 @@ h1 {
     color: #6a0dad;
     font-weight: bold;
 }
+
+.city-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.flight-cards {
+    display: grid;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.flight-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.flight-card:hover {
+    transform: translateY(-3px);
+}
+
+.flight-info {
+    padding: 10px;
+}
+
+.flight-number {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.flight-route {
+    color: #7f8c8d;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.flight-time {
+    color: #34495e;
+    font-size: 0.9em;
+}
+
+.flight-price {
+    font-weight: bold;
+    color: #e74c3c;
+    margin: 5px 0;
+}
+
+.book-button {
+    display: block;
+    background: #3498db;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.book-button:hover {
+    background: #2980b9;
+}
+
+.no-flights {
+    color: #e74c3c;
+    text-align: center;
+    padding: 10px;
+    background: #fde8e8;
+    border-radius: 4px;
+}
+

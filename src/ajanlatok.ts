@@ -1,331 +1,196 @@
-export interface Flight {
-    id: number;
+interface Flight {
+    id: string;
     Departure_Date: string;
-    Departure_Time: number;
+    Departure_Time: string;
     Destination_Date: string;
-    Destination_Time: number;
+    Destination_Time: string;
     Airport_From: string;
     Airport_To: string;
     Price: number;
-    Type_of_plane: string;
-    Free_seats: number;
+    Plane_Type: string;
+    Free_Seats: number;
     Flight_Number: string;
+    Image?: string;
 }
 
-export async function fetchPlanes(): Promise<Flight[]> {
-    const response = await fetch("http://localhost:3000/userFlights");
-    if (!response.ok) {
-        throw new Error("Failed to fetch planes");
-    }
-    const data: Flight[] = await response.json();
-    return data;
+interface Hotel {
+    id: string;
+    name: string;
+    city: string;
+    pricePerNight: number;
+    maxGuests: number;
+    amenities: string[];
+    rating: number;
+    availableFrom: string;
+    availableTo: string;
 }
 
-export async function displayPlanes(): Promise<void> {
-    const planes = await fetchPlanes();
-    const departureInputes = document.getElementById('departureDropDownMenuInput');
-    const destinationInputes = document.getElementById('destinationDropDownMenuInput');
-    const citiesFrom = [...new Set(planes.map(x => x.Airport_From))]; 
+interface AirportCoordinate {
+    name: string;
+    lat: number;
+    lng: number;
+    id: string;
+}
 
-    citiesFrom.forEach(element => {
-        const option = document.createElement('option');
-        option.value = element;
-        option.innerText = element;
-        departureInputes?.appendChild(option);
-    });
+let map: L.Map;
+let selectedDeparture: string = ""; // Alapértelmezett indulási repülőtér
+let selectedMonth: string = new Date().toISOString().slice(5, 7); // Az aktuális hónap
 
-    departureInputes?.addEventListener('change', (e) => {
-        const selectedCity = (e.target as HTMLSelectElement).value;
-        const citiesTo = [...new Set(planes
-            .filter(flight => flight.Airport_From === selectedCity)
-            .map(flight => flight.Airport_To))];
+document.addEventListener("DOMContentLoaded", () => {
+    const departureSelect = document.getElementById("departure-select") as HTMLSelectElement;
+    const monthSelect = document.getElementById("month-select") as HTMLSelectElement;
 
-        if (destinationInputes) {
-            destinationInputes.innerHTML = '<option value="">Select Destination</option><option value="anywhere">Bárhova</option>';
-
-            citiesTo.forEach(element => {
-                const option = document.createElement('option');
-                option.value = element;
-                option.innerText = element;
-                destinationInputes.appendChild(option);
-            });
-        }
-    });}
-
-let cheapestFlightIds: number[] = [];
-async function bookFlight(flightId: number, totalPrice: number, guests: number, flightNumber: string) {
-    const currentUser = getCurrentUser();
-    if (currentUser === null) {
-        alert('Kérlek, először jelentkezz be!');
-        window.location.href = './login.html';
+    if (!departureSelect || !monthSelect) {
+        console.error("Nem található a választó elem!");
         return;
     }
 
-    const updatedUser = { ...currentUser, guests };
-
-    if (!('bookings' in updatedUser)) {
-        (updatedUser as any).bookings = [];
-    }
-    (updatedUser as any).bookings.push(flightId);
-
-    try {
-        const response = await fetch(`http://localhost:3000/users/${updatedUser.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedUser),
+    // Betöltjük a repülőtereket
+    fetchAirportCoordinates().then(coordinates => {
+        coordinates.forEach(coord => {
+            const option = document.createElement("option");
+            option.value = coord.name;
+            option.textContent = coord.name;
+            departureSelect.appendChild(option);
         });
 
-        if (!response.ok) throw new Error('Failed to update user on server');
-
-        let activeBookingIds: number[] = JSON.parse(localStorage.getItem('activeBookings') || '[]');
-        activeBookingIds.push(flightId);
-        localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
-
-        alert(`${flightNumber} járat foglalása sikeres!`);
-    } catch (error) {
-        console.error('Error updating user:', error);
-        alert('Hiba történt a foglalás során.');
-    }
-}
-function getCurrentUser(): { id: number; name: string; bookings?: number[] } | null {
-    return JSON.parse(localStorage.getItem('currentUser') || 'null');
-}
-
-function addSelectButtonListeners() {
-    const selectButtons = document.querySelectorAll('.select-button');
-    selectButtons.forEach(button => {
-        button.replaceWith(button.cloneNode(true));
+        // Beállítjuk az alapértelmezett indulási repülőteret
+        selectedDeparture = coordinates[0].name;
+        departureSelect.value = selectedDeparture;
     });
 
-    document.querySelectorAll('.select-button').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const flightCard = (e.target as HTMLElement).closest('.flight-card');
-            if (flightCard) {
-                const flightId = parseInt(flightCard.querySelector('.flight-info')?.getAttribute('data-flight-id') || '0');
-                const totalPrice = parseInt(flightCard.querySelector('.total-price')?.textContent?.replace(/\D/g, '') || '0');
-                const flightNumber = flightCard.querySelector('.flight-info')?.getAttribute('flight.Flight_Number') || 'Ismeretlen';
-                const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
-                const guests = parseInt(guestsInput?.value || '1');
+    // Beállítjuk az aktuális hónapot
+    monthSelect.value = selectedMonth;
 
-                bookFlight(flightId, totalPrice, guests, flightNumber);
-            }
+    // Kezdeti térkép betöltése
+    initializeMap();
+
+    // Hónap és indulási repülőtér változás figyelése
+    departureSelect.addEventListener("change", (event) => {
+        selectedDeparture = (event.target as HTMLSelectElement).value;
+        initializeMap();
+    });
+
+    monthSelect.addEventListener("change", (event) => {
+        selectedMonth = (event.target as HTMLSelectElement).value.padStart(2, "0");
+        initializeMap();
+    });
+});
+
+async function fetchPlanes(): Promise<Flight[]> {
+    try {
+        const response = await fetch("http://localhost:3000/userFlights");
+        if (!response.ok) {
+            throw new Error("Failed to fetch planes");
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error fetching planes:", error);
+        return [];
+    }
+}
+
+async function fetchHotels(): Promise<Hotel[]> {
+    try {
+        const response = await fetch("http://localhost:3000/hotels");
+        if (!response.ok) {
+            throw new Error("Failed to fetch hotels");
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error fetching hotels:", error);
+        return [];
+    }
+}
+
+async function fetchAirportCoordinates(): Promise<AirportCoordinate[]> {
+    try {
+        const response = await fetch("http://localhost:3000/airportCoordinates");
+        if (!response.ok) {
+            throw new Error("Failed to fetch airport coordinates");
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error fetching airport coordinates:", error);
+        return [];
+    }
+}
+
+async function initializeMap() {
+    const coordinates = await fetchAirportCoordinates();
+    const flights = await fetchPlanes();
+    const hotels = await fetchHotels();
+
+    if (!coordinates || coordinates.length === 0) {
+        console.error("No valid coordinates found.");
+        const mapContainer = document.getElementById('map');
+        if (mapContainer) {
+            mapContainer.innerHTML = `<div style="text-align: center; padding: 20px; color: red;">Hiba: Nem sikerült betölteni a városok adatait.</div>`;
+        }
+        return;
+    }
+
+    // Térkép inicializálása
+    if (map) {
+        map.remove(); // Eltávolítjuk a régi térképet, ha már létezik
+    }
+    map = L.map('map').setView([47.4979, 19.0402], 5); // Kezdeti középpont Budapest
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    coordinates.forEach(coord => {
+        const marker = L.marker([coord.lat, coord.lng]).addTo(map);
+
+        // Szűrés a kiválasztott indulási repülőtérre és hónapra
+        const cityFlights = flights
+            .filter((flight: Flight) => {
+                const flightMonth = flight.Departure_Date.split('-')[1]; // YYYY-MM-DD formátumból kivesszük a hónapot
+                return (
+                    flight.Airport_From === selectedDeparture &&
+                    flight.Airport_To === coord.name &&
+                    flightMonth === selectedMonth && // Csak a kiválasztott hónapban induló járatok
+                    flight.Free_Seats >= 1 // Legalább 1 szabad hely
+                );
+            })
+            .sort((a, b) => a.Price - b.Price) // Ár szerinti növekvő sorrend
+            .slice(0, 5); // Az 5 legolcsóbb járat
+
+        const cityHotels = hotels.filter((hotel: Hotel) => hotel.city === coord.name);
+
+        // Popup tartalom létrehozása
+        let popupContent = `<b>${coord.name}</b><br>`;
+
+        if (cityFlights.length === 0) {
+            popupContent += `<br><b>Nincsenek elérhető repülőjáratok ebben a hónapban.</b><br>`;
+        } else {
+            popupContent += `<br><b>Repülőjáratok (5 legolcsóbb):</b><br>`;
+            cityFlights.forEach((flight: Flight) => {
+                const departureDay = flight.Departure_Date.split('-')[2]; // YYYY-MM-DD formátumból kivesszük a napot
+                popupContent += `<a href="reservation.html?departureDate=${flight.Departure_Date}&departureTime=${flight.Departure_Time}&destinationDate=${flight.Destination_Date}&destinationTime=${flight.Destination_Time}&airportFrom=${flight.Airport_From}&airportTo=${flight.Airport_To}&price=${flight.Price}&typeOfPlane=${flight.Plane_Type}&freeSeats=${flight.Free_Seats}&flightNumber=${flight.Flight_Number}&passangers=1&departureAirport=${flight.Airport_From}&destinationAirport=${flight.Airport_To}" target="_blank">${flight.Flight_Number} - ${flight.Price} EUR (Indulás: ${departureDay}. nap)</a><br>`;
+            });
+        }
+
+        if (cityHotels.length === 0) {
+            popupContent += `<br><b>Nincsenek elérhető szállások.</b><br>`;
+        } else {
+            popupContent += `<br><b>Szállások:</b><br>`;
+            cityHotels.slice(0, 5).forEach((hotel: Hotel) => {
+                if (!hotel.id || !hotel.name) {
+                    console.error("Invalid hotel data:", hotel);
+                    return;
+                }
+                popupContent += `<a href="hotelek.html?selectedCity=${encodeURIComponent(coord.name)}" target="_blank">${hotel.name}</a><br>`;
+            });
+        }
+
+        // Popup hozzáadása a markerhez
+        marker.bindPopup(popupContent);
+
+        // Kattintás esemény kezelése
+        marker.on('click', () => {
+            marker.openPopup();
         });
     });
 }
-
-
-
-function addFlightIdsToCards() {
-    const flightCards = document.querySelectorAll('.flight-card');
-    flightCards.forEach(card => {
-        const flightId = card.querySelector('.flight-info')?.getAttribute('data-flight-id');
-        if (!flightId) {
-            const flightIdFromData = card.querySelector('.flight-info')?.getAttribute('data-flight-id');
-            if (flightIdFromData) {
-                card.querySelector('.flight-info')?.setAttribute('data-flight-id', flightIdFromData);
-            }
-        }
-    });
-}
-
-async function displayCheapestFlights(selectedCity: string, guests: number, destination?: string, dateFrom?: string) {
-    try {
-        const flights = await fetchPlanes();
-        let filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
-
-        if (!selectedCity || selectedCity === "") {
-            filteredFlights = [];
-        } else if (!destination || destination === "anywhere") {
-            filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
-        } else {
-            filteredFlights = flights.filter(
-                flight => flight.Airport_From === selectedCity && flight.Airport_To === destination
-            );
-        }
-
-        if (dateFrom) {
-            filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
-        }
-
-        const cheapestFlights = filteredFlights
-            .sort((a, b) => a.Price - b.Price)
-            .slice(0, 4);
-
-        cheapestFlightIds = cheapestFlights.map(flight => flight.id);
-
-        const container = document.getElementById('cheapest-flights');
-        const title = document.getElementById('cheapest-flights-title');
-        if (container && title) {
-            container.innerHTML = '';
-            container.className = 'flight-list';
-
-            if (cheapestFlights.length > 0) {
-                title.style.display = 'block';
-            } else {
-                title.style.display = 'none'; 
-            }
-
-            cheapestFlights.forEach(flight => {
-                const totalPrice = flight.Price * guests;
-                const card = document.createElement('div');
-                card.className = 'flight-card';
-                card.innerHTML = `
-                    <div class="flight-info" data-flight-id="${flight.id}">
-                        <img src="img/cities/${flight.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
-                        <div class="flight-time">
-                            <strong>${flight.Departure_Time}:00</strong>
-                            <span>${flight.Airport_From}</span>
-                        </div>
-                        <div class="flight-time">
-                            ✈ ${flight.Flight_Number}
-                            <span>${calculator(flight.Departure_Time.toString(), flight.Destination_Time.toString())} h</span>
-                        </div>
-                        <div class="flight-time">
-                            <strong>${flight.Destination_Time}:00</strong>
-                            <span>${flight.Airport_To}</span>
-                        </div>
-                    </div>
-                    <div class="flight-price">
-                        <div class="price-details">
-                            <div class="price-per-person">Price per person: ${flight.Price} EUR</div>
-                            <div class="total-price"><strong>Total price: ${totalPrice} EUR</strong></div>
-                        </div>
-                        <button class="select-button">Select</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-        addSelectButtonListeners();
-        addFlightIdsToCards();
-    } catch (error) {
-        console.error('Error displaying cheapest flights:', error);
-    }
-}
-
-async function displayPopularFlights(selectedCity: string, guests: number, destination?: string, dateFrom?: string) {
-    try {
-        const flights = await fetchPlanes();
-        let filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
-
-        if (!selectedCity || selectedCity === "") {
-            filteredFlights = [];
-        } else if (!destination || destination === "anywhere") {
-            filteredFlights = flights.filter(flight => flight.Airport_From === selectedCity);
-        } else {
-            filteredFlights = flights.filter(
-                flight => flight.Airport_From === selectedCity && flight.Airport_To === destination
-            );
-        }
-
-        if (dateFrom) {
-            filteredFlights = filteredFlights.filter(flight => flight.Departure_Date === dateFrom);
-        }
-
-        const popularFlights = filteredFlights
-            .filter(flight => !cheapestFlightIds.includes(flight.id))
-            .sort((a, b) => a.Free_seats - b.Free_seats)
-            .slice(0, 4);
-
-        const container = document.getElementById('popular-flights');
-        const title = document.getElementById('popular-flights-title');
-        if (container && title) {
-            container.innerHTML = '';
-            container.className = 'flight-list';
-
-            if (popularFlights.length > 0) {
-                title.style.display = 'block';
-            } else {
-                title.style.display = 'none'; 
-            }
-
-            popularFlights.forEach(flight => {
-                const totalPrice = flight.Price * guests;
-                const card = document.createElement('div');
-                card.className = 'flight-card';
-                card.innerHTML = `
-                    <div class="flight-info" data-flight-id="${flight.id}">
-                        <img src="img/cities/${flight.Airport_To}.jpg" class="rounded me-3" alt="Airline Logo" width="150">
-                        <div class="flight-time">
-                            <strong>${flight.Departure_Time}:00</strong>
-                            <span>${flight.Airport_From}</span>
-                        </div>
-                        <div class="flight-time">
-                            ✈ ${flight.Flight_Number}
-                            <span>${calculator(flight.Departure_Time.toString(), flight.Destination_Time.toString())} h</span>
-                        </div>
-                        <div class="flight-time">
-                            <strong>${flight.Destination_Time}:00</strong>
-                            <span>${flight.Airport_To}</span>
-                        </div>
-                    </div>
-                    <div class="flight-price">
-                        <div class="price-details">
-                            <div class="price-per-person">Price per person: ${flight.Price} EUR</div>
-                            <div class="total-price"><strong>Total price: ${totalPrice} EUR</strong></div>
-                        </div>
-                        <button class="select-button">Select</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-        addSelectButtonListeners();
-        addFlightIdsToCards();
-    } catch (error) {
-        console.error('Error displaying popular flights:', error);
-    }
-}
-
-function calculator(a: string, b: string) {
-    let time1 = a.split(':');
-    let time2 = b.split(':');
-    if (Number(time1[0]) > Number(time2[0])) {
-        return 24 - Number(time1[0]) + Number(time2[0]);
-    } else {
-        return Number(time2[0]) - Number(time1[0]);
-    }
-}
-
-document.getElementById('flightSearchForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const departureSelect = document.getElementById('departureDropDownMenuInput') as HTMLSelectElement;
-    const destinationSelect = document.getElementById('destinationDropDownMenuInput') as HTMLSelectElement;
-    const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
-    const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
-
-    const selectedCity = departureSelect.value;
-    const destination = destinationSelect.value;
-    const guests = parseInt(guestsInput.value);
-    const dateFrom = dateFromInput.value || undefined;
-
-    displayCheapestFlights(selectedCity, guests, destination, dateFrom);
-    displayPopularFlights(selectedCity, guests, destination, dateFrom);
-});
-
-document.getElementById('flightSearchForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const departureSelect = document.getElementById('departureDropDownMenuInput') as HTMLSelectElement;
-    const destinationSelect = document.getElementById('destinationDropDownMenuInput') as HTMLSelectElement;
-    const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
-    const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
-
-    const selectedCity = departureSelect.value;
-    const guests = parseInt(guestsInput.value);
-    const dateFrom = dateFromInput.value || undefined; 
-
-    if (destinationSelect.value === "anywhere" || destinationSelect.value === "") {
-        displayCheapestFlights(selectedCity, guests, undefined, dateFrom);
-        displayPopularFlights(selectedCity, guests, undefined, dateFrom);
-    } else {
-        displayCheapestFlights(selectedCity, guests, destinationSelect.value, dateFrom);
-        displayPopularFlights(selectedCity, guests, destinationSelect.value, dateFrom);
-    }
-    
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    displayPlanes();
-});
