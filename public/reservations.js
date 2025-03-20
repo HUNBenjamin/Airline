@@ -1,4 +1,3 @@
-"use strict";
 //   sor  oszlop oszlopban székek
 let planeSeatsList = {
     B737: [[0, 0, 0], [35, 2, 3]],
@@ -9,7 +8,7 @@ let planeSeatsList = {
     AA350: [[8, 3, 2], [31, 3, 3]]
 };
 let start = false;
-let reservationDatas = [];
+export let reservationDatas = [];
 let seatsNumber = [];
 let isbusiness = false;
 let data = getQueryParams();
@@ -137,6 +136,7 @@ function getQueryParams() {
         freeSeats: params.get("freeSeats"),
         flightNumber: params.get("flightNumber"),
         passangers: params.get("passangers"),
+        id: params.get("id")
     };
 }
 function PlaneFinder(PlaneName) {
@@ -295,6 +295,7 @@ function SeatReservationFixButton() {
         questionsDiv.innerHTML += `<div> <h1 class="my-5 mx-5">Seat(s) reserved ✅ </h1> </div>`;
         questions.append(questionsDiv);
         //Ezt kell valahogy átadnom a user-be
-        reservationDatas = [seatsNumber, data.price, data.passangers, data.flightNumber, data.departureAirport, data.departureDate, data.departureTime, data.destinationAirport, data.departureDate, data.destinationTime, data.typeOfPlane, data.flightNumber];
+        reservationDatas = [data.id];
+        // localStorage.setItem('activeBookings', JSON.stringify(data.id));
     });
 }

@@ -80,7 +80,7 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
     let flightDiv = document.getElementById('fromDiv') as HTMLDivElement;
     flightDiv.innerHTML = "";
     let i = 0;
-    savePlanesToStorage(AvailablePlanes);
+    // savePlanesToStorage(AvailablePlanes);
     AvailablePlanes.forEach(element => {
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
@@ -104,7 +104,7 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
                             <div class="price-per-person">Price per person: ${element.Price} EUR</div> 
                             <div class="total-price"><strong>Total price: ${element.Price * Passangers} EUR</strong></div>
                         </div>
-                    <a href="reservation.html?departureDate=${element.Departure_Date}&departureTime=${element.Departure_Time}&destinationDate=${element.Destination_Date}&destinationTime=${element.Destination_Time}&airportFrom=${element.Airport_From}&airportTo=${element.Airport_To}&price=${element.Price}&typeOfPlane=${element.Plane_Type}&freeSeats=${element.Free_Seats}&flightNumber=${element.Flight_Number}&passangers=${Passangers}&departureAirport=${element.Airport_From}&destinationAirport=${element.Airport_To}" id="selectedPlane" class="select-button ms-3">Select</a> 
+                    <a href="reservation.html?departureDate=${element.Departure_Date}&departureTime=${element.Departure_Time}&destinationDate=${element.Destination_Date}&destinationTime=${element.Destination_Time}&airportFrom=${element.Airport_From}&airportTo=${element.Airport_To}&price=${element.Price}&typeOfPlane=${element.Plane_Type}&freeSeats=${element.Free_Seats}&flightNumber=${element.Flight_Number}&passangers=${Passangers}&departureAirport=${element.Airport_From}&destinationAirport=${element.Airport_To}$id=${element.id}" id="selectedPlane" class="select-button ms-3">Select</a> 
                 </div>
             </div>`;
         flightDiv?.appendChild(myDiv);
@@ -123,10 +123,10 @@ function calculator(a: string, b: string) {
     }
 }
 
-export const savePlanesToStorage = (planes: Plane[]) => {
-    localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
-}
-export const getPlanesFromStorage = (): Plane[] => {
-    const storedPlanes = localStorage.getItem('AvailablePlanes');
-    return storedPlanes ? JSON.parse(storedPlanes) : [];
-}
+// export const savePlanesToStorage = (planes: Plane[]) => {
+//     localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
+// }
+// export const getPlanesFromStorage = (): Plane[] => {
+//     const storedPlanes = localStorage.getItem('AvailablePlanes');
+//     return storedPlanes ? JSON.parse(storedPlanes) : [];
+// }
