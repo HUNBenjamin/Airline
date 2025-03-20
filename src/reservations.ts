@@ -1,3 +1,5 @@
+import { addBooking } from "./login";
+
 //   sor  oszlop oszlopban székek
 let planeSeatsList = {
     B737:  [[0, 0, 0], [35, 2, 3]],
@@ -146,7 +148,7 @@ function getQueryParams() {
     freeSeats: params.get("freeSeats"),
     flightNumber: params.get("flightNumber"),
     passangers: params.get("passangers"),
-    id: params.get("id")
+    id: params.get("planeId")
   };
 }
 
@@ -319,8 +321,12 @@ function SeatReservationFixButton() {
         questionsDiv.innerHTML += `<div> <h1 class="my-5 mx-5">Seat(s) reserved ✅ </h1> </div>`;
         questions.append(questionsDiv);
         //Ezt kell valahogy átadnom a user-be
-        reservationDatas = [data.id];
-        // localStorage.setItem('activeBookings', JSON.stringify(data.id));
+        reservationDatas = [Number(data.id)];
+        console.log(reservationDatas);
+        console.log(localStorage.getItem('activeBookings'));
+        localStorage.setItem('activeBookings', JSON.stringify(reservationDatas));
+        console.log(localStorage.getItem('activeBookings'));
+
 
     });
 }
