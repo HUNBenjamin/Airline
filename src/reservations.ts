@@ -9,9 +9,9 @@ let planeSeatsList = {
 };
   
   
-  
+
   let start = false;
-  let reservationDatas: any = [];
+  export let reservationDatas: any = [];
   let seatsNumber: string[] = [];
   let isbusiness = false;
   let data = getQueryParams();
@@ -320,6 +320,7 @@ function SeatReservationFixButton() {
         questions.append(questionsDiv);
         //Ezt kell valahogy átadnom a user-be
         reservationDatas = [data.id];
+        // localStorage.setItem('activeBookings', JSON.stringify(data.id));
 
     });
 }

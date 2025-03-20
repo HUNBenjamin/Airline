@@ -80,7 +80,7 @@ document.getElementById('DoneButton')?.addEventListener("click", (event) => {
     let flightDiv = document.getElementById('fromDiv') as HTMLDivElement;
     flightDiv.innerHTML = "";
     let i = 0;
-    savePlanesToStorage(AvailablePlanes);
+    // savePlanesToStorage(AvailablePlanes);
     AvailablePlanes.forEach(element => {
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
@@ -123,10 +123,10 @@ function calculator(a: string, b: string) {
     }
 }
 
-export const savePlanesToStorage = (planes: Plane[]) => {
-    localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
-}
-export const getPlanesFromStorage = (): Plane[] => {
-    const storedPlanes = localStorage.getItem('AvailablePlanes');
-    return storedPlanes ? JSON.parse(storedPlanes) : [];
-}
+// export const savePlanesToStorage = (planes: Plane[]) => {
+//     localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
+// }
+// export const getPlanesFromStorage = (): Plane[] => {
+//     const storedPlanes = localStorage.getItem('AvailablePlanes');
+//     return storedPlanes ? JSON.parse(storedPlanes) : [];
+// }

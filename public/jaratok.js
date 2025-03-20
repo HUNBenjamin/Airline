@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -74,7 +75,7 @@ displayPlane();
     let flightDiv = document.getElementById('fromDiv');
     flightDiv.innerHTML = "";
     let i = 0;
-    savePlanesToStorage(AvailablePlanes);
+    // savePlanesToStorage(AvailablePlanes);
     AvailablePlanes.forEach(element => {
         let myDiv = document.createElement('div');
         myDiv.innerHTML += `<div class="flight-card">
@@ -115,10 +116,10 @@ function calculator(a, b) {
         return Number(time2[0]) - Number(time1[0]);
     }
 }
-export const savePlanesToStorage = (planes) => {
-    localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
-};
-export const getPlanesFromStorage = () => {
-    const storedPlanes = localStorage.getItem('AvailablePlanes');
-    return storedPlanes ? JSON.parse(storedPlanes) : [];
-};
+// export const savePlanesToStorage = (planes: Plane[]) => {
+//     localStorage.setItem('AvailablePlanes', JSON.stringify(planes));
+// }
+// export const getPlanesFromStorage = (): Plane[] => {
+//     const storedPlanes = localStorage.getItem('AvailablePlanes');
+//     return storedPlanes ? JSON.parse(storedPlanes) : [];
+// }

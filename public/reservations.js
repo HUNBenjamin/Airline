@@ -1,4 +1,3 @@
-"use strict";
 //   sor  oszlop oszlopban székek
 let planeSeatsList = {
     B737: [[0, 0, 0], [35, 2, 3]],
@@ -9,7 +8,7 @@ let planeSeatsList = {
     AA350: [[8, 3, 2], [31, 3, 3]]
 };
 let start = false;
-let reservationDatas = [];
+export let reservationDatas = [];
 let seatsNumber = [];
 let isbusiness = false;
 let data = getQueryParams();
@@ -297,5 +296,6 @@ function SeatReservationFixButton() {
         questions.append(questionsDiv);
         //Ezt kell valahogy átadnom a user-be
         reservationDatas = [data.id];
+        // localStorage.setItem('activeBookings', JSON.stringify(data.id));
     });
 }
