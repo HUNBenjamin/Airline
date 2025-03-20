@@ -1,3 +1,4 @@
+import { clear } from "console";
 import { addBooking } from "./login";
 
 //   sor  oszlop oszlopban székek
@@ -320,14 +321,13 @@ function SeatReservationFixButton() {
         let questionsDiv = document.createElement("div");
         questionsDiv.innerHTML += `<div> <h1 class="my-5 mx-5">Seat(s) reserved ✅ </h1> </div>`;
         questions.append(questionsDiv);
-        //Ezt kell valahogy átadnom a user-be
-        reservationDatas = [Number(data.id)];
-        console.log(reservationDatas);
-        console.log(localStorage.getItem('activeBookings'));
+        reservationDatas = localStorage.getItem('activeBookings')
+        reservationDatas = JSON.parse(reservationDatas!);
+
+        reservationDatas.push(Number(data.id));
         localStorage.setItem('activeBookings', JSON.stringify(reservationDatas));
         console.log(localStorage.getItem('activeBookings'));
-
-
+        
     });
 }
 
