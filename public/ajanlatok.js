@@ -125,31 +125,52 @@ function initializeMap() {
                 .sort((a, b) => a.Price - b.Price) // Ár szerinti növekvő sorrend
                 .slice(0, 5); // Az 5 legolcsóbb járat
             const cityHotels = hotels.filter((hotel) => hotel.city === coord.name);
+            // Kép elérési útja
+            const cityImagePath = `img/cities/${coord.name.toLowerCase()}.jpg`;
             // Popup tartalom létrehozása
-            let popupContent = `<b>${coord.name}</b><br>`;
-            if (cityFlights.length === 0) {
-                popupContent += `<br><b>Nincsenek elérhető repülőjáratok ebben a hónapban.</b><br>`;
-            }
-            else {
-                popupContent += `<br><b>Repülőjáratok (5 legolcsóbb):</b><br>`;
-                cityFlights.forEach((flight) => {
-                    const departureDay = flight.Departure_Date.split('-')[2]; // YYYY-MM-DD formátumból kivesszük a napot
-                    popupContent += `<a href="reservation.html?departureDate=${flight.Departure_Date}&departureTime=${flight.Departure_Time}&destinationDate=${flight.Destination_Date}&destinationTime=${flight.Destination_Time}&airportFrom=${flight.Airport_From}&airportTo=${flight.Airport_To}&price=${flight.Price}&typeOfPlane=${flight.Plane_Type}&freeSeats=${flight.Free_Seats}&flightNumber=${flight.Flight_Number}&passangers=1&departureAirport=${flight.Airport_From}&destinationAirport=${flight.Airport_To}" target="_blank">${flight.Flight_Number} - ${flight.Price} EUR (Indulás: ${departureDay}. nap)</a><br>`;
-                });
-            }
+            let popupContent = `
+            <div class="popup-container">
+                <div class="popup-image-container">
+                    <img src="${cityImagePath}" alt="${coord.name}" class="popup-image">
+                </div>
+                <div class="popup-hotels">
+                    <h4>Szállások</h4>
+        `;
             if (cityHotels.length === 0) {
-                popupContent += `<br><b>Nincsenek elérhető szállások.</b><br>`;
+                popupContent += `<p>Nincsenek elérhető szállások.</p>`;
             }
             else {
-                popupContent += `<br><b>Szállások:</b><br>`;
                 cityHotels.slice(0, 5).forEach((hotel) => {
                     if (!hotel.id || !hotel.name) {
                         console.error("Invalid hotel data:", hotel);
                         return;
                     }
-                    popupContent += `<a href="hotelek.html?selectedCity=${encodeURIComponent(coord.name)}" target="_blank">${hotel.name}</a><br>`;
+                    popupContent += `
+                    <div class="hotel-item">
+                        <a href="hotelek.html?selectedCity=${encodeURIComponent(coord.name)}" target="_blank">
+                            ${hotel.name}
+                        </a>
+                    </div>
+                `;
                 });
             }
+            popupContent += `</div><div class="popup-flights"><h4>Repülőjáratok</h4>`;
+            if (cityFlights.length === 0) {
+                popupContent += `<p>Nincsenek elérhető repülőjáratok ebben a hónapban.</p>`;
+            }
+            else {
+                cityFlights.forEach((flight) => {
+                    const departureDay = flight.Departure_Date.split('-')[2]; // YYYY-MM-DD formátumból kivesszük a napot
+                    popupContent += `
+                    <div class="flight-item">
+                        <a href="reservation.html?departureDate=${flight.Departure_Date}&departureTime=${flight.Departure_Time}&destinationDate=${flight.Destination_Date}&destinationTime=${flight.Destination_Time}&airportFrom=${flight.Airport_From}&airportTo=${flight.Airport_To}&price=${flight.Price}&typeOfPlane=${flight.Plane_Type}&freeSeats=${flight.Free_Seats}&flightNumber=${flight.Flight_Number}&passangers=1&departureAirport=${flight.Airport_From}&destinationAirport=${flight.Airport_To}" target="_blank">
+                            ${flight.Flight_Number} - ${flight.Price} EUR (Indulás: ${departureDay}. nap)
+                        </a>
+                    </div>
+                `;
+                });
+            }
+            popupContent += `</div></div>`; // Popup tartalom lezárása
             // Popup hozzáadása a markerhez
             marker.bindPopup(popupContent);
             // Kattintás esemény kezelése

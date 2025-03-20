@@ -28017,11 +28017,17 @@
       "phone": "123-456-7890",
       "password": "abc12345",
       "email": "johnmontgomery@blake.com",
-      "hotelBookings": [],
-      "guests": 2,
-      "bookings": [
-        633
-      ]
+      "hotelBookings": [
+        66
+      ],
+      "hotelBookingDates": {
+        "66": {
+          "dateFrom": "2025-03-20",
+          "dateTo": "2025-03-21",
+          "guests": 1
+        }
+      },
+      "guests": 1
     },
     {
       "name": "Carol Holmes",

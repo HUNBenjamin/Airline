@@ -44,38 +44,6 @@ async function fetchPlanes(): Promise<Flight[]> {
     return data;
 }
 
-// function saveFormData() {
-//     const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
-//     const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
-//     const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
-//     const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
-
-//     const formData = {
-//         destination: destinationSelect.value,
-//         guests: guestsInput.value,
-//         dateFrom: dateFromInput.value,
-//         dateTo: dateToInput.value
-//     };
-
-//     localStorage.setItem('hotelFormData', JSON.stringify(formData));
-// }
-
-// function loadFormData() {
-//     const formData = localStorage.getItem('hotelFormData');
-//     if (formData) {
-//         const parsedData = JSON.parse(formData);
-//         const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
-//         const guestsInput = document.getElementById('guestsInput') as HTMLInputElement;
-//         const dateFromInput = document.getElementById('dateFromInput') as HTMLInputElement;
-//         const dateToInput = document.getElementById('dateToInput') as HTMLInputElement;
-
-//         destinationSelect.value = parsedData.destination;
-//         guestsInput.value = parsedData.guests;
-//         dateFromInput.value = parsedData.dateFrom;
-//         dateToInput.value = parsedData.dateTo;
-//     }
-// }
-
 function initializeHotelSearch() {
     const searchForm = document.getElementById('hotelSearchForm') as HTMLFormElement;
     const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
@@ -107,6 +75,13 @@ function initializeHotelSearch() {
         selectedHotels = filteredHotels; 
         displayFilteredHotels(filteredHotels, hotelContainer);
     });
+
+    // Automatikus keresés indítása, ha a URL-ben van selectedCity paraméter
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCity = urlParams.get('selectedCity');
+    if (selectedCity && destinationSelect.value === selectedCity) {
+        searchForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
 }
 
 export async function displayHotels(): Promise<void> {
@@ -115,14 +90,17 @@ export async function displayHotels(): Promise<void> {
         const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
         
         if (destinationSelect) {
-            destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
-            const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
-            uniqueDestinations.forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                destinationSelect.appendChild(option);
+            destinationSelect.addEventListener('change', () => {
+                destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
+                const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
+                uniqueDestinations.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    destinationSelect.appendChild(option);
+                });
             });
+
         }
 
         initializeHotelSearch();
@@ -184,13 +162,13 @@ function displayFilteredHotels(hotels: Hotel[], container: HTMLDivElement): void
             if (hotelId) {
                 bookHotel(parseInt(hotelId), hotel.name);
             }
-        });    });
+        });
+    });
 }
 
 async function bookHotel(hotelId: number, hotelName: string): Promise<void> {
     const currentUser = getCurrentUser();
     
-    // Ha nincs bejelentkezve, akkor figyelmeztetés és átirányítás
     if (!currentUser) {
         const shouldRedirect = confirm("A foglaláshoz be kell jelentkezned. Kattints az 'OK' gombra a bejelentkezéshez.");
         if (shouldRedirect) {
@@ -234,14 +212,15 @@ export function getCurrentUser() {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
 }
+
 export function setCurrentUser(user: any) {
     localStorage.setItem('currentUser', JSON.stringify(user));
 }
 
 interface User {
-    hotelBookings: number[]; 
-    hotelBookingDates: { [hotelId: number]: { dateFrom: string; dateTo: string } }; 
-    
+    hotelBookings: number[];
+    hotelBookingDates: { [hotelId: number]: { dateFrom: string; dateTo: string; guests: number } };
+    guests: number;
 }
 
 let selectedRating = 0; 
@@ -255,7 +234,7 @@ function applyFilters() {
 
     let filteredHotels = selectedHotels.filter(hotel => {
         const matchesAmenities = selectedAmenities.length === 0 || selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
-        const matchesRating = selectedRating === 0 || (hotel.rating >= selectedRating - 0.5 && hotel.rating <= selectedRating); // Módosított feltétel
+        const matchesRating = selectedRating === 0 || (hotel.rating >= selectedRating - 0.5 && hotel.rating <= selectedRating);
         const matchesPrice = hotel.pricePerNight <= selectedPrice;
         return matchesAmenities && matchesRating && matchesPrice;
     });
@@ -310,14 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (selectedCity && destinationSelect) {
         destinationSelect.value = selectedCity;
-        // Opcionálisan indíts egy keresést is, ha a város már be van állítva
         destinationSelect.dispatchEvent(new Event('change'));
     }
-});
 
-document.getElementById('filterButton')?.addEventListener('click', applyFilters);
-
-document.addEventListener('DOMContentLoaded', () => {
     displayHotels();
     initializeRatingFilter();
 
@@ -355,29 +329,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Get the city from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const selectedCity = urlParams.get('selectedCity');
-    
-    // Get the city select element
-    const citySelect = document.getElementById('citySelect') as HTMLSelectElement;
-    
-    if (selectedCity && citySelect) {
-        // Set the selected city in the dropdown
-        citySelect.value = selectedCity;
-        // Trigger the change event to load hotels for this city
-        citySelect.dispatchEvent(new Event('change'));
-    }
-});
-
 document.addEventListener("DOMContentLoaded", () => {
     const dateFromInput = document.getElementById("dateFromInput") as HTMLInputElement;
     const dateToInput = document.getElementById("dateToInput") as HTMLInputElement;
     const guestsInput = document.getElementById("guestsInput") as HTMLInputElement;
 
     if (guestsInput) {
-        guestsInput.value = "1"; // Default guest count is 1
+        guestsInput.value = "1";
         guestsInput.min = "1";
     }
 
@@ -396,17 +354,94 @@ document.addEventListener("DOMContentLoaded", () => {
         dateFromInput.addEventListener("change", () => {
             const selectedDate = new Date(dateFromInput.value);
             if (!isNaN(selectedDate.getTime())) {
-                // Set minimum departure date to the next day
                 const nextDay = new Date(selectedDate);
                 nextDay.setDate(nextDay.getDate() + 1);
                 const minDate = nextDay.toISOString().split("T")[0];
                 dateToInput.min = minDate;
 
-                // Adjust departure date if it's before the minimum date
                 if (dateToInput.value && dateToInput.value < minDate) {
                     dateToInput.value = minDate;
                 }
             }
         });
+    }
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCity = urlParams.get("selectedCity");
+
+    if (!selectedCity) {
+        console.error("Nincs kiválasztott város.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/hotels");
+        if (!response.ok) {
+            throw new Error("Hiba a szállások lekérésekor.");
+        }
+        const hotels = await response.json();
+
+        // Kiválasztott város szerinti szűrés
+        const filteredHotels = hotels.filter((hotel: { city: string; id: number; name: string; pricePerNight: number; rating: number; maxGuests: number; amenities: string[] }) => 
+            hotel.city.toLowerCase() === selectedCity.toLowerCase()
+        );
+
+        // Szállások megjelenítése
+        const hotelContainer = document.getElementById("hotelList");
+        if (!hotelContainer) {
+            console.error("Nem található a hotelList elem.");
+            return;
+        }
+        hotelContainer.innerHTML = "";
+
+        if (filteredHotels.length === 0) {
+            hotelContainer.innerHTML = `<p>Nincsenek elérhető szállások ebben a városban.</p>`;
+        } else {
+            filteredHotels.forEach((hotel: { id: number; name: string; pricePerNight: number; rating: number; maxGuests: number; amenities: string[] }) => {
+                const hotelCard = document.createElement('div');
+                hotelCard.className = 'hotel-card';
+                hotelCard.innerHTML = `
+                    <div class="hotel-card-left">
+                        <img src="img/hotels/${hotel.id}.jpg" alt="Hotel Image" class="hotel-image">
+                    </div>
+                    <div class="hotel-card-middle">
+                        <div class="hotel-header">
+                            <h3>${hotel.name}</h3>
+                        </div>
+                        <div class="amenities">
+                            <p>Szolgáltatások:</p>
+                            <ul>${hotel.amenities.map(amenity => `<li>${amenity}</li>`).join('')}</ul>
+                        </div>
+                        <div class="price-section">     
+                            <p>Ár/éjszaka: ${hotel.pricePerNight} EUR</p>
+                        </div>
+                    </div>
+                    <div class="hotel-card-right">
+                        <div class="rating-line">
+                            <span class="rating">${'⭐️'.repeat(Math.floor(hotel.rating))}${hotel.rating % 1 >= 0.5 && hotel.rating % 1 < 1 ? '⭐️' : ''}</span>
+                            <span class="rating-number">${hotel.rating}/5</span>
+                        </div>
+                        <button class="book-hotel-btn" data-hotel-id="${hotel.id}">Foglalás</button>
+                        <div class="total-price-line">
+                            <span>Összérték: <strong>${calculateTotalPrice(hotel.pricePerNight, (document.getElementById('dateFromInput') as HTMLInputElement).value, (document.getElementById('dateToInput') as HTMLInputElement).value, parseInt((document.getElementById('guestsInput') as HTMLInputElement).value))} EUR</strong></span>
+                        </div>
+                    </div>
+                `;
+                hotelContainer.appendChild(hotelCard);
+        
+                const bookButton = hotelCard.querySelector('.book-hotel-btn') as HTMLButtonElement;
+                bookButton.addEventListener('click', () => {
+                    const hotelId = bookButton.dataset.hotelId;
+                    const guests = parseInt((document.getElementById('guestsInput') as HTMLInputElement).value);
+                    if (hotelId) {
+                        bookHotel(parseInt(hotelId), hotel.name);
+                    }
+                });
+            });
+        }
+    } catch (error) {
+        console.error("Hiba:", error);
     }
 });
