@@ -65,15 +65,22 @@ export function displayHotels() {
             const flights = yield fetchPlanes();
             const destinationSelect = document.getElementById('hotelDestinationSelect');
             if (destinationSelect) {
+                // Először feltöltjük az opciókat
+                destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
+                const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
+                uniqueDestinations.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    destinationSelect.appendChild(option);
+                });
+                // Utána eseménykezelőt állítunk be
                 destinationSelect.addEventListener('change', () => {
-                    destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
-                    const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
-                    uniqueDestinations.forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city;
-                        option.textContent = city;
-                        destinationSelect.appendChild(option);
-                    });
+                    const selectedCity = destinationSelect.value;
+                    if (selectedCity) {
+                        const newUrl = `${window.location.pathname}?selectedCity=${encodeURIComponent(selectedCity)}`;
+                        history.pushState(null, '', newUrl);
+                    }
                 });
             }
             initializeHotelSearch();

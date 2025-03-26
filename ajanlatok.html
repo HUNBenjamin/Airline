@@ -30,26 +30,31 @@
         }
         .popup-container {
     display: flex;
-    gap: 15px; /* Térköz a kép, hotelek és járatok között */
-    max-width: 800px; /* Max szélesség a felugró kártyának */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    max-width: 800px;
+    padding: 10px;
 }
 
 .popup-image-container {
-    flex: 1; /* A kép 1 rész */
+    flex: 0 0 150px; /* Fix szélesség a képeknek */
 }
 
 .popup-image {
-    width: 150px; /* Kép szélessége */
-    height: 150px; /* Kép magassága */
-    object-fit: cover; /* Kép arányainak megtartása */
-    border-radius: 8px; /* Lekerekített sarkok */
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 .popup-hotels, .popup-flights {
-    flex: 1; /* A hotelek és járatok 1-1 rész */
+    flex: 1;
+    min-width: 250px; /* Megakadályozza a túlzott összehúzódást */
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Térköz a hotelek vagy járatok között */
+    gap: 10px;
 }
 
 .popup-hotels h4, .popup-flights h4 {
@@ -70,6 +75,7 @@
 .hotel-item a:hover, .flight-item a:hover {
     text-decoration: underline;
 }
+
     </style>
 </head>
 <body>

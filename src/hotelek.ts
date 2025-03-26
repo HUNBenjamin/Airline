@@ -90,17 +90,24 @@ export async function displayHotels(): Promise<void> {
         const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
         
         if (destinationSelect) {
-            destinationSelect.addEventListener('change', () => {
-                destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
-                const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
-                uniqueDestinations.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    destinationSelect.appendChild(option);
-                });
+            // Először feltöltjük az opciókat
+            destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
+            const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
+            uniqueDestinations.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                destinationSelect.appendChild(option);
             });
 
+            // Utána eseménykezelőt állítunk be
+            destinationSelect.addEventListener('change', () => {
+                const selectedCity = destinationSelect.value;
+                if (selectedCity) {
+                    const newUrl = `${window.location.pathname}?selectedCity=${encodeURIComponent(selectedCity)}`;
+                    history.pushState(null, '', newUrl);
+                }
+            });
         }
 
         initializeHotelSearch();
@@ -108,6 +115,7 @@ export async function displayHotels(): Promise<void> {
         console.error('Error in displayHotels:', error);
     }
 }
+
 
 function calculateTotalPrice(pricePerNight: number, dateFrom: string, dateTo: string, guests: number): number {
     const fromDate = new Date(dateFrom);
