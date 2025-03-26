@@ -70,6 +70,10 @@ header nav a:hover {
     padding: 20px;
     font-size: 1.2em;
 }
+footer{
+    background-color: #6a0dad;
+    color: white;
+}
 
 /* Info cards */
 /* .info-cards {
@@ -214,7 +218,7 @@ header nav a:hover {
     justify-content: space-around;
     margin: 20px 0;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
 }
 
 .info-card {
@@ -222,7 +226,7 @@ header nav a:hover {
     border-radius: 8px;
     padding: 20px;
     width: 30%;
-    min-width: 250px;
+    min-width: 350px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
 }

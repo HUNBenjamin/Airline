@@ -20,52 +20,23 @@
             <a href="user.html" id="navbar-username">Felhasználó</a>
         </nav>
     </header>
-    <div class="container" style="min-height: 550px;">
+    <div class="container">
         <div id="MyBgWhite">
-            <div class="flight-search-container">
-                <form id="flightSearchForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="departureDropDownMenuInput">Indulás:</label>
-                            <select id="departureDropDownMenuInput" required>
-                                <option value="">Válassza ki a repteret</option>
-                            </select>
-                        </div>
-                    
-                        <div class="form-group">
-                            <label for="destinationDropDownMenuInput">Uticél:</label>
-                            <select id="destinationDropDownMenuInput">
-                                <option value="">Válassza ki az uticélt</option>
-                            </select>
-                        </div>
-                    
-                        <div class="form-group">
-                            <label for="passangersNumber">Utasok:</label>
-                            <input type="number" id="passangersNumber" min="1" value="1" required>
-                        </div>
-                    
-                        <div class="form-group">
-                            <label for="dateFromInput">Dátum:</label>
-                            <input id="flyingDateData" type="date" required value="2025-03-20">
-                        </div>
-                    </div>
-                    <button type="submit" class="search-button" id="DoneButton">Keresés</button>
-                </form>
-            </div>
-                <div class="test mt-3">
-                    <div id="fromDiv"></div>
+                <div >
+                    <table id="delayTableDiv" class="table table-striped table-hover m-3 text-center">
+                        
+                    </table>
                 </div>
         </div>
     </div>
     <div class="banner">
-        <p><strong>Meglepetés ajánlat:</strong> Szerezz akár 20% kedvezményt minden foglalásodnál! Az ajánlat Március 31 áll.</p>
+        <p></p>
     </div>
-    
     <div class="info-cards">
-        <a href="delay.html" class="text-decoration-none">
+        <a href="jaratok.html" class="text-decoration-none">
           <div class="info-card">
-            <h3>Késések</h3>
-            <p>Csekkold le hogy késik hogy a géped időben van e.</p>
+            <h3>Jegyek</h3>
+            <p>Vásárold meg álmaid helyszinére repülőjegyedet a SkyQuest Airlines-nál</p>
         </div>
         </a>
         <a href="ajanlatok.html" class="text-decoration-none">
@@ -137,8 +108,9 @@
           </div>
         </div>
       </footer>
-    <script type="module" src="./public/jaratok.js"></script>
-    <script type="module" src="./public/login.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0v8FqG7WQvEEwTR4/Jd/csyZ0Fh5J6MZxk1wW+vP4tXgpoDs" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="./public/delay.js" type="module"></script>
+  <script src="./public/login.js" type="module"></script>
 </body>
 </html>
