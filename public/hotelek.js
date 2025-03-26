@@ -65,7 +65,6 @@ export function displayHotels() {
             const flights = yield fetchPlanes();
             const destinationSelect = document.getElementById('hotelDestinationSelect');
             if (destinationSelect) {
-                // Először feltöltjük az opciókat
                 destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
                 const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
                 uniqueDestinations.forEach(city => {
@@ -74,7 +73,6 @@ export function displayHotels() {
                     option.textContent = city;
                     destinationSelect.appendChild(option);
                 });
-                // Utána eseménykezelőt állítunk be
                 destinationSelect.addEventListener('change', () => {
                     const selectedCity = destinationSelect.value;
                     if (selectedCity) {
@@ -324,9 +322,7 @@ document.addEventListener("DOMContentLoaded", () => __awaiter(void 0, void 0, vo
             throw new Error("Hiba a szállások lekérésekor.");
         }
         const hotels = yield response.json();
-        // Kiválasztott város szerinti szűrés
         const filteredHotels = hotels.filter((hotel) => hotel.city.toLowerCase() === selectedCity.toLowerCase());
-        // Szállások megjelenítése
         const hotelContainer = document.getElementById("hotelList");
         if (!hotelContainer) {
             console.error("Nem található a hotelList elem.");
