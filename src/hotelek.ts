@@ -90,17 +90,21 @@ export async function displayHotels(): Promise<void> {
         const destinationSelect = document.getElementById('hotelDestinationSelect') as HTMLSelectElement;
         
         if (destinationSelect) {
-            destinationSelect.addEventListener('change', () => {
-                destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
-                const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
-                uniqueDestinations.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    destinationSelect.appendChild(option);
-                });
+            destinationSelect.innerHTML = '<option value="">Válassz célállomást</option>';
+            const uniqueDestinations = [...new Set(flights.map(x => x.Airport_To))];
+            uniqueDestinations.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                destinationSelect.appendChild(option);
             });
-
+            destinationSelect.addEventListener('change', () => {
+                const selectedCity = destinationSelect.value;
+                if (selectedCity) {
+                    const newUrl = `${window.location.pathname}?selectedCity=${encodeURIComponent(selectedCity)}`;
+                    history.pushState(null, '', newUrl);
+                }
+            });
         }
 
         initializeHotelSearch();
@@ -108,6 +112,7 @@ export async function displayHotels(): Promise<void> {
         console.error('Error in displayHotels:', error);
     }
 }
+
 
 function calculateTotalPrice(pricePerNight: number, dateFrom: string, dateTo: string, guests: number): number {
     const fromDate = new Date(dateFrom);
@@ -382,13 +387,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             throw new Error("Hiba a szállások lekérésekor.");
         }
         const hotels = await response.json();
-
-        // Kiválasztott város szerinti szűrés
         const filteredHotels = hotels.filter((hotel: { city: string; id: number; name: string; pricePerNight: number; rating: number; maxGuests: number; amenities: string[] }) => 
             hotel.city.toLowerCase() === selectedCity.toLowerCase()
         );
-
-        // Szállások megjelenítése
         const hotelContainer = document.getElementById("hotelList");
         if (!hotelContainer) {
             console.error("Nem található a hotelList elem.");
