@@ -67,7 +67,7 @@ export function clearCurrentUser() {
     localStorage.removeItem('currentUser');
 }
 
-let activeBookingIds: number[] = [1, 2, 3];
+let activeBookingIds: number[] = [];
 let allFlights: number[] = [];
 
 async function fetchFlights(): Promise<any[]> {
@@ -261,9 +261,7 @@ function setupUserPage() {
             ].join('');
 
             bookingsList.innerHTML = bookingsHTML;
-            bookingsList.insertAdjacentHTML('afterend', 
-                '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>'
-            );
+            
         } catch (error) {
             console.error('Error displaying bookings:', error);
             bookingsList.innerHTML = '<li class="list-group-item">Hiba történt a foglalások betöltésekor</li>';
@@ -368,7 +366,7 @@ export async function addBooking(flightId: number) {
 }
 
 async function resetBookings() {
-    activeBookingIds = [1, 2, 3];
+    activeBookingIds = [];
     const currentUser = getCurrentUser();
     if (currentUser) {
         currentUser.hotelBookings = [];
@@ -387,7 +385,7 @@ function initializeActiveBookings() {
         setCurrentUser(currentUser);
     }
     if (activeBookingIds.length === 0) {
-        activeBookingIds = [1, 2, 3]; 
+        activeBookingIds = []; 
         localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
     }
 }

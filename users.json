@@ -28631,6 +28631,16 @@
         }
       },
       "guests": 1
+    },
+    {
+      "id": "d89d",
+      "name": "abhgfaeswhe",
+      "phone": "5424637",
+      "email": "b@c.d",
+      "password": "12345",
+      "bookings": [],
+      "hotelBookings": [],
+      "guests": 1
     }
   ],
   "hotels": [

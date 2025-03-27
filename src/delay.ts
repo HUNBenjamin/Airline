@@ -42,6 +42,8 @@ async function displayPlaneDelay(type: string = 'all') {
         delayTable.appendChild(tr);
         AllPlanesDelay.forEach(element => {
             const tr = document.createElement('tr');
+            tr.classList.add("border-bottom")
+            tr.classList.add("border-dark")
             tr.innerHTML = 
             `
                         <td>${element.Departure_Time}</td>

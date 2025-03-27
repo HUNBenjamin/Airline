@@ -74,7 +74,7 @@ export function setCurrentUser(user) {
 export function clearCurrentUser() {
     localStorage.removeItem('currentUser');
 }
-let activeBookingIds = [1, 2, 3];
+let activeBookingIds = [];
 let allFlights = [];
 function fetchFlights() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -253,7 +253,6 @@ function setupUserPage() {
                 `)
             ].join('');
             bookingsList.innerHTML = bookingsHTML;
-            bookingsList.insertAdjacentHTML('afterend', '<button class="btn btn-primary mt-3" onclick="resetBookings()">Foglalások visszaállítása</button>');
         }
         catch (error) {
             console.error('Error displaying bookings:', error);
@@ -355,7 +354,7 @@ export function addBooking(flightId) {
 }
 function resetBookings() {
     return __awaiter(this, void 0, void 0, function* () {
-        activeBookingIds = [1, 2, 3];
+        activeBookingIds = [];
         const currentUser = getCurrentUser();
         if (currentUser) {
             currentUser.hotelBookings = [];
@@ -374,7 +373,7 @@ function initializeActiveBookings() {
         setCurrentUser(currentUser);
     }
     if (activeBookingIds.length === 0) {
-        activeBookingIds = [1, 2, 3];
+        activeBookingIds = [];
         localStorage.setItem('activeBookings', JSON.stringify(activeBookingIds));
     }
 }
